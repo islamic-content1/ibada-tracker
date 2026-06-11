@@ -3,27 +3,34 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>جدول عبادة عشرة ذي الحجة</title>
+<title>برنامج عبادة</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#f5faf5;--sf:#ffffff;
-  --primary:#3a9e5f;--primary-dark:#2d7a49;--primary-light:#e8f5ee;
-  --done-bg:#d1fae5;--done-border:#3a9e5f;--done-text:#15803d;
-  --miss-bg:#fee2e2;--miss-border:#ef4444;--miss-text:#b91c1c;
-  --edit-color:#ff8c42;--gold:#f59e0b;
-  --bd:#c8e6d4;--tx:#1e2d24;--mu:#5a7a65;--sh:0 2px 12px rgba(58,158,95,.08);
+  --gL:#d4f4e2;--gM:#5cb87a;--gD:#1a6b3c;--gDD:#0f4a28;
+  --rL:#fcd5d5;--rM:#e07a7a;--rD:#c0392b;--gold:#b8860b;
+  --bg:#fdfaf5;--sf:#ffffff;--bd:#e2d9c8;--tx:#2c2416;--mu:#7a6a52;
+  --primary:#1a6b3c;--primary-dark:#0f4a28;--primary-light:#e8f6ee;
+  --done-bg:#d4f4e2;--done-border:#5cb87a;--done-text:#1a6b3c;
+  --miss-bg:#fcd5d5;--miss-border:#e07a7a;--miss-text:#c0392b;
+  --edit-color:#b8860b;--sh:0 2px 12px rgba(0,0,0,.08);
 }
-*{box-sizing:border-box;margin:0;padding:0}
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Amiri',serif!important}
 html,body{overflow-x:hidden;width:100%}
-body{font-family:'Tajawal',system-ui,Tahoma,sans-serif;background:var(--bg);color:var(--tx);padding:1.2rem 0.8rem 3rem}
-.hdr{text-align:center;margin-bottom:1.2rem;padding:1.2rem 1rem 1rem;background:linear-gradient(135deg,#3a9e5f,#2d7a49);border-radius:16px;box-shadow:var(--sh)}
-.bsm{font-size:14px;color:#b8e8cb;margin-bottom:5px}
-.hdr h1{font-size:22px;font-weight:800;color:#fff}
-.hdr p{font-size:11px;color:#b8e8cb;margin-top:5px}
+
+button,input,textarea,select,table,thead,tbody,tr,th,td,a,span,div,p,label{
+  font-family:'Amiri',serif!important;
+}
+body{font-family:'Amiri',system-ui,Tahoma,sans-serif;background:var(--bg);color:var(--tx);padding:1.2rem 0.8rem 3rem}
+.hdr{text-align:center;margin-bottom:1.4rem;padding-bottom:1rem;border-bottom:1.5px solid var(--bd)}
+.bsm{font-size:16px;color:var(--gold);margin-bottom:5px;font-weight:600}
+.hdr h1{font-size:24px;font-weight:700;color:#d4a017;font-family:'Amiri',serif;text-shadow:0 1px 3px rgba(0,0,0,.2)}
+.hdr p{font-size:12px;color:var(--mu);margin-top:5px}
+.journey-quote{font-size:14px;color:var(--tx);line-height:1.9;margin-top:10px;font-weight:700}
+.journey-quote span{color:var(--gold);font-size:13px}
 .how-box{background:var(--sf);border:1.5px solid var(--bd);border-radius:12px;margin-bottom:1rem;overflow:hidden;box-shadow:var(--sh)}
-.how-hdr{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:linear-gradient(90deg,#3a9e5f,#2d7a49);color:#fff;cursor:pointer;font-size:13px;font-weight:700}
+.how-hdr{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--gD);color:#fff;cursor:pointer;font-size:13px;font-weight:700}
 .how-body{display:none;padding:12px 14px;font-size:11.5px;color:var(--tx)}
 .how-body .sec-title{font-weight:700;color:var(--primary);margin:8px 0 3px;font-size:12px}
 .how-body .row{display:flex;justify-content:space-between;padding:3px 8px;border-radius:6px;background:var(--bg);margin-bottom:2px}
@@ -37,13 +44,13 @@ body{font-family:'Tajawal',system-ui,Tahoma,sans-serif;background:var(--bg);colo
 .nr label{font-size:13px;color:var(--mu);font-weight:500}
 .nr input{border:1.5px solid var(--bd);border-radius:8px;padding:6px 12px;font-family:inherit;font-size:13px;background:var(--sf);color:var(--tx);width:180px;text-align:right;outline:none}
 .nr input:focus{border-color:var(--primary)}
-.custom-box{background:#f0faf3;border:1.5px solid #a8d8b8;border-radius:12px;padding:12px 14px;margin-bottom:1rem}
-.custom-box-title{font-size:13px;font-weight:700;color:#2d7a49;margin-bottom:10px}
+.custom-box{background:#fffdf0;border:1.5px solid #f0c040;border-radius:12px;padding:12px 14px;margin-bottom:1rem}
+.custom-box-title{font-size:13px;font-weight:700;color:#856404;margin-bottom:10px;display:flex;align-items:center;gap:6px}
 .custom-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
 .custom-label{flex:1;font-size:12px;color:var(--tx)}
 .custom-unit{font-size:11px;color:var(--mu);min-width:30px}
 .custom-pts{font-size:11px;color:var(--primary);font-weight:700;min-width:60px;text-align:left}
-.custom-inp{width:65px;border:1.5px solid #a8d8b8;border-radius:6px;padding:4px 8px;font-size:13px;text-align:center;font-family:inherit;background:#fff;color:var(--tx);outline:none;-moz-appearance:textfield}
+.custom-inp{width:65px;border:1.5px solid #f0c040;border-radius:6px;padding:4px 8px;font-size:13px;text-align:center;font-family:inherit;background:#fff;color:var(--tx);outline:none;-moz-appearance:textfield}
 .custom-inp:focus{border-color:var(--primary)}
 .tw{overflow:hidden;border-radius:12px;box-shadow:var(--sh);border:1px solid var(--bd);background:var(--sf);margin-bottom:1rem}
 table{width:100%;border-collapse:collapse;table-layout:fixed;font-size:11px}
@@ -52,12 +59,12 @@ thead th.tc{background:var(--primary-dark);width:18px}
 thead th.ti{text-align:right;padding-right:8px;width:32%}
 thead th.tp{width:28px;font-size:10px;opacity:.85}
 thead th.td{width:5.5%}
-td.cc{background:var(--primary-light);color:var(--primary-dark);font-weight:700;text-align:center;padding:3px 1px;border:1px solid #a8d8b8;writing-mode:vertical-lr;text-orientation:mixed;font-size:9px;vertical-align:middle;max-width:18px;overflow:hidden}
-td.ic{font-size:10px;color:var(--tx);padding:4px 6px 4px 3px;border:1px solid var(--bd);background:var(--sf);overflow:hidden;white-space:normal;line-height:1.35}
-td.pc{text-align:center;color:var(--mu);font-size:11px;padding:4px 1px;border:1px solid var(--bd);background:#f5faf5;font-weight:600;cursor:pointer;position:relative}
+td.cc{background:#e8f6ee;color:var(--gD);font-weight:700;text-align:center;padding:3px 1px;border:1px solid #c8e8d4;writing-mode:vertical-lr;text-orientation:mixed;font-size:9px;vertical-align:middle;max-width:18px;overflow:hidden}
+td.ic{font-size:10.5px;color:var(--tx);padding:4px 6px 4px 3px;border:1px solid #ede7db;background:var(--sf);overflow:hidden;white-space:normal;line-height:1.35}
+td.pc{text-align:center;color:var(--mu);font-size:11px;padding:4px 1px;border:1px solid #ede7db;background:#faf8f3;font-weight:600;cursor:pointer;position:relative}
 td.pc:hover{background:var(--primary-light)}
 td.pc.edited{color:var(--edit-color)}
-td.cell{text-align:center;padding:2px;border:1px solid var(--bd);cursor:pointer;user-select:none;background:var(--sf);font-size:14px;font-weight:700;transition:background .1s;height:32px;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+td.cell{text-align:center;padding:2px;border:1px solid #ede7db;cursor:pointer;user-select:none;background:var(--sf);font-size:14px;font-weight:700;transition:background .1s;height:32px;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
 td.cell.done{background:var(--done-bg);color:var(--done-text)}
 td.cell.miss{background:var(--miss-bg);color:var(--miss-text)}
 tr.tr-day td{background:var(--primary);color:#fff;font-weight:700;font-size:12px;padding:7px 3px;text-align:center;border-top:2px solid var(--primary-dark)}
@@ -86,36 +93,37 @@ tr.tr-day td.lbl{text-align:right;padding-right:8px;background:var(--primary-dar
 <body>
 <div class="hdr">
   <div class="bsm">بسم الله الرحمن الرحيم</div>
-  <h1>🌙 جدول عبادة عشر ذي الحجة</h1>
+  <h1>برنامج عبادة</h1>
+  <div class="journey-quote">فِي رحلة العمر والأيام مسرعة<br>لا تنسى من أنت أو ما وجهة السفر<br><span>من أنت = مسلم &nbsp;|&nbsp; وجهة السفر = الجنة</span></div>
   <p>كبسة = عملته ✓ &nbsp;|&nbsp; كبستين = ما عملته ✗ &nbsp;|&nbsp; ثلاث = إلغاء</p>
 </div>
 
 <div class="how-box">
-  <div class="how-hdr" onclick="toggleHow()"><span>💡 كيف تُحسب النقاط؟</span><span id="howArr">▼</span></div>
+  <div class="how-hdr" onclick="toggleHow()"><span>كيف تُحسب النقاط؟</span><span id="howArr">▼</span></div>
   <div class="how-body" id="howBody">
-    <div class="sec-title">🌅 الأذكار</div>
+    <div class="sec-title">الأذكار</div>
     <div class="row"><span>أذكار الصباح / المساء / النوم</span><span>5 نقاط لكل واحدة</span></div>
-    <div class="sec-title">📖 القرآن</div>
+    <div class="sec-title">القرآن</div>
     <div class="row"><span>البقرة كاملة</span><span>20 نقطة</span></div>
     <div class="row"><span>جزء قرآن</span><span>10 نقاط/جزء</span></div>
     <div class="row"><span>سماع قرآن</span><span>1 نقطة/صفحة</span></div>
     <div class="row"><span>قراءة تفسير آيتين</span><span>5 نقاط</span></div>
-    <div class="sec-title">🙏 القيام</div>
+    <div class="sec-title">القيام</div>
     <div class="row"><span>ركعتين حاجة</span><span>5 نقاط</span></div>
     <div class="row"><span>ركعتين توبة / شكر</span><span>2 نقاط</span></div>
     <div class="row"><span>قضاء فروض</span><span>3 نقاط/فرض</span></div>
-    <div class="sec-title">🕌 الصلاة</div>
+    <div class="sec-title">الصلاة</div>
     <div class="row"><span>ركعات ضحى / أوابين</span><span>2 نقاط/ركعتين</span></div>
     <div class="row"><span>فروض الصلاة / سنن</span><span>5 نقاط</span></div>
-    <div class="sec-title">📿 الذكر — كل 100 = 5 نقاط</div>
+    <div class="sec-title">الذكر — كل 100 = 5 نقاط</div>
     <div class="row"><span>صلاة على الرسول، استغفار، تهليل، تسبيح، بسملة</span><span>5 ن/100</span></div>
-    <div class="sec-title">🌱 تزكية</div>
+    <div class="sec-title">تزكية</div>
     <div class="row"><span>سماع محاضرة نصف ساعة</span><span>5 نقاط</span></div>
     <div class="row"><span>مساعدة الأم</span><span>5 نقاط</span></div>
     <div class="row"><span>حفظ قرآن</span><span>5 نقاط</span></div>
     <div class="row neg"><span>جلوس على الجوال أكثر من ساعتين</span><span>−2 نقطة</span></div>
     <div style="background:#f0faf3;border:1px solid #a8d8b8;border-radius:8px;padding:8px 10px;font-size:11px;color:#2d7a49;margin-top:8px">
-      💡 اضغطي على رقم النقاط في الجدول لتعديله ليوم محدد — النقاط البرتقالية = معدّلة
+      اضغطي على رقم النقاط في الجدول لتعديله ليوم محدد — النقاط البرتقالية = معدّلة
     </div>
   </div>
 </div>
@@ -136,8 +144,9 @@ tr.tr-day td.lbl{text-align:right;padding-right:8px;background:var(--primary-dar
 <div class="custom-box">
   <div class="custom-box-title">⚙️ حددي كميتك اليومية</div>
   <div style="text-align:center;margin-bottom:8px">
-    <a href="https://drive.google.com/file/d/11wAL1M5G87WDh2hMWLIybjHiAcaO651_/view?usp=drive_link" target="_blank" style="font-size:11px;color:#2d7a49;text-decoration:none;background:#fff;border:1px solid #a8d8b8;padding:4px 12px;border-radius:10px;display:inline-block">📗 افتحي الكتاب الأسود</a>
+    <a href="https://drive.google.com/file/d/11wAL1M5G87WDh2hMWLIybjHiAcaO651_/view?usp=drive_link" target="_blank" style="font-size:11px;color:#4a3000;text-decoration:none;background:#fff8e1;border:1px solid #f0c040;padding:4px 12px;border-radius:10px;display:inline-block">📗 افتحي الكتاب الأسود</a>
   </div>
+  <div style="font-size:11px;color:#856404;margin-bottom:10px;text-align:center">💛 للذكر أدخلي مضاعفات 100 فقط: 100، 200، 300...</div>
   <div id="customSettings"></div>
 </div>
 
@@ -147,7 +156,7 @@ tr.tr-day td.lbl{text-align:right;padding-right:8px;background:var(--primary-dar
       <tr>
         <th class="tc">الفئة</th><th class="ti">العبادة</th><th class="tp">نقاط✎</th>
         <th class="td">١</th><th class="td">٢</th><th class="td">٣</th><th class="td">٤</th><th class="td">٥</th>
-        <th class="td">٦</th><th class="td">٧</th><th class="td">٨</th><th class="td">٩</th>
+        <th class="td">٦</th><th class="td">٧</th><th class="td">٨</th><th class="td">٩</th><th class="td">١٠</th>
       </tr>
     </thead>
     <tbody id="tbody"></tbody>
@@ -157,7 +166,7 @@ tr.tr-day td.lbl{text-align:right;padding-right:8px;background:var(--primary-dar
 <div class="gc">
   <div class="sc"><div class="sl">المجموع</div><div class="sv" id="grandVal">0</div></div>
   <div class="sc"><div class="sl">المعدل</div><div class="sv" id="avgVal">—</div></div>
-  <div class="sc"><div class="sl">الأيام</div><div class="sv" id="filledVal">0/9</div></div>
+  <div class="sc"><div class="sl">الأيام</div><div class="sv" id="filledVal">0/10</div></div>
 </div>
 <div class="gc2">
   <div class="sc pct-box">
@@ -265,13 +274,13 @@ const CUSTOM_DEFS=[
   {ibada:'قضاء فروض',ptsPerUnit:3,unit:'فرض/يوم',max:20,defaultVal:1},
   {ibada:'ركعات ضحى',ptsPerUnit:1,unit:'ركعة/يوم',max:20,defaultVal:2},
   {ibada:'ركعات أوابين',ptsPerUnit:1,unit:'ركعة/يوم',max:12,defaultVal:2},
-  {ibada:'صلاة على الرسول',ptsPerUnit:5,unit:'/يوم',max:2000,defaultVal:200,ptsDiv:100,step:100},
-  {ibada:'استغفار',ptsPerUnit:5,unit:'/يوم',max:2000,defaultVal:200,ptsDiv:100,step:100},
-  {ibada:'تهليل',ptsPerUnit:5,unit:'/يوم',max:4000,defaultVal:400,ptsDiv:100,step:100},
+  {ibada:'صلاة على الرسول',ptsPerUnit:5,unit:'/يوم',max:2000,defaultVal:100,ptsDiv:100,step:100},
+  {ibada:'استغفار',ptsPerUnit:5,unit:'/يوم',max:2000,defaultVal:100,ptsDiv:100,step:100},
+  {ibada:'تهليل',ptsPerUnit:5,unit:'/يوم',max:4000,defaultVal:100,ptsDiv:100,step:100},
   {ibada:'سبحان الله وبحمده',ptsPerUnit:5,unit:'/يوم',max:1000,defaultVal:100,ptsDiv:100,step:100},
   {ibada:'بسم الله الرحمن الرحيم',ptsPerUnit:5,unit:'/يوم',max:1000,defaultVal:100,ptsDiv:100,step:100},
 ];
-const DAYS=9,SK='dhulhijja_v8',NK='dhulhijja_name_v8',EDITK='dhulhijja_edit_v1';
+const DAYS=10,SK='dhulhijja_v10',NK='dhulhijja_name_v10',EDITK='dhulhijja_edit_v10';
 let state={},editedPts={};
 const sk=(r,d)=>r+'-'+d;
 
@@ -446,14 +455,14 @@ function openReport(){
   let catsHtml='';
   const CAT_COLORS={'الأذكار':'#3a9e5f','القرآن':'#2d7a49','القيام':'#4a8c6f','الصلاة':'#f59e0b','الذكر':'#5cb87a','صدقة':'#ef4444','تزكية':'#6b9e7a'};
   Object.entries(cats).forEach(([cat,info])=>{const col=CAT_COLORS[cat]||'#3a9e5f';const catPct=info.max>0?Math.round(info.earned/info.max*100):0;let rowsHtml='';info.rows.forEach(row=>{const dayDots=Array.from({length:DAYS},(_,di)=>{const v=state[sk(row.ri,di+1)]||0;const bg=v===1?'#d1fae5':v===2?'#fee2e2':'#f0f0f0';const color=v===1?'#15803d':v===2?'#b91c1c':'#ccc';const sym=v===1?'✓':v===2?'✗':'';return '<div style="width:18px;height:18px;background:'+bg+';border-radius:3px;font-size:8px;font-weight:700;color:'+color+';display:flex;align-items:center;justify-content:center">'+sym+'</div>';}).join('');rowsHtml+='<div style="display:flex;align-items:center;gap:6px;padding:5px 8px;border-radius:6px;background:#f5faf5;margin-bottom:3px"><div style="flex:1;font-size:11px;color:'+(row.negative?'#ef4444':'#1e2d24')+'">'+row.ibada+'</div><div style="display:flex;gap:2px">'+dayDots+'</div><div style="width:28px;text-align:center;font-size:11px;font-weight:700;color:'+(row.negative?'#ef4444':'#3a9e5f')+'">'+row.earned+'</div></div>';});catsHtml+='<div style="margin-bottom:12px"><div style="background:'+col+';color:#fff;font-size:11px;font-weight:700;padding:5px 12px;border-radius:6px;margin-bottom:6px;display:flex;justify-content:space-between"><span>'+cat+'</span><span>'+info.earned+' نقطة ('+catPct+'%)</span></div>'+rowsHtml+'</div>';});
-  const rHtml='<div style="background:linear-gradient(135deg,#2d7a49,#3a9e5f);color:#fff;padding:1.4rem;border-radius:14px;text-align:center;margin-bottom:1.2rem"><div style="font-size:13px;color:#b8e8cb;margin-bottom:4px">بسم الله الرحمن الرحيم</div><div style="font-size:20px;font-weight:800">تقرير عبادة عشر ذي الحجة</div><div style="font-size:13px;opacity:.8;margin-top:3px">'+name+'</div></div>'
+  const rHtml='<div style="background:linear-gradient(135deg,#2d7a49,#3a9e5f);color:#fff;padding:1.4rem;border-radius:14px;text-align:center;margin-bottom:1.2rem"><div style="font-size:13px;color:#b8e8cb;margin-bottom:4px">بسم الله الرحمن الرحيم</div><div style="font-size:20px;font-weight:800">تقرير برنامج عبادة</div><div style="font-size:13px;opacity:.8;margin-top:3px">'+name+'</div></div>'
   +'<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:6px"><div style="background:#fff;border-radius:10px;padding:12px;text-align:center;border:1px solid #c8e6d4"><div style="font-size:24px;font-weight:800;color:#3a9e5f">'+grand+'</div><div style="font-size:10px;color:#5a7a65">المجموع</div></div><div style="background:#fff;border-radius:10px;padding:12px;text-align:center;border:1px solid #c8e6d4"><div style="font-size:24px;font-weight:800;color:#3a9e5f">'+avg+'</div><div style="font-size:10px;color:#5a7a65">المعدل</div></div><div style="background:#fff;border-radius:10px;padding:12px;text-align:center;border:1px solid #c8e6d4"><div style="font-size:24px;font-weight:800;color:#3a9e5f">'+filled+'<span style="font-size:14px;color:#5a7a65">/'+DAYS+'</span></div><div style="font-size:10px;color:#5a7a65">الأيام</div></div></div>'
   +'<div style="background:linear-gradient(135deg,#f0fdf4,#dcfce7);border-radius:10px;padding:12px;text-align:center;border:1px solid #3a9e5f;margin-bottom:1.2rem"><div style="font-size:22px;font-weight:800;color:#15803d">'+pctDay+'</div><div style="font-size:10px;color:#5a7a65">📊 معدل اليوم من 100</div></div>'
   +'<div style="background:#fff;border-radius:12px;padding:14px;border:1px solid #c8e6d4;margin-bottom:1.2rem"><div style="font-size:13px;font-weight:700;color:#3a9e5f;margin-bottom:12px">📊 الأداء اليومي</div><div style="display:flex;gap:4px;align-items:flex-end;height:130px">'+bars+'</div></div>'
   +'<div style="background:#fff;border-radius:12px;padding:14px;border:1px solid #c8e6d4;margin-bottom:1.2rem"><div style="font-size:13px;font-weight:700;color:#3a9e5f;margin-bottom:12px">📋 تفصيل العبادات</div>'+catsHtml+'</div>'
   +'<div style="text-align:center;padding-bottom:1rem"><button onclick="window.print()" style="font-family:inherit;font-size:13px;padding:10px 24px;background:#3a9e5f;color:#fff;border:none;border-radius:8px;cursor:pointer">🖨️ طباعة</button></div>';
   let ov=document.getElementById('rptOv');if(ov)ov.remove();
-  ov=document.createElement('div');ov.id='rptOv';ov.style.cssText='position:fixed;inset:0;z-index:9000;background:#f5faf5;overflow-y:auto;-webkit-overflow-scrolling:touch;font-family:Tajawal,system-ui,sans-serif';
+  ov=document.createElement('div');ov.id='rptOv';ov.style.cssText='position:fixed;inset:0;z-index:9000;background:#f5faf5;overflow-y:auto;-webkit-overflow-scrolling:touch;font-family:'Amiri',serif';
   const cb=document.createElement('div');cb.style.cssText='position:sticky;top:0;z-index:9999;background:#2d7a49;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem';
   cb.innerHTML='<span style="color:#fff;font-size:13px;font-weight:700">📊 تقريري</span><button onclick="document.getElementById(\'rptOv\').remove()" style="background:#ef4444;color:#fff;border:none;border-radius:6px;padding:5px 12px;font-family:inherit;font-size:12px;cursor:pointer">✕ إغلاق</button>';
   const ct=document.createElement('div');ct.style.cssText='padding:0 1rem';ct.innerHTML=rHtml;
