@@ -46,6 +46,7 @@ body{font-family:'Amiri',system-ui,Tahoma,sans-serif;background:var(--bg);color:
 .nr input:focus{border-color:var(--primary)}
 .custom-box{background:#fffdf0;border:1.5px solid #f0c040;border-radius:12px;padding:12px 14px;margin-bottom:1rem}
 .custom-box-title{font-size:13px;font-weight:700;color:#856404;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.zikr-warning{background:#fff8e1;border:1.5px solid #f0c040;border-radius:10px;padding:7px 10px;margin:8px 0 10px;font-size:11px;color:#856404;text-align:center;font-weight:700;display:flex;align-items:center;justify-content:center;gap:5px;line-height:1.6}
 .custom-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
 .custom-label{flex:1;font-size:12px;color:var(--tx)}
 .custom-unit{font-size:11px;color:var(--mu);min-width:30px}
@@ -94,7 +95,7 @@ tr.tr-day td.lbl{text-align:right;padding-right:8px;background:var(--primary-dar
 <div class="hdr">
   <div class="bsm">بسم الله الرحمن الرحيم</div>
   <h1>برنامج عبادة</h1>
-  <div class="journey-quote">فِي رحلة العمر والأيام مسرعة<br>لا تنسى من أنت أو ما وجهة السفر<br><span>من أنت = مسلم &nbsp;|&nbsp; وجهة السفر = الجنة</span></div>
+  <div class="journey-quote">فِي رحلة العمر والأيام مسرعة<br>لا تنس من أنت أو ما وجهة السفر<br><span> أنت = مسلم &nbsp;|&nbsp; وجهة السفر = الجنة</span></div>
   <p>كبسة = عملته ✓ &nbsp;|&nbsp; كبستين = ما عملته ✗ &nbsp;|&nbsp; ثلاث = إلغاء</p>
 </div>
 
@@ -146,7 +147,6 @@ tr.tr-day td.lbl{text-align:right;padding-right:8px;background:var(--primary-dar
   <div style="text-align:center;margin-bottom:8px">
     <a href="https://drive.google.com/file/d/11wAL1M5G87WDh2hMWLIybjHiAcaO651_/view?usp=drive_link" target="_blank" style="font-size:11px;color:#4a3000;text-decoration:none;background:#fff8e1;border:1px solid #f0c040;padding:4px 12px;border-radius:10px;display:inline-block">📗 افتحي الكتاب الأسود</a>
   </div>
-  <div style="font-size:11px;color:#856404;margin-bottom:10px;text-align:center">💛 للذكر أدخلي مضاعفات 100 فقط: 100، 200، 300...</div>
   <div id="customSettings"></div>
 </div>
 
@@ -390,6 +390,12 @@ function saveCustomSettings(arr){_ls.setItem('dhulhijja_csettings',JSON.stringif
 function buildCustomSettings(){
   const box=document.getElementById('customSettings');if(!box)return;const saved=getCustomSettings();box.innerHTML='';
   CUSTOM_DEFS.forEach((def,i)=>{
+    if(i===5){
+      const warn=document.createElement('div');
+      warn.className='zikr-warning';
+      warn.innerHTML='<span>⚠️</span><span>للذكر أدخلي مضاعفات 100 فقط: 100، 200، 300...</span>';
+      box.appendChild(warn);
+    }
     const row=document.createElement('div');row.className='custom-row';const val=saved?saved[i]:def.defaultVal;const pts=Math.floor(val/(def.ptsDiv||1))*def.ptsPerUnit;
     row.innerHTML='<span class="custom-label">'+def.ibada+'</span><input type="number" class="custom-inp" id="ci_'+i+'" value="'+val+'" min="0" max="'+(def.max||999)+'" step="'+(def.step||1)+'"><span class="custom-unit">'+(def.unit||'')+'</span><span class="custom-pts" id="cp_'+i+'">= '+pts+' نقطة</span>';
     box.appendChild(row);
