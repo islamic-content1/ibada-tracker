@@ -462,8 +462,9 @@ function openReport(){
   +'<div style="background:#fff;border-radius:12px;padding:14px;border:1px solid #c8e6d4;margin-bottom:1.2rem"><div style="font-size:13px;font-weight:700;color:#3a9e5f;margin-bottom:12px">📋 تفصيل العبادات</div>'+catsHtml+'</div>'
   +'<div style="text-align:center;padding-bottom:1rem"><button onclick="window.print()" style="font-family:inherit;font-size:13px;padding:10px 24px;background:#3a9e5f;color:#fff;border:none;border-radius:8px;cursor:pointer">🖨️ طباعة</button></div>';
   let ov=document.getElementById('rptOv');if(ov)ov.remove();
-  ov=document.createElement('div');ov.id='rptOv';ov.style.cssText='position:fixed;inset:0;z-index:9000;background:#f5faf5;overflow-y:auto;-webkit-overflow-scrolling:touch;font-family:'Amiri',serif';
-  const cb=document.createElement('div');cb.style.cssText='position:sticky;top:0;z-index:9999;background:#2d7a49;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem';
+ov=document.createElement('div');
+ov.id='rptOv';
+ov.style.cssText="position:fixed;inset:0;z-index:9000;background:#f5faf5;overflow-y:auto;-webkit-overflow-scrolling:touch;font-family:'Amiri',serif";  const cb=document.createElement('div');cb.style.cssText='position:sticky;top:0;z-index:9999;background:#2d7a49;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem';
   cb.innerHTML='<span style="color:#fff;font-size:13px;font-weight:700">📊 تقريري</span><button onclick="document.getElementById(\'rptOv\').remove()" style="background:#ef4444;color:#fff;border:none;border-radius:6px;padding:5px 12px;font-family:inherit;font-size:12px;cursor:pointer">✕ إغلاق</button>';
   const ct=document.createElement('div');ct.style.cssText='padding:0 1rem';ct.innerHTML=rHtml;
   ov.appendChild(cb);ov.appendChild(ct);document.body.appendChild(ov);
