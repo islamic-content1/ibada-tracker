@@ -21,7 +21,7 @@ body{font-family:'Amiri',system-ui,Tahoma,sans-serif;background:var(--bg);color:
 .sl{font-size:10px;color:var(--mu);margin-top:2px}
 .btns{display:flex;gap:8px;margin-bottom:.8rem}
 .btn{font-family:inherit;font-size:13px;font-weight:600;padding:10px;border-radius:10px;cursor:pointer;border:none;flex:1;text-align:center}
-.btn-r{background:var(--gD);color:#fff}.btn-r.loading{background:var(--gM)}.btn-x{background:#217346;color:#fff}
+.btn-r{background:var(--gD);color:#fff}.btn-r.loading{background:var(--gM)}.btn-x{background:#217346;color:#fff}.btn-admin{background:#fff8e1;color:#856404;border:1.5px solid #f0c040}
 .last-up{text-align:center;font-size:11px;color:var(--mu);margin-bottom:1rem}
 .card,.girl-card{background:var(--sf);border-radius:14px;border:1px solid var(--bd);margin-bottom:14px;box-shadow:var(--sh);overflow:hidden}
 .card{padding:12px}
@@ -80,6 +80,13 @@ body{font-family:'Amiri',system-ui,Tahoma,sans-serif;background:var(--bg);color:
 .admin-btn{font-family:inherit;font-size:12px;font-weight:700;border-radius:9px;padding:8px;border:none;cursor:pointer}
 .admin-del{background:#fff;color:#c0392b;border:1.5px solid #c0392b}
 .admin-reset{background:#fff8e1;color:#856404;border:1.5px solid #f0c040}
+.admin-panel{display:none;background:var(--sf);border:1.5px solid #f0c040;border-radius:14px;padding:12px;margin-bottom:1rem;box-shadow:var(--sh)}.admin-panel.open{display:block}
+.admin-panel-title{font-size:13px;font-weight:700;color:#856404;margin-bottom:8px}
+.admin-panel-grid{display:grid;grid-template-columns:1fr;gap:8px}
+.admin-panel select,.admin-panel input{font-family:inherit;font-size:13px;border:1.5px solid var(--bd);border-radius:9px;padding:9px;background:#fff;color:var(--tx);outline:none}
+.admin-panel select:focus,.admin-panel input:focus{border-color:#f0c040}
+.admin-panel-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.admin-panel-note{font-size:10px;color:var(--mu);line-height:1.6;margin-top:7px;text-align:center}
 .empty{text-align:center;padding:3rem 1rem;color:var(--mu);font-size:13px;line-height:2}
 #toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--gD);color:#fff;font-size:13px;padding:9px 22px;border-radius:30px;opacity:0;transition:all .3s;pointer-events:none;z-index:9999;white-space:nowrap}
 #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
@@ -92,14 +99,28 @@ body{font-family:'Amiri',system-ui,Tahoma,sans-serif;background:var(--bg);color:
   <div class="sc"><div class="sv" id="stTop">—</div><div class="sl">أعلى مجموع</div></div>
   <div class="sc"><div class="sv" id="stAvg">—</div><div class="sl">متوسط المجموعة</div></div>
 </div>
-<div class="btns"><button class="btn btn-r" id="refreshBtn" onclick="loadData()">↻ تحديث النتائج</button><button class="btn btn-x" onclick="exportExcel()">⬇ Excel</button></div>
+<div class="btns"><button class="btn btn-r" id="refreshBtn" onclick="loadData()">↻ تحديث النتائج</button><button class="btn btn-admin" onclick="toggleAdminPanel()">⚙️ إدارة</button><button class="btn btn-x" onclick="exportExcel()">⬇ Excel</button></div>
 <div class="last-up" id="lastUp"></div>
+
+<div class="admin-panel" id="adminPanel">
+  <div class="admin-panel-title">⚙️ إدارة البنات</div>
+  <div class="admin-panel-grid">
+    <select id="adminGirlSelect">
+      <option value="">اختاري اسم البنت...</option>
+    </select>
+    <div class="admin-panel-actions">
+      <button class="admin-btn admin-reset" onclick="resetSelectedGirl()">🧹 تصفير البيانات</button>
+      <button class="admin-btn admin-del" onclick="deleteSelectedGirl()">🗑️ حذف البنت</button>
+    </div>
+  </div>
+  <div class="admin-panel-note">الحذف يزيل البنت نهائياً من الشيت، أما التصفير يبقي الاسم ويمسح النقاط. يظهر تأكيد قبل تنفيذ أي إجراء.</div>
+</div>
+
 <div id="main"><div class="empty">🌿<br>اضغطي "تحديث" لتحميل نتائج البنات</div></div>
 <div id="toast"></div>
 <script>
 const SHEET_ID='1F28Gsxzg3EEuHu_Zw-9QtsnnlvHOAhThtADYpgTlmhc';
 const SCRIPT_URL='https://script.google.com/macros/s/AKfycbzAZ4UtFB3IqkVK9ssUFnmXJH9pCZig0Oe-jkDJio9pHUgFdcVyfNdcjxpWdcOp6H-6Mg/exec';
-const ADMIN_PASSWORD='1234';
 const DAYS=10;
 const ROWS=[
   {cat:'الأذكار',ibada:'أذكار الصباح',pts:5},
@@ -177,7 +198,7 @@ async function loadData(){
       };
     });
     document.getElementById('lastUp').textContent='آخر تحديث: '+new Date().toLocaleTimeString('ar');
-    render();showToast('تم التحديث ✓ — '+girlsData.length+' بنت');
+    render();populateAdminSelect();showToast('تم التحديث ✓ — '+girlsData.length+' بنت');
   }catch(e){console.error(e);showToast('خطأ في التحميل');}
   btn.textContent='↻ تحديث النتائج';btn.classList.remove('loading');btn.disabled=false;
 }
@@ -283,6 +304,13 @@ function notesHtml(g){
   return html+'</div>';
 }
 
+
+function toggleAdminPanel(){
+  const p=document.getElementById('adminPanel');
+  if(!p)return;
+  p.classList.toggle('open');
+}
+
 function adminActionsHtml(g){
   const n=String(g.name||'').replace(/\\/g,'\\\\').replace(/'/g,"\\'");
   return '<div class="admin-actions">'
@@ -290,8 +318,42 @@ function adminActionsHtml(g){
     +'<button class="admin-btn admin-del" onclick="event.stopPropagation();deleteGirl(\''+esc(n)+'\')">🗑️ حذف البنت</button>'
     +'</div>';
 }
+
+function populateAdminSelect(){
+  const sel=document.getElementById('adminGirlSelect');
+  if(!sel)return;
+  const current=sel.value;
+  sel.innerHTML='<option value="">اختاري اسم البنت...</option>';
+  girlsData
+    .map(g=>g.name)
+    .filter(Boolean)
+    .sort((a,b)=>String(a).localeCompare(String(b),'ar'))
+    .forEach(name=>{
+      const opt=document.createElement('option');
+      opt.value=name;
+      opt.textContent=name;
+      sel.appendChild(opt);
+    });
+  if(current)sel.value=current;
+}
+function getSelectedGirlName(){
+  const sel=document.getElementById('adminGirlSelect');
+  const name=sel?sel.value.trim():'';
+  if(!name){showToast('اختاري اسم البنت أولاً');return '';}
+  return name;
+}
+function deleteSelectedGirl(){
+  const name=getSelectedGirlName();
+  if(!name)return;
+  deleteGirl(name);
+}
+function resetSelectedGirl(){
+  const name=getSelectedGirlName();
+  if(!name)return;
+  resetGirl(name);
+}
+
 async function adminPost(payload,successMsg){
-  payload.adminPassword=ADMIN_PASSWORD;
   try{
     await fetch(SCRIPT_URL,{method:'POST',mode:'no-cors',body:JSON.stringify(payload)});
     showToast(successMsg);
