@@ -46,7 +46,7 @@ body{font-family:'Amiri',system-ui,Tahoma,sans-serif;background:var(--bg);color:
 .nr input:focus{border-color:var(--primary)}
 .custom-box{background:#fffdf0;border:1.5px solid #f0c040;border-radius:12px;padding:12px 14px;margin-bottom:1rem}
 .custom-box-title{font-size:13px;font-weight:700;color:#856404;margin-bottom:10px;display:flex;align-items:center;gap:6px}
-.zikr-warning{background:#fff8e1;border:1.5px solid #f0c040;border-radius:10px;padding:7px 10px;margin:8px 0 10px;font-size:11px;color:#856404;text-align:center;font-weight:700;display:flex;align-items:center;justify-content:center;gap:5px;line-height:1.6}
+.zikr-warning{background:#fff8e1;border:1.5px solid #f0c040;border-radius:10px;padding:7px 10px;margin:8px 0 10px;font-size:11px;color:#856404;text-align:right;font-weight:700;display:flex;align-items:flex-start;justify-content:flex-start;gap:6px;line-height:1.6;direction:rtl}
 .custom-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
 .custom-label{flex:1;font-size:12px;color:var(--tx)}
 .custom-unit{font-size:11px;color:var(--mu);min-width:30px}
@@ -65,9 +65,9 @@ td.ic{font-size:10.5px;color:var(--tx);padding:4px 6px 4px 3px;border:1px solid 
 td.pc{text-align:center;color:var(--mu);font-size:11px;padding:4px 1px;border:1px solid #ede7db;background:#faf8f3;font-weight:600;cursor:pointer;position:relative}
 td.pc:hover{background:var(--primary-light)}
 td.pc.edited{color:var(--edit-color)}
-td.cell{text-align:center;padding:2px;border:1px solid #ede7db;cursor:pointer;user-select:none;background:var(--sf);font-size:14px;font-weight:700;transition:background .1s;height:32px;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
-td.cell.done{background:var(--done-bg);color:var(--done-text)}
-td.cell.miss{background:var(--miss-bg);color:var(--miss-text)}
+td.cell{text-align:center;padding:2px;border:1px solid #ede7db;cursor:pointer;user-select:none;background:var(--sf);font-size:13px;font-weight:700;transition:background .1s;height:32px;-webkit-tap-highlight-color:transparent;touch-action:manipulation;line-height:1}
+td.cell.done{background:var(--done-bg);color:var(--done-text);font-family:Arial,sans-serif!important;font-size:14px;font-weight:700}
+td.cell.miss{background:var(--miss-bg);color:var(--miss-text);font-family:Arial,sans-serif!important;font-size:13px;font-weight:700}
 tr.tr-day td{background:var(--primary);color:#fff;font-weight:700;font-size:12px;padding:7px 3px;text-align:center;border-top:2px solid var(--primary-dark)}
 tr.tr-day td.lbl{text-align:right;padding-right:8px;background:var(--primary-dark);font-size:11px}
 .gc{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:6px}
@@ -245,7 +245,7 @@ const ROWS=[
   {cat:'الأذكار',ibada:'أذكار الصباح',pts:5},
   {cat:'الأذكار',ibada:'أذكار المساء',pts:5},
   {cat:'الأذكار',ibada:'أذكار النوم',pts:5},
-  {cat:'القرآن',ibada:'البقرة كاملة',pts:20},
+  {cat:'القرآن',ibada:'ثلث البقرة',pts:10},
   {cat:'القرآن',ibada:'جزء قرآن',pts:10,customIdx:0},
   {cat:'القرآن',ibada:'سماع قرآن (صفحة)',pts:1,customIdx:1},
   {cat:'القرآن',ibada:'قراءة تفسير آيتين',pts:5},
@@ -267,11 +267,23 @@ const ROWS=[
   {cat:'تزكية',ibada:'مساعدة الأم',pts:5},
   {cat:'تزكية',ibada:'حفظ قرآن',pts:5},
   {cat:'تزكية',ibada:'جلوس على الجوال أكثر من ساعتين',pts:-2,negative:true},
-];
+ ];
+const IBADA_NOTES={
+  'ثلث البقرة':'ورد يا لطيف',
+  'جزء قرآن':'أسماء الله الحسنى مع دعائها (٣× عن كل جزء)',
+  'ركعتين حاجة':'٣٣× سيد الاستغفار (عن ركعتي الحاجة والشكر والتوبة)',
+  'ركعتين توبة':'٣٣× سيد الاستغفار (عن ركعتي الحاجة والشكر والتوبة)',
+  'ركعتين شكر':'٣٣× سيد الاستغفار (عن ركعتي الحاجة والشكر والتوبة)',
+  'قضاء فروض (فرض)':'١٠× &quot;يا حي يا قيوم، برحمتك أستغيث&quot; — عن كل فرض',
+  'ركعات ضحى':'صيغ الاستغفار (عن ركعات الضحى والأوابين معاً)',
+  'ركعات أوابين':'صيغ الاستغفار (عن ركعات الضحى والأوابين معاً)',
+  'فروض الصلاة':'٣٣ الباقيات الصالحات عن كل صلاة وسنتها',
+  'سنن الصلوات':'٣٣ الباقيات الصالحات عن كل صلاة وسنتها'
+};
 const CUSTOM_DEFS=[
   {ibada:'جزء قرآن',ptsPerUnit:10,unit:'جزء/يوم',max:30,defaultVal:1},
   {ibada:'سماع قرآن',ptsPerUnit:1,unit:'صفحة/يوم',max:100,defaultVal:1},
-  {ibada:'قضاء فروض',ptsPerUnit:3,unit:'فرض/يوم',max:20,defaultVal:1},
+  {ibada:'قضاء فروض',ptsPerUnit:3,unit:'فرض/يوم',max:20,defaultVal:2},
   {ibada:'ركعات ضحى',ptsPerUnit:1,unit:'ركعة/يوم',max:20,defaultVal:2},
   {ibada:'ركعات أوابين',ptsPerUnit:1,unit:'ركعة/يوم',max:12,defaultVal:2},
   {ibada:'صلاة على الرسول',ptsPerUnit:5,unit:'/يوم',max:2000,defaultVal:100,ptsDiv:100,step:100},
@@ -311,7 +323,7 @@ function confirmReset(){
 }
 
 function getPts(ri,d){const key=ri+'_'+d;if(editedPts[key]!==undefined)return editedPts[key];return ROWS[ri].pts;}
-function applyCell(td,v){td.classList.remove('done','miss');if(v===1){td.classList.add('done');td.textContent='✓'}else if(v===2){td.classList.add('miss');td.textContent='✗'}else td.textContent='';}
+function applyCell(td,v){td.classList.remove('done','miss');if(v===1){td.classList.add('done');td.innerHTML='☑'}else if(v===2){td.classList.add('miss');td.textContent='✗'}else td.textContent='';}
 function toggle(ri,d,td){const k=sk(ri,d),next=((state[k]||0)+1)%3;if(next===0)delete state[k];else state[k]=next;applyCell(td,next);save();recalc();}
 
 let editingRi=-1,editingD=-1;
@@ -370,9 +382,11 @@ function build(){
     const tr=document.createElement('tr');
     if(r.cat!==lastCat){const span=ROWS.filter(x=>x.cat===r.cat).length;const td=document.createElement('td');td.className='cc';td.rowSpan=span;const abbr={'الأذكار':'أذكار','القرآن':'قرآن','القيام':'قيام','الصلاة':'صلاة','الذكر':'ذكر','صدقة':'صدقة','تزكية':'تزكية'};td.textContent=abbr[r.cat]||r.cat;tr.appendChild(td);lastCat=r.cat;}
     const ti=document.createElement('td');ti.className='ic';
-    if(r.link){ti.innerHTML='<div>'+r.ibada+' <a href="'+r.link+'" target="_blank" style="font-size:9px;color:#3a9e5f">▶</a></div>';}
-    else if(r.negative){ti.innerHTML='<div style="color:#ef4444">'+r.ibada+'</div>';}
-    else{ti.textContent=r.ibada;}
+    const note=IBADA_NOTES[r.ibada];
+    const noteHtml=note?'<div style="color:#b8860b;font-size:10px;line-height:1.4;margin-top:2px">'+note+'</div>':'';
+    if(r.link){ti.innerHTML='<div>'+r.ibada+' <a href="'+r.link+'" target="_blank" style="font-size:9px;color:#3a9e5f">▶</a></div>'+noteHtml;}
+    else if(r.negative){ti.innerHTML='<div style="color:#ef4444">'+r.ibada+'</div>'+noteHtml;}
+    else{ti.innerHTML='<div>'+r.ibada+'</div>'+noteHtml;}
     tr.appendChild(ti);
     const tp=document.createElement('td');tp.className='pc';tp.id='pts_'+ri;tp.textContent=r.pts;if(r.negative)tp.style.color='#ef4444';
     tp.title='اضغطي لتعديل نقاط يوم معين';tp.onclick=()=>openEditModal(ri);
@@ -459,8 +473,8 @@ function openReport(){
   const cats={};
   ROWS.forEach((r,ri)=>{if(!cats[r.cat])cats[r.cat]={earned:0,max:0,rows:[]};cats[r.cat].max+=Math.max(0,r.pts)*DAYS;let rowEarned=0;for(let d=1;d<=DAYS;d++)if((state[sk(ri,d)]||0)===1)rowEarned+=getPts(ri,d);cats[r.cat].earned+=rowEarned;cats[r.cat].rows.push({ri,ibada:r.ibada,pts:r.pts,earned:rowEarned,negative:r.negative||false});});
   let catsHtml='';
-  const CAT_COLORS={'الأذكار':'#3a9e5f','القرآن':'#2d7a49','القيام':'#4a8c6f','الصلاة':'#f59e0b','الذكر':'#5cb87a','صدقة':'#ef4444','تزكية':'#6b9e7a'};
-  Object.entries(cats).forEach(([cat,info])=>{const col=CAT_COLORS[cat]||'#3a9e5f';const catPct=info.max>0?Math.round(info.earned/info.max*100):0;let rowsHtml='';info.rows.forEach(row=>{const dayDots=Array.from({length:DAYS},(_,di)=>{const v=state[sk(row.ri,di+1)]||0;const bg=v===1?'#d1fae5':v===2?'#fee2e2':'#f0f0f0';const color=v===1?'#15803d':v===2?'#b91c1c':'#ccc';const sym=v===1?'✓':v===2?'✗':'';return '<div style="width:18px;height:18px;background:'+bg+';border-radius:3px;font-size:8px;font-weight:700;color:'+color+';display:flex;align-items:center;justify-content:center">'+sym+'</div>';}).join('');rowsHtml+='<div style="display:flex;align-items:center;gap:6px;padding:5px 8px;border-radius:6px;background:#f5faf5;margin-bottom:3px"><div style="flex:1;font-size:11px;color:'+(row.negative?'#ef4444':'#1e2d24')+'">'+row.ibada+'</div><div style="display:flex;gap:2px">'+dayDots+'</div><div style="width:28px;text-align:center;font-size:11px;font-weight:700;color:'+(row.negative?'#ef4444':'#3a9e5f')+'">'+row.earned+'</div></div>';});catsHtml+='<div style="margin-bottom:12px"><div style="background:'+col+';color:#fff;font-size:11px;font-weight:700;padding:5px 12px;border-radius:6px;margin-bottom:6px;display:flex;justify-content:space-between"><span>'+cat+'</span><span>'+info.earned+' نقطة ('+catPct+'%)</span></div>'+rowsHtml+'</div>';});
+  const REPORT_CAT_COLOR='#3a9e5f';
+  Object.entries(cats).forEach(([cat,info])=>{const col=REPORT_CAT_COLOR;const catPct=info.max>0?Math.round(info.earned/info.max*100):0;let rowsHtml='';info.rows.forEach(row=>{const dayDots=Array.from({length:DAYS},(_,di)=>{const v=state[sk(row.ri,di+1)]||0;const bg=v===1?'#d1fae5':v===2?'#fee2e2':'#f0f0f0';const color=v===1?'#15803d':v===2?'#b91c1c':'#ccc';const sym=v===1?'✔':v===2?'✗':'';return '<div style="width:18px;height:18px;background:'+bg+';border-radius:3px;font-size:8px;font-weight:700;color:'+color+';display:flex;align-items:center;justify-content:center">'+sym+'</div>';}).join('');rowsHtml+='<div style="display:flex;align-items:center;gap:6px;padding:5px 8px;border-radius:6px;background:#f5faf5;margin-bottom:3px"><div style="flex:1;font-size:11px;color:'+(row.negative?'#ef4444':'#1e2d24')+'">'+row.ibada+'</div><div style="display:flex;gap:2px">'+dayDots+'</div><div style="width:28px;text-align:center;font-size:11px;font-weight:700;color:'+(row.negative?'#ef4444':'#3a9e5f')+'">'+row.earned+'</div></div>';});catsHtml+='<div style="margin-bottom:12px"><div style="background:'+col+';color:#fff;font-size:11px;font-weight:700;padding:5px 12px;border-radius:6px;margin-bottom:6px;display:flex;justify-content:space-between"><span>'+cat+'</span><span>'+info.earned+' نقطة ('+catPct+'%)</span></div>'+rowsHtml+'</div>';});
   const rHtml='<div style="background:linear-gradient(135deg,#2d7a49,#3a9e5f);color:#fff;padding:1.4rem;border-radius:14px;text-align:center;margin-bottom:1.2rem"><div style="font-size:13px;color:#b8e8cb;margin-bottom:4px">بسم الله الرحمن الرحيم</div><div style="font-size:20px;font-weight:800">تقرير برنامج عبادة</div><div style="font-size:13px;opacity:.8;margin-top:3px">'+name+'</div></div>'
   +'<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:6px"><div style="background:#fff;border-radius:10px;padding:12px;text-align:center;border:1px solid #c8e6d4"><div style="font-size:24px;font-weight:800;color:#3a9e5f">'+grand+'</div><div style="font-size:10px;color:#5a7a65">المجموع</div></div><div style="background:#fff;border-radius:10px;padding:12px;text-align:center;border:1px solid #c8e6d4"><div style="font-size:24px;font-weight:800;color:#3a9e5f">'+avg+'</div><div style="font-size:10px;color:#5a7a65">المعدل</div></div><div style="background:#fff;border-radius:10px;padding:12px;text-align:center;border:1px solid #c8e6d4"><div style="font-size:24px;font-weight:800;color:#3a9e5f">'+filled+'<span style="font-size:14px;color:#5a7a65">/'+DAYS+'</span></div><div style="font-size:10px;color:#5a7a65">الأيام</div></div></div>'
   +'<div style="background:linear-gradient(135deg,#f0fdf4,#dcfce7);border-radius:10px;padding:12px;text-align:center;border:1px solid #3a9e5f;margin-bottom:1.2rem"><div style="font-size:22px;font-weight:800;color:#15803d">'+pctDay+'</div><div style="font-size:10px;color:#5a7a65">📊 معدل اليوم من 100</div></div>'
