@@ -138,13 +138,15 @@ function rankNumber(list,index,scoreKey){const score=list[index]&&Number(list[in
 function rankMedal(rank){return rank===1?'🥇':rank===2?'🥈':rank===3?'🥉':'#'+rank;}
 function rankItemClass(rank){return rank===1?'t1':rank===2?'t2':rank===3?'t3':'';}
 function rankNumClass(rank){return rank===1?'r1':rank===2?'r2':rank===3?'r3':'';}
-function calcDayMaxForGirl(g){return ROWS.reduce((s,r)=>s+((r.pts>0&&!r.bonus)?r.pts:0),0);}
+function calcDayMaxForGirl(g){return ROWS.reduce((s,r)=>s+((r.pts>0&&!r.bonus)?rowPts(g,r):0),0);}
 function calcGirlDayTotal(g,d){let t=0;ROWS.forEach((r,ri)=>{if(((g.state||{})[sk(ri,d)]||0)===1)t+=getPts(g,ri,d);});return t;}
 function calcGirlDayPct(g){
   const dayMax=calcDayMaxForGirl(g);if(!dayMax)return null;
-  let sum=0,count=0;
-  for(let d=1;d<=DAYS;d++){const hasData=ROWS.some((_,ri)=>((g.state||{})[sk(ri,d)]||0)!==0);if(hasData){sum+=Math.min(100,Math.round(calcGirlDayTotal(g,d)/dayMax*100));count++;}}
-  return count>0?Math.round(sum/count):null;
+  let count=0;
+  for(let d=1;d<=DAYS;d++){const hasData=ROWS.some((_,ri)=>((g.state||{})[sk(ri,d)]||0)!==0);if(hasData)count++;}
+  if(!count)return null;
+  const totalDays=(g.dayTotals||[]).reduce((a,b)=>a+(Number(b)||0),0)+(Number(g.counter)||0)*5;
+  return Math.round((totalDays/count)/dayMax*100);
 }
 async function loadData(){
   const btn=document.getElementById('refreshBtn');btn.textContent='جاري التحميل...';btn.classList.add('loading');btn.disabled=true;
@@ -270,7 +272,7 @@ function detailsTable(g){
   html+='<td></td></tr>';
   html+='<tr style="background:#fffdf0;color:#856404;font-weight:700;font-size:9px"><td colspan="3" style="text-align:right;padding-right:4px">عداد التسميع</td><td colspan="10">'+(Number(g.counter)||0)+' مرة = '+counterPoints(g)+' نقطة</td><td></td></tr>';
   html+='<tr style="background:#e8f6ee;font-weight:700;font-size:9px"><td colspan="3" style="text-align:right;padding-right:4px;color:var(--gD);border-top:2px solid var(--gM)">معدل اليوم %</td>';
-  for(let d=1;d<=DAYS;d++){const hasData=ROWS.some((_,ri)=>((g.state||{})[sk(ri,d)]||0)!==0);if(hasData){const pct=Math.min(100,Math.round(calcGirlDayTotal(g,d)/dayMax*100));const color=pct>=80?'var(--gD)':pct>=50?'#b8860b':'var(--rD)';html+='<td style="color:'+color+';font-weight:700;border-top:2px solid var(--gM)">'+pct+'%</td>';}else{html+='<td style="color:#ccc;border-top:2px solid var(--gM)">—</td>';}}
+  for(let d=1;d<=DAYS;d++){const hasData=ROWS.some((_,ri)=>((g.state||{})[sk(ri,d)]||0)!==0);if(hasData){const pct=Math.round(calcGirlDayTotal(g,d)/dayMax*100);const color=pct>=80?'var(--gD)':pct>=50?'#b8860b':'var(--rD)';html+='<td style="color:'+color+';font-weight:700;border-top:2px solid var(--gM)">'+pct+'%</td>';}else{html+='<td style="color:#ccc;border-top:2px solid var(--gM)">—</td>';}}
   html+='<td style="border-top:2px solid var(--gM)"></td></tr>';
   return html+'</tbody></table>';
 }
