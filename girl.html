@@ -448,10 +448,10 @@ function recalc(){
   for(let d=1;d<=DAYS;d++){
     const el=document.getElementById('dpct'+d);if(!el)continue;
     const hasData=ROWS.some((_,ri)=>(state[sk(ri,d)]||0)!==0);
-    if(hasData){const pct=Math.min(100,Math.round(calcDayTotal(d)/dayMax*100));el.textContent=pct+'%';el.style.color=pct>=80?'var(--done-text)':pct>=50?'var(--gold)':'var(--miss-text)';pctDaySum+=pct;pctDayCount++;}
+    if(hasData){const pct=Math.round(calcDayTotal(d)/dayMax*100);el.textContent=pct+'%';el.style.color=pct>=80?'var(--done-text)':pct>=50?'var(--gold)':'var(--miss-text)';pctDaySum+=pct;pctDayCount++;}
     else{el.textContent='—';el.style.color='var(--mu)';}
   }
-  document.getElementById('pctDayVal').textContent=pctDayCount>0?Math.round(pctDaySum/pctDayCount)+'%':'—';
+  document.getElementById('pctDayVal').textContent=filled>0?Math.round((grand/filled)/dayMax*100)+'%':'—';
   // النقاط تضل ثابتة
   ROWS.forEach((r,ri)=>{
     const ptsEl=document.getElementById('pts_'+ri);if(!ptsEl)return;
@@ -480,7 +480,7 @@ function openReport(){
   const dt=getDayTotals();let grand=0;dt.forEach(v=>grand+=v);grand+=counterVal*5;
   let filled=0;for(let d=1;d<=DAYS;d++){if(ROWS.some((_,ri)=>(state[sk(ri,d)]||0)!==0))filled++;}
   const avg=filled>0?(grand/filled).toFixed(1):'—';
-  const dayMax=calcDayMax();const pctDay=filled>0?Math.min(100,Math.round((grand/filled)/dayMax*100))+'%':'—';
+  const dayMax=calcDayMax();const pctDay=filled>0?Math.round((grand/filled)/dayMax*100)+'%':'—';
   const maxVal=Math.max(...dt,1);
   const bars=dt.map((v,i)=>{const h=maxVal>0?Math.round((v/maxVal)*110):0;const col=v===0?'#e2d9c8':v>=maxVal*0.8?'#0f4a28':v>=maxVal*0.5?'#1a6b3c':'#a8d8b8';return '<div style="display:flex;flex-direction:column;align-items:center;flex:1;gap:2px"><div style="font-size:9px;font-weight:700;color:#1a6b3c">'+(v>0?v:'')+'</div><div style="width:75%;background:'+col+';border-radius:4px 4px 0 0;height:'+h+'px;min-height:2px"></div><div style="font-size:9px;color:#7a6a52">'+(i+1)+'</div></div>';}).join('');
   const cats={};
