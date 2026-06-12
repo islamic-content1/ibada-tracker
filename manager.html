@@ -338,23 +338,19 @@ function resetSelectedGirl(){const name=getSelectedGirlName();if(!name)return;re
 // ✅ adminPost عبر iframe — الحل الوحيد الشغال مع Apps Script
 function adminPost(payload, successMsg) {
   return new Promise((resolve) => {
-    const iframe = document.createElement('iframe');
-    iframe.style.display = 'none';
     const params = new URLSearchParams({ type: payload.type, name: payload.name });
-    iframe.src = SCRIPT_URL + '?' + params.toString();
-    let done = false;
-    function finish() {
-      if (done) return;
-      done = true;
-      try { document.body.removeChild(iframe); } catch(e) {}
+    const url = SCRIPT_URL + '?' + params.toString();
+    
+    // نفتح في تاب جديد
+    const newTab = window.open(url, '_blank');
+    
+    // ننتظر ثواني ثم نغلق التاب ونحدث البيانات
+    setTimeout(() => {
+      try { newTab.close(); } catch(e) {}
       showToast(successMsg);
-      setTimeout(loadData, 1500);
+      setTimeout(loadData, 500);
       resolve();
-    }
-    iframe.onload = finish;
-    iframe.onerror = finish;
-    setTimeout(finish, 4000);
-    document.body.appendChild(iframe);
+    }, 3000);
   });
 }
 
