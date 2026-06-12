@@ -178,7 +178,6 @@ async function loadData(){
     const rows=json.table.rows||[];
     girlsData=rows.filter(r=>r.c&&r.c[0]&&r.c[0].v&&r.c[0].v!=='الاسم').map(r=>{
       const c=r.c;
-      // dayTotals: columns 4..13 (10 days)
       const dt=[];for(let i=4;i<14;i++)dt.push(c[i]?Number(c[i].v)||0:0);
       const state=findJsonCell(c,obj=>obj&&typeof obj==='object'&&!Array.isArray(obj)&&Object.keys(obj).some(k=>k.indexOf('-')>-1),14)||readJSON(cellText(c,15),{});
       const notes=findJsonCell(c,obj=>obj&&typeof obj==='object'&&!Array.isArray(obj)&&Object.keys(obj).some(k=>!isNaN(Number(k))&&obj[k]&&typeof obj[k]==='object'&&('text' in obj[k])),14)||readJSON(cellText(c,17),{});
@@ -304,19 +303,10 @@ function notesHtml(g){
   return html+'</div>';
 }
 
-
 function toggleAdminPanel(){
   const p=document.getElementById('adminPanel');
   if(!p)return;
   p.classList.toggle('open');
-}
-
-function adminActionsHtml(g){
-  const n=String(g.name||'').replace(/\\/g,'\\\\').replace(/'/g,"\\'");
-  return '<div class="admin-actions">'
-    +'<button class="admin-btn admin-reset" onclick="event.stopPropagation();resetGirl(\''+esc(n)+'\')"> تصفير البيانات</button>'
-    +'<button class="admin-btn admin-del" onclick="event.stopPropagation();deleteGirl(\''+esc(n)+'\')"> حذف البنت</button>'
-    +'</div>';
 }
 
 function populateAdminSelect(){
@@ -353,12 +343,12 @@ function resetSelectedGirl(){
   resetGirl(name);
 }
 
+// ✅ الدالة المعدلة — FormData مع doPost
 async function adminPost(payload, successMsg) {
   try {
-    const url = SCRIPT_URL 
-      + '?type=' + encodeURIComponent(payload.type) 
-      + '&name=' + encodeURIComponent(payload.name);
-    await fetch(url, { method: 'GET', mode: 'no-cors' });
+    const form = new FormData();
+    form.append('payload', JSON.stringify(payload));
+    await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: form });
     showToast(successMsg);
     setTimeout(loadData, 1500);
   } catch(e) {
@@ -366,6 +356,7 @@ async function adminPost(payload, successMsg) {
     showToast('صار خطأ بالإجراء');
   }
 }
+
 function deleteGirl(name){
   if(!confirm('متأكدة من حذف '+name+' نهائياً من الشيت؟'))return;
   adminPost({type:'deleteGirl',name:name},'تم حذف البنت ✓');
