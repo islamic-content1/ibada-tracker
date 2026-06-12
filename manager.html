@@ -76,6 +76,10 @@ body{font-family:'Amiri',system-ui,Tahoma,sans-serif;background:var(--bg);color:
 .id{width:17px;height:17px;border-radius:4px;font-size:8px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;border:0.5px solid var(--bd)}
 .id.d{background:var(--gL);color:var(--gD);border-color:var(--gM)}.id.m{background:var(--rL);color:var(--rD)}.id.e{background:#f5f5f5;color:#ccc}
 .section-btn{width:100%;display:flex;align-items:center;justify-content:space-between;padding:8px 10px;background:#fff;border:1px solid var(--bd);border-radius:9px;font-family:inherit;font-size:12px;font-weight:700;color:var(--gD);margin-top:8px;cursor:pointer}
+.admin-actions{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:9px}
+.admin-btn{font-family:inherit;font-size:12px;font-weight:700;border-radius:9px;padding:8px;border:none;cursor:pointer}
+.admin-del{background:#fff;color:#c0392b;border:1.5px solid #c0392b}
+.admin-reset{background:#fff8e1;color:#856404;border:1.5px solid #f0c040}
 .empty{text-align:center;padding:3rem 1rem;color:var(--mu);font-size:13px;line-height:2}
 #toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--gD);color:#fff;font-size:13px;padding:9px 22px;border-radius:30px;opacity:0;transition:all .3s;pointer-events:none;z-index:9999;white-space:nowrap}
 #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
@@ -94,62 +98,48 @@ body{font-family:'Amiri',system-ui,Tahoma,sans-serif;background:var(--bg);color:
 <div id="toast"></div>
 <script>
 const SHEET_ID='1F28Gsxzg3EEuHu_Zw-9QtsnnlvHOAhThtADYpgTlmhc';
+const SCRIPT_URL='https://script.google.com/macros/s/AKfycbzAZ4UtFB3IqkVK9ssUFnmXJH9pCZig0Oe-jkDJio9pHUgFdcVyfNdcjxpWdcOp6H-6Mg/exec';
+const ADMIN_PASSWORD='1234';
 const DAYS=10;
 const ROWS=[
   {cat:'الأذكار',ibada:'أذكار الصباح',pts:5},
   {cat:'الأذكار',ibada:'أذكار المساء',pts:5},
   {cat:'الأذكار',ibada:'أذكار النوم',pts:5},
-  {cat:'القرآن',ibada:'البقرة كاملة',pts:20},
-  {cat:'القرآن',ibada:'جزء قرآن',pts:10,customIdx:0},
-  {cat:'القرآن',ibada:'سماع قرآن (صفحة)',pts:1,customIdx:1},
-  {cat:'القرآن',ibada:'قراءة تفسير آيتين',pts:5},
-  {cat:'القيام',ibada:'ركعتين حاجة',pts:5},
-  {cat:'القيام',ibada:'ركعتين توبة',pts:2},
-  {cat:'القيام',ibada:'ركعتين شكر',pts:2},
-  {cat:'القيام',ibada:'قضاء فروض (فرض)',pts:3,customIdx:2},
-  {cat:'الصلاة',ibada:'ركعات ضحى',pts:2,customIdx:3,dynamicName:true},
-  {cat:'الصلاة',ibada:'ركعات أوابين',pts:2,customIdx:4,dynamicName:true},
-  {cat:'الصلاة',ibada:'فروض الصلاة',pts:5},
-  {cat:'الصلاة',ibada:'سنن الصلوات',pts:5},
-  {cat:'الذكر',ibada:'صلاة على الرسول',pts:10,customIdx:5,ptsDiv:100},
-  {cat:'الذكر',ibada:'استغفار',pts:10,customIdx:6,ptsDiv:100},
-  {cat:'الذكر',ibada:'تهليل',pts:20,customIdx:7,ptsDiv:100},
-  {cat:'الذكر',ibada:'سبحان الله وبحمده',pts:5,customIdx:8,ptsDiv:100},
-  {cat:'الذكر',ibada:'بسم الله الرحمن الرحيم',pts:5,customIdx:9,ptsDiv:100},
+  {cat:'القرآن',ibada:'ثلث البقرة',pts:10,badil:'ورد يا لطيف'},
+  {cat:'القرآن',ibada:'جزء قرآن',pts:10,badil:'٣× أسماء الله الحسنى مع دعائها — عن كل جزء'},
+  {cat:'القرآن',ibada:'حفظ قرآن',pts:5},
+  {cat:'القيام',ibada:'قيام قبل الأذان بنصف ساعة',pts:10,badil:'القراءة من الكتاب',link:'https://drive.google.com/file/d/1IbWEFdrNM2LzlibcInj1fwvPcS3-uoXn/view?usp=sharing'},
+  {cat:'الصلاة',ibada:'ركعات ضحى',pts:4,badil:'صيغ الاستغفار (عن الضحى والأوابين معاً)'},
+  {cat:'الصلاة',ibada:'ركعات أوابين',pts:2,badil:'صيغ الاستغفار (عن الضحى والأوابين معاً)'},
+  {cat:'الصلاة',ibada:'فروض الصلاة',pts:5,badil:'٣٣ الباقيات الصالحات عن كل صلاة وسنتها'},
+  {cat:'الصلاة',ibada:'سنن الصلوات',pts:5,badil:'٣٣ الباقيات الصالحات عن كل صلاة وسنتها'},
+  {cat:'الصلاة',ibada:'أذكار بعد الصلاة',pts:5,note:'آية الكرسي وخواتيم البقرة والمعوذات'},
+  {cat:'الذكر',ibada:'صلاة على الرسول ١٠٠',pts:10,note:'١٠٠ صباحاً و١٠٠ مساءً'},
+  {cat:'الذكر',ibada:'استغفار ١٠٠',pts:10,note:'١٠٠ صباحاً و١٠٠ مساءً'},
+  {cat:'الذكر',ibada:'تهليل ١٠٠',pts:10,note:'١٠٠ صباحاً و١٠٠ مساءً'},
   {cat:'صدقة',ibada:'صدقة يومية',pts:1},
-  {cat:'تزكية',ibada:'سماع نصف ساعة محاضرة',pts:5},
-  {cat:'تزكية',ibada:'مساعدة الأم',pts:5},
-  {cat:'تزكية',ibada:'حفظ قرآن',pts:5},
-  {cat:'تزكية',ibada:'جلوس على الجوال أكثر من ساعتين',pts:-2,negative:true},
-];
-const CUSTOM_DEFS=[
-  {ibada:'جزء قرآن',ptsPerUnit:10,unit:'جزء/يوم',defaultVal:1},
-  {ibada:'سماع قرآن',ptsPerUnit:1,unit:'صفحة/يوم',defaultVal:1},
-  {ibada:'قضاء فروض',ptsPerUnit:3,unit:'فرض/يوم',defaultVal:2},
-  {ibada:'ركعات ضحى',ptsPerUnit:1,unit:'ركعة/يوم',defaultVal:2},
-  {ibada:'ركعات أوابين',ptsPerUnit:1,unit:'ركعة/يوم',defaultVal:2},
-  {ibada:'صلاة على الرسول',ptsPerUnit:5,unit:'مرة/يوم',defaultVal:100,ptsDiv:100},
-  {ibada:'استغفار',ptsPerUnit:5,unit:'مرة/يوم',defaultVal:100,ptsDiv:100},
-  {ibada:'تهليل',ptsPerUnit:5,unit:'مرة/يوم',defaultVal:100,ptsDiv:100},
-  {ibada:'سبحان الله وبحمده',ptsPerUnit:5,unit:'مرة/يوم',defaultVal:100,ptsDiv:100},
-  {ibada:'بسم الله الرحمن الرحيم',ptsPerUnit:5,unit:'مرة/يوم',defaultVal:100,ptsDiv:100},
+  {cat:'تزكية',ibada:'جلوس على الجوال أكثر من ساعتين (دون واتساب)',pts:-2,negative:true},
+  {cat:'تزكية',ibada:'طلب علم شرعي',pts:5,bonus:true},
 ];
 const CAT_ORDER=['الأذكار','القرآن','القيام','الصلاة','الذكر','صدقة','تزكية'];
 let girlsData=[];
 const sk=(r,d)=>r+'-'+d;
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 function readJSON(v,fb){try{return v?JSON.parse(v):fb}catch(e){return fb}}
-function getCustomValue(g,i){const def=CUSTOM_DEFS[i];const v=(g.customSettings&&g.customSettings[i]!=null)?g.customSettings[i]:undefined;return Number(v==null?(def?def.defaultVal:0):v)||0;}
-function customLabel(g,i){const def=CUSTOM_DEFS[i];if(!def)return '';return def.ibada+': '+getCustomValue(g,i)+' '+def.unit;}
-function rowPts(g,r){if(r.customIdx==null)return r.pts;const def=CUSTOM_DEFS[r.customIdx];return Math.floor(getCustomValue(g,r.customIdx)/(def.ptsDiv||1))*def.ptsPerUnit;}
-function rowName(g,r){if(r.customIdx==null)return r.ibada;const def=CUSTOM_DEFS[r.customIdx];const v=getCustomValue(g,r.customIdx);if(r.dynamicName)return v+' '+r.ibada;return r.ibada+' — '+v+' '+def.unit;}
-function rowEarned(g,ri){const r=ROWS[ri],pts=rowPts(g,r);let t=0;for(let d=1;d<=DAYS;d++)if(((g.state||{})[sk(ri,d)]||0)===1)t+=pts;return t;}
+function cellText(c,i){return c&&c[i]&&c[i].v!=null?c[i].v:'';}
+function findJsonCell(c,pred,from){for(let i=from||0;i<c.length;i++){try{const v=cellText(c,i);if(!v)continue;const obj=JSON.parse(v);if(pred(obj))return obj;}catch(e){}}return null;}
+function getPts(g,ri,d){const key=ri+'_'+d;return (g.editedPts&&g.editedPts[key]!==undefined)?Number(g.editedPts[key])||0:ROWS[ri].pts;}
+function rowPts(g,r,ri,d){return d?getPts(g,ri,d):r.pts;}
+function rowName(g,r){return r.ibada;}
+function rowMeta(r){let arr=[];if(r.note)arr.push(r.note);if(r.badil)arr.push('بديل: '+r.badil);if(r.bonus)arr.push('⭐ بونص');return arr.join(' | ');}
+function rowEarned(g,ri){let t=0;for(let d=1;d<=DAYS;d++)if(((g.state||{})[sk(ri,d)]||0)===1)t+=getPts(g,ri,d);return t;}
+function counterPoints(g){return (Number(g.counter)||0)*5;}
 function rankNumber(list,index,scoreKey){const score=list[index]&&Number(list[index][scoreKey]);return 1+list.filter((x,idx)=>idx<index&&Number(x[scoreKey])>score).length;}
 function rankMedal(rank){return rank===1?'🥇':rank===2?'🥈':rank===3?'🥉':'#'+rank;}
 function rankItemClass(rank){return rank===1?'t1':rank===2?'t2':rank===3?'t3':'';}
 function rankNumClass(rank){return rank===1?'r1':rank===2?'r2':rank===3?'r3':'';}
-function calcDayMaxForGirl(g){return ROWS.reduce((s,r)=>s+(r.pts>0?rowPts(g,r):0),0);}
-function calcGirlDayTotal(g,d){let t=0;ROWS.forEach((r,ri)=>{if(((g.state||{})[sk(ri,d)]||0)===1)t+=rowPts(g,r);});return t;}
+function calcDayMaxForGirl(g){return ROWS.reduce((s,r)=>s+((r.pts>0&&!r.bonus)?r.pts:0),0);}
+function calcGirlDayTotal(g,d){let t=0;ROWS.forEach((r,ri)=>{if(((g.state||{})[sk(ri,d)]||0)===1)t+=getPts(g,ri,d);});return t;}
 function calcGirlDayPct(g){
   const dayMax=calcDayMaxForGirl(g);if(!dayMax)return null;
   let sum=0,count=0;
@@ -167,16 +157,21 @@ async function loadData(){
       const c=r.c;
       // dayTotals: columns 4..13 (10 days)
       const dt=[];for(let i=4;i<14;i++)dt.push(c[i]?Number(c[i].v)||0:0);
+      const state=findJsonCell(c,obj=>obj&&typeof obj==='object'&&!Array.isArray(obj)&&Object.keys(obj).some(k=>k.indexOf('-')>-1),14)||readJSON(cellText(c,15),{});
+      const notes=findJsonCell(c,obj=>obj&&typeof obj==='object'&&!Array.isArray(obj)&&Object.keys(obj).some(k=>!isNaN(Number(k))&&obj[k]&&typeof obj[k]==='object'&&('text' in obj[k])),14)||readJSON(cellText(c,17),{});
+      const editedPts=findJsonCell(c,obj=>obj&&typeof obj==='object'&&!Array.isArray(obj)&&Object.keys(obj).some(k=>k.indexOf('_')>-1),14)||readJSON(cellText(c,18),{});
+      const rawCounter=cellText(c,19)||cellText(c,20)||0;
       return {
         name:c[0].v,
         grand:c[1]?Number(c[1].v)||0:0,
         avg:c[2]?c[2].v:'—',
         filled:c[3]?c[3].v:0,
         dayTotals:dt,
-        state:readJSON(c[15]&&c[15].v,{}),
+        state:state,
+        editedPts:editedPts,
+        counter:Number(rawCounter)||0,
         lastUpdate:c[16]&&c[16].v?c[16].v.toString():'',
-        notes:readJSON(c[17]&&c[17].v,{}),
-        customSettings:readJSON(c[19]&&c[19].v,[]),
+        notes:notes,
       };
     });
     document.getElementById('lastUp').textContent='آخر تحديث: '+new Date().toLocaleTimeString('ar');
@@ -237,7 +232,8 @@ function girlCard(g,gi,sorted,maxG){
   const dt=g.dayTotals||Array(DAYS).fill(0);
   const dayPct=calcGirlDayPct(g);
   const dots=dt.map((v,i)=>'<div class="dd '+(v>0?'f':'e')+'"><div class="dn">'+(i+1)+'</div>'+(v>0?v:'')+'</div>').join('');
-  const chips=CUSTOM_DEFS.map((_,i)=>'<span class="chip">'+esc(customLabel(g,i))+'</span>').join('');
+  const editedCount=g.editedPts?Object.keys(g.editedPts).length:0;
+  const counterBox='<div class="custom-box"><div class="custom-title">📖 عداد التسميع والتعديلات</div><div class="chips"><span class="chip">أخذ موعد تسميع قرآن: '+(Number(g.counter)||0)+' مرة = '+counterPoints(g)+' نقطة</span><span class="chip">تعديلات النقاط: '+editedCount+'</span></div></div>';
   const body=detailsTable(g)+notesHtml(g)+'<div style="font-size:10px;color:var(--mu);margin-top:8px;text-align:left">آخر إرسال: '+esc(g.lastUpdate||'—')+'</div>';
   const pctColor=dayPct!==null?(dayPct>=80?'#0f4a28':dayPct>=50?'#b8860b':'#c0392b'):'#aaa';
   const pctBadge=dayPct!==null?'<div style="text-align:center;background:linear-gradient(135deg,#f0faf5,#d4f4e2);border:1px solid var(--gM);border-radius:10px;padding:6px 10px;margin-bottom:8px"><div style="font-size:18px;font-weight:700;color:'+pctColor+'">'+dayPct+'%</div><div style="font-size:9px;color:var(--mu)">معدل اليوم من 100</div></div>':'';
@@ -249,7 +245,7 @@ function girlCard(g,gi,sorted,maxG){
     +'</div>'
     +'<div class="gc-body" id="gbody_'+gi+'" style="display:none">'
     +pctBadge
-    +'<div class="custom-box"><div class="custom-title">⚙️ اختيارات وكميات البنت</div><div class="chips">'+chips+'</div></div>'
+    +counterBox
     +'<div class="prog-row"><span>التقدم الكلي</span><span>'+pct+'%</span></div><div class="prog-t"><div class="prog-f" style="width:'+pct+'%"></div></div>'
     +'<div class="days-row">'+dots+'</div>'
     +'<button class="toggle-btn" onclick="toggleDetails('+gi+',this)"><span>عرض تفاصيل العبادات</span><span>▼</span></button>'
@@ -263,15 +259,16 @@ function detailsTable(g){
   html+='<th class="ptsH">مج</th></tr></thead><tbody>';
   let lastCat='',catRows={};ROWS.forEach(r=>catRows[r.cat]=(catRows[r.cat]||0)+1);
   ROWS.forEach((r,ri)=>{
-    const pts=rowPts(g,r);let earned=0;html+='<tr>';
+    const pts=r.pts;let earned=0;html+='<tr>'
     if(r.cat!==lastCat){html+='<td class="cat" rowspan="'+catRows[r.cat]+'">'+esc(r.cat)+'</td>';lastCat=r.cat;}
-    html+='<td class="ibada" style="'+(r.negative?'color:#ef4444':'')+'">'+esc(rowName(g,r))+'</td><td style="'+(r.negative?'color:#ef4444':'')+'">'+pts+'</td>';
-    for(let d=1;d<=DAYS;d++){const v=(g.state&&g.state[sk(ri,d)])||0;if(v===1)earned+=pts;html+='<td><span class="id '+(v===1?'d':v===2?'m':'e')+'">'+(v===1?'✓':v===2?'✗':'')+'</span></td>';}
+    html+='<td class="ibada" style="'+(r.negative?'color:#ef4444':'')+'">'+esc(rowName(g,r))+(rowMeta(r)?'<div style="font-size:8px;color:#b8860b;font-weight:400">'+esc(rowMeta(r))+'</div>':'')+'</td><td style="'+(r.negative?'color:#ef4444':'')+'">'+pts+'</td>';
+    for(let d=1;d<=DAYS;d++){const v=(g.state&&g.state[sk(ri,d)])||0;const dpts=getPts(g,ri,d);if(v===1)earned+=dpts;let mark=v===1?'✓':v===2?'✗':'';if(v===1&&g.editedPts&&g.editedPts[ri+'_'+d]!==undefined){mark+=(dpts>ROWS[ri].pts?'↑':dpts<ROWS[ri].pts?'↓':'');}html+='<td><span class="id '+(v===1?'d':v===2?'m':'e')+'">'+mark+'</span></td>';}
     html+='<td><b style="'+(r.negative?'color:#ef4444':'')+'">'+earned+'</b></td></tr>';
   });
   html+='<tr style="background:var(--gD);color:#fff;font-weight:700;font-size:9px"><td colspan="3" style="text-align:right;padding-right:4px;background:var(--gDD)">مجموع اليوم</td>';
-  for(let d=1;d<=DAYS;d++){let t=0;ROWS.forEach((r,ri)=>{if(((g.state||{})[sk(ri,d)]||0)===1)t+=rowPts(g,r);});html+='<td>'+t+'</td>';}
+  for(let d=1;d<=DAYS;d++){let t=0;ROWS.forEach((r,ri)=>{if(((g.state||{})[sk(ri,d)]||0)===1)t+=getPts(g,ri,d);});html+='<td>'+t+'</td>';}
   html+='<td></td></tr>';
+  html+='<tr style="background:#fffdf0;color:#856404;font-weight:700;font-size:9px"><td colspan="3" style="text-align:right;padding-right:4px">عداد التسميع</td><td colspan="10">'+(Number(g.counter)||0)+' مرة = '+counterPoints(g)+' نقطة</td><td></td></tr>';
   html+='<tr style="background:#e8f6ee;font-weight:700;font-size:9px"><td colspan="3" style="text-align:right;padding-right:4px;color:var(--gD);border-top:2px solid var(--gM)">معدل اليوم %</td>';
   for(let d=1;d<=DAYS;d++){const hasData=ROWS.some((_,ri)=>((g.state||{})[sk(ri,d)]||0)!==0);if(hasData){const pct=Math.min(100,Math.round(calcGirlDayTotal(g,d)/dayMax*100));const color=pct>=80?'var(--gD)':pct>=50?'#b8860b':'var(--rD)';html+='<td style="color:'+color+';font-weight:700;border-top:2px solid var(--gM)">'+pct+'%</td>';}else{html+='<td style="color:#ccc;border-top:2px solid var(--gM)">—</td>';}}
   html+='<td style="border-top:2px solid var(--gM)"></td></tr>';
@@ -283,6 +280,31 @@ function notesHtml(g){
   keys.sort((a,b)=>Number(a)-Number(b)).forEach(d=>{html+='<div style="background:#fffdf0;border:1px solid #f0c040;border-radius:6px;padding:5px 8px;margin-bottom:5px"><div style="font-size:9px;font-weight:700;color:#856404;margin-bottom:2px">اليوم '+d+'</div><div style="font-size:10px;color:var(--tx)">'+esc(notes[d].text||'')+'</div></div>';});
   return html+'</div>';
 }
+
+function adminActionsHtml(g){
+  const n=String(g.name||'').replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+  return '<div class="admin-actions">'
+    +'<button class="admin-btn admin-reset" onclick="event.stopPropagation();resetGirl(\''+esc(n)+'\')">🧹 تصفير البيانات</button>'
+    +'<button class="admin-btn admin-del" onclick="event.stopPropagation();deleteGirl(\''+esc(n)+'\')">🗑️ حذف البنت</button>'
+    +'</div>';
+}
+async function adminPost(payload,successMsg){
+  payload.adminPassword=ADMIN_PASSWORD;
+  try{
+    await fetch(SCRIPT_URL,{method:'POST',mode:'no-cors',body:JSON.stringify(payload)});
+    showToast(successMsg);
+    setTimeout(loadData,700);
+  }catch(e){console.error(e);showToast('صار خطأ بالإجراء');}
+}
+function deleteGirl(name){
+  if(!confirm('متأكدة من حذف '+name+' نهائياً من الشيت؟'))return;
+  adminPost({type:'deleteGirl',name:name},'تم حذف البنت ✓');
+}
+function resetGirl(name){
+  if(!confirm('متأكدة من تصفير بيانات '+name+'؟ سيبقى الاسم موجود.'))return;
+  adminPost({type:'resetGirl',name:name},'تم تصفير بيانات البنت ✓');
+}
+
 function toggleGirlCard(i){const b=document.getElementById('gbody_'+i);const arr=document.getElementById('garr_'+i);const open=b.style.display==='block';b.style.display=open?'none':'block';if(arr)arr.textContent=open?'▼':'▲';}
 function toggleDetails(i,btn){const d=document.getElementById('details_'+i);d.classList.toggle('open');const s=btn.querySelector('span:last-child');if(s)s.textContent=d.classList.contains('open')?'▲':'▼';}
 function togglePanel(id,btn){const d=document.getElementById(id);if(!d)return;const isOpen=d.style.display==='block';d.style.display=isOpen?'none':'block';const s=btn.querySelector('span:last-child');if(s)s.textContent=isOpen?'▼':'▲';}
@@ -290,10 +312,10 @@ function toggleCollapsible(id,btn){const d=document.getElementById(id);if(!d)ret
 function exportExcel(){
   if(!girlsData.length){showToast('لا يوجد بيانات');return;}
   const wb=XLSX.utils.book_new();const sorted=[...girlsData].sort((a,b)=>b.grand-a.grand);
-  const sum=[['الترتيب','الاسم','المجموع','المعدل','الأيام','معدل اليوم %',...Array.from({length:DAYS},(_,i)=>'يوم '+(i+1)),'آخر تحديث']];
-  sorted.forEach((g,i)=>{const dp=calcGirlDayPct(g);sum.push([i+1,g.name,g.grand,g.avg,g.filled,dp!==null?dp+'%':'—',...(g.dayTotals||[]),g.lastUpdate||'']);});
+  const sum=[['الترتيب','الاسم','المجموع','المعدل','الأيام','معدل اليوم %','عداد التسميع',...Array.from({length:DAYS},(_,i)=>'يوم '+(i+1)),'آخر تحديث']];
+  sorted.forEach((g,i)=>{const dp=calcGirlDayPct(g);sum.push([i+1,g.name,g.grand,g.avg,g.filled,dp!==null?dp+'%':'—',(Number(g.counter)||0),...(g.dayTotals||[]),g.lastUpdate||'']);});
   XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(sum),'ملخص');
-  girlsData.forEach(g=>{const d=[['الفئة','العبادة','النقاط',...Array.from({length:DAYS},(_,i)=>'يوم '+(i+1)),'المجموع']];ROWS.forEach((r,ri)=>{const pts=rowPts(g,r);let s=0;const row=[r.cat,rowName(g,r),pts];for(let day=1;day<=DAYS;day++){const v=((g.state||{})[sk(ri,day)]||0)===1?pts:0;row.push(v);s+=v;}row.push(s);d.push(row);});XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(d),String(g.name).slice(0,28));});
+  girlsData.forEach(g=>{const d=[['الفئة','العبادة','النقاط',...Array.from({length:DAYS},(_,i)=>'يوم '+(i+1)),'المجموع']];ROWS.forEach((r,ri)=>{const pts=r.pts;let s=0;const row=[r.cat,rowName(g,r),pts];for(let day=1;day<=DAYS;day++){const dpts=getPts(g,ri,day);const v=((g.state||{})[sk(ri,day)]||0)===1?dpts:0;row.push(v);s+=v;}row.push(s);d.push(row);});d.push(['عداد','أخذ موعد تسميع قرآن',5,'عدد المرات: '+(Number(g.counter)||0),'النقاط: '+counterPoints(g)]);XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(d),String(g.name).slice(0,28));});
   XLSX.writeFile(wb,'نتائج_البنات.xlsx');showToast('تم التصدير ✓');
 }
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);}
