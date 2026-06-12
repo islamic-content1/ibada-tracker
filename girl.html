@@ -64,9 +64,9 @@ td.ic{font-size:10.5px;color:var(--tx);padding:4px 6px 4px 3px;border:1px solid 
 td.pc{text-align:center;color:var(--mu);font-size:11px;padding:4px 1px;border:1px solid #ede7db;background:#faf8f3;font-weight:600;cursor:pointer;position:relative}
 td.pc:hover{background:var(--primary-light)}
 td.pc.edited{color:var(--edit-color)}
-td.cell{text-align:center;padding:0;border:1px solid #ede7db;cursor:pointer;user-select:none;background:var(--sf);transition:background .1s;height:36px;-webkit-tap-highlight-color:transparent;touch-action:manipulation;vertical-align:middle;display:table-cell}
-td.cell.done{background:var(--done-bg)}
-td.cell.miss{background:var(--miss-bg)}
+td.cell{text-align:center;padding:2px;border:1px solid #ede7db;cursor:pointer;user-select:none;background:var(--sf);font-size:14px;font-weight:700;font-family:'Amiri',system-ui,Tahoma,sans-serif;transition:background .1s;height:32px;-webkit-tap-highlight-color:transparent;touch-action:manipulation;line-height:1}
+td.cell.done{background:#d4f4e2;color:#1a6b3c}
+td.cell.miss{background:#fcd5d5;color:#c0392b}
 tr.tr-day td{background:var(--primary);color:#fff;font-weight:700;font-size:12px;padding:7px 3px;text-align:center;border-top:2px solid var(--primary-dark)}
 tr.tr-day td.lbl{text-align:right;padding-right:8px;background:var(--primary-dark);font-size:11px}
 .gc{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:6px}
@@ -296,18 +296,7 @@ function save(){try{_ls.setItem(SK,JSON.stringify(state))}catch(e){}try{_ls.setI
 function saveEditedPts(){try{_ls.setItem(EDITK,JSON.stringify(editedPts))}catch(e){}}
 function confirmReset(){document.getElementById('resetModal').classList.remove('show');const keys=[SK,NK,EDITK,SNK,'dhulhijja_csettings'];keys.forEach(k=>{try{_ls.removeItem(k);}catch(e){}});state={};editedPts={};document.getElementById('userName').value='';ROWS.forEach(r=>{if(r.customIdx!==undefined){const def=CUSTOM_DEFS[r.customIdx];r.pts=Math.floor(def.defaultVal/(def.ptsDiv||1))*def.ptsPerUnit;}});build();buildCustomSettings();showToast('✓ تم تفريغ الجدول');}
 function getPts(ri,d){const key=ri+'_'+d;if(editedPts[key]!==undefined)return editedPts[key];return ROWS[ri].pts;}
-function applyCell(td,v){
-  td.classList.remove('done','miss');
-  if(v===1){
-    td.classList.add('done');
-    td.innerHTML='<svg viewBox="0 0 24 24" width="18" height="18" style="display:block;margin:auto"><polyline points="4,13 9,18 20,7" style="fill:none;stroke:#1a7a40;stroke-width:3;stroke-linecap:round;stroke-linejoin:round"/></svg>';
-  }else if(v===2){
-    td.classList.add('miss');
-    td.innerHTML='<svg viewBox="0 0 24 24" width="16" height="16" style="display:block;margin:auto"><line x1="5" y1="5" x2="19" y2="19" style="stroke:#c0392b;stroke-width:3;stroke-linecap:round"/><line x1="19" y1="5" x2="5" y2="19" style="stroke:#c0392b;stroke-width:3;stroke-linecap:round"/></svg>';
-  }else{
-    td.innerHTML='';
-  }
-}
+function applyCell(td,v){td.classList.remove('done','miss');if(v===1){td.classList.add('done');td.textContent='✓'}else if(v===2){td.classList.add('miss');td.textContent='✗'}else td.textContent='';}
 function toggle(ri,d,td){const k=sk(ri,d),next=((state[k]||0)+1)%3;if(next===0)delete state[k];else state[k]=next;applyCell(td,next);save();recalc();}
 let editingRi=-1,editingD=-1;
 function openEditModal(ri){editingRi=ri;editingD=-1;document.getElementById('editModalTitle').textContent='✎ '+ROWS[ri].ibada;const box=document.getElementById('dayBtns');box.innerHTML='';for(let d=1;d<=DAYS;d++){const b=document.createElement('button');const key=ri+'_'+d;const isEdited=editedPts[key]!==undefined;const pts=getPts(ri,d);b.style.cssText='font-family:inherit;padding:7px 4px;border-radius:8px;cursor:pointer;border:1.5px solid '+(isEdited?'var(--edit-color)':'var(--bd)')+';background:'+(isEdited?'#fff8f0':'#f5faf5')+';color:'+(isEdited?'var(--edit-color)':'var(--tx)')+';font-size:11px;font-weight:700;width:100%';b.innerHTML='<div>اليوم '+d+'</div><div style="font-size:10px;color:var(--mu)">('+pts+')</div>';b.onclick=function(){editingD=d;document.getElementById('editModalInput').value=getPts(ri,d);Array.from(box.children).forEach(x=>x.style.background='#f5faf5');this.style.background='#fff0e0';};box.appendChild(b);}document.getElementById('editModalInput').value='';document.getElementById('editModal').classList.add('show');}
