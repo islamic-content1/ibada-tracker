@@ -314,8 +314,8 @@ function toggleAdminPanel(){
 function adminActionsHtml(g){
   const n=String(g.name||'').replace(/\\/g,'\\\\').replace(/'/g,"\\'");
   return '<div class="admin-actions">'
-    +'<button class="admin-btn admin-reset" onclick="event.stopPropagation();resetGirl(\''+esc(n)+'\')">🧹 تصفير البيانات</button>'
-    +'<button class="admin-btn admin-del" onclick="event.stopPropagation();deleteGirl(\''+esc(n)+'\')">🗑️ حذف البنت</button>'
+    +'<button class="admin-btn admin-reset" onclick="event.stopPropagation();resetGirl(\''+esc(n)+'\')"> تصفير البيانات</button>'
+    +'<button class="admin-btn admin-del" onclick="event.stopPropagation();deleteGirl(\''+esc(n)+'\')"> حذف البنت</button>'
     +'</div>';
 }
 
