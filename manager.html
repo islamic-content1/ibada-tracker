@@ -41,17 +41,14 @@ body{font-family:'Amiri',system-ui,Tahoma,sans-serif;background:var(--bg);color:
 .rtrack{background:#e8f0e8;border-radius:10px;height:5px;overflow:hidden;margin-top:4px}
 .rfill{height:100%;background:linear-gradient(90deg,var(--gM),var(--gD));border-radius:10px}
 .rpts{font-size:15px;font-weight:700;color:var(--gD)}
-
-/* لوحة الإدارة المعدلة */
 .admin-panel{display:none;background:var(--sf);border:1.5px solid #f0c040;border-radius:14px;padding:12px;margin-bottom:1rem;box-shadow:var(--sh)}.admin-panel.open{display:block}
 .admin-panel-title{font-size:13px;font-weight:700;color:#856404;margin-bottom:8px}
 .admin-panel-grid{display:grid;grid-template-columns:1fr;gap:8px}
 .admin-panel select{font-family:inherit;font-size:13px;border:1.5px solid var(--bd);border-radius:9px;padding:9px;background:#fff;color:var(--tx);outline:none;width:100%}
 .admin-panel-actions{display:grid;grid-template-columns:1fr;gap:8px}
 .admin-btn{font-family:inherit;font-size:12px;font-weight:700;border-radius:9px;padding:10px;border:none;cursor:pointer}
-.admin-del{background:#fff8e1;color:#856404;border:1.5px solid #f0c040} /* منظر التصفير القديم */
+.admin-del{background:#fff8e1;color:#856404;border:1.5px solid #f0c040}
 .admin-panel-note{font-size:10px;color:var(--mu);line-height:1.6;margin-top:7px;text-align:center}
-
 .collapsible-hdr{width:100%;display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:#f0f9f4;border:1px solid var(--gM);border-radius:10px;font-family:inherit;font-size:13px;font-weight:700;color:var(--gD);cursor:pointer;margin-bottom:6px}
 .collapsible-body{display:none;padding:4px 0}
 .collapsible-body.open{display:block}
@@ -101,7 +98,6 @@ body{font-family:'Amiri',system-ui,Tahoma,sans-serif;background:var(--bg);color:
 <div class="btns"><button class="btn btn-r" id="refreshBtn" onclick="loadData()">↻ تحديث النتائج</button><button class="btn btn-admin" onclick="toggleAdminPanel()">⚙️ إدارة</button><button class="btn btn-x" onclick="exportExcel()">⬇ Excel</button></div>
 <div class="last-up" id="lastUp"></div>
 
-<!-- لوحة الإدارة المعدلة -->
 <div class="admin-panel" id="adminPanel">
   <div class="admin-panel-title">⚙️ إدارة البنات</div>
   <div class="admin-panel-grid">
@@ -220,13 +216,6 @@ function render(){
     html+='<div class="rank-item '+cls+'"><div class="rnum '+ncls+'">'+rankMedal(rnk)+'</div><div class="rinfo"><div class="rname">'+esc(g.name)+'</div><div class="rmeta">مجموع: '+g.grand+' | معدل: '+g.avg+' | أيام: '+g.filled+'/'+DAYS+'</div><div class="rtrack"><div class="rfill" style="width:'+pct+'%"></div></div></div><div class="rpts">'+g.grand+'</div></div>';
   });
   html+='</div>';
-  const withPct=girlsData.map(g=>({...g,dayPct:calcGirlDayPct(g)})).filter(g=>g.dayPct!==null).sort((a,b)=>b.dayPct-a.dayPct);
-  html+='<div class="card" style="padding:12px">';
-  html+='<button class="collapsible-hdr" onclick="toggleCollapsible(\'pctRank\',this)"><span>🌟 الأوائل حسب معدل اليوم من 100</span><span>▼</span></button>';
-  html+='<div class="collapsible-body" id="pctRank">';
-  if(withPct.length===0){html+='<div style="font-size:11px;color:#aaa;padding:8px">لا يوجد بيانات بعد</div>';}
-  else{withPct.forEach((g,i)=>{const rnk=rankNumber(withPct,i,'dayPct');const cls=rankItemClass(rnk);const ncls=rankNumClass(rnk);const pctColor=g.dayPct>=80?'var(--gD)':g.dayPct>=50?'#b8860b':'var(--rD)';html+='<div class="rank-item '+cls+'"><div class="rnum '+ncls+'">'+rankMedal(rnk)+'</div><div class="rinfo"><div class="rname">'+esc(g.name)+'</div><div class="rmeta">مجموع: '+g.grand+' | أيام: '+g.filled+'/'+DAYS+'</div><div class="rtrack"><div class="rfill" style="width:'+g.dayPct+'%"></div></div></div><div class="rpts" style="color:'+pctColor+'">'+g.dayPct+'%</div></div>';});}
-  html+='</div></div>';
   html+=perIbadaRanking()+'<div class="card-t" style="margin-bottom:10px">👥 تفصيل أداء كل بنت</div>';
   girlsData.forEach((g,gi)=>{html+=girlCard(g,gi,sorted,maxG);});
   cont.innerHTML=html;
@@ -319,16 +308,9 @@ function populateAdminSelect(){
   if(!sel)return;
   const current=sel.value;
   sel.innerHTML='<option value="">اختاري اسم البنت...</option>';
-  girlsData
-    .map(g=>g.name)
-    .filter(Boolean)
-    .sort((a,b)=>String(a).localeCompare(String(b),'ar'))
-    .forEach(name=>{
-      const opt=document.createElement('option');
-      opt.value=name;
-      opt.textContent=name;
-      sel.appendChild(opt);
-    });
+  girlsData.map(g=>g.name).filter(Boolean).sort((a,b)=>String(a).localeCompare(String(b),'ar')).forEach(name=>{
+    const opt=document.createElement('option');opt.value=name;opt.textContent=name;sel.appendChild(opt);
+  });
   if(current)sel.value=current;
 }
 
@@ -341,22 +323,13 @@ function getSelectedGirlName(){
 
 function deleteSelectedGirl(){const name=getSelectedGirlName();if(!name)return;deleteGirl(name);}
 
-function adminPost(payload, successMsg) {
-  return new Promise((resolve) => {
-    const params = new URLSearchParams({
-      type: payload.type,
-      name: payload.name
-    });
-    const iframe = document.createElement('iframe');
-    iframe.style.display = 'none';
-    iframe.src = SCRIPT_URL + '?' + params.toString() + '&t=' + Date.now();
+function adminPost(payload,successMsg){
+  return new Promise((resolve)=>{
+    const params=new URLSearchParams({type:payload.type,name:payload.name});
+    const iframe=document.createElement('iframe');iframe.style.display='none';
+    iframe.src=SCRIPT_URL+'?'+params.toString()+'&t='+Date.now();
     document.body.appendChild(iframe);
-    setTimeout(() => {
-      iframe.remove();
-      showToast(successMsg);
-      loadData();
-      resolve();
-    }, 1500);
+    setTimeout(()=>{iframe.remove();showToast(successMsg);loadData();resolve();},1500);
   });
 }
 
