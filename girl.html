@@ -105,11 +105,10 @@ tr.tr-day td.lbl{text-align:right;padding-right:8px;background:var(--primary-dar
     <div class="row"><span>نصف البقرة</span><span>15 نقطة</span></div>
     <div class="row"><span>البقرة كاملة</span><span>20 نقطة</span></div>
     <div class="row"><span>ثلث البقرة</span><span>10 نقاط</span></div>
-    <div class="row"><span>جزء قرآن</span><span>10 نقاط</span></div>
-    <div class="row"><span>قراءة تفسير آيتين</span><span>5 نقاط</span></div>
+    <div class="row"><span>جزء قرآن</span><span>10 نقاط — بديله: ٣× أسماء الله الحسنى مع دعائها عن كل جزء</span></div>
     <div class="row"><span>حفظ قرآن</span><span>5 نقاط</span></div>
     <div class="sec-title">القيام</div>
-    <div class="row"><span>قيام قبل الأذان بنصف ساعة</span><span>10 نقاط</span></div>
+    <div class="row"><span>قيام قبل الأذان بنصف ساعة</span><span>10 نقاط — بديله: <a href="https://drive.google.com/file/d/1IbWEFdrNM2LzlibcInj1fwvPcS3-uoXn/view?usp=sharing" target="_blank" rel="noopener" style="color:#0f4a28;text-decoration:underline;font-weight:700">القراءة من هاد الكتاب</a></span></div>
     <div class="sec-title">الصلاة</div>
     <div class="row"><span>ركعات ضحى — كل ركعتين</span><span>2 نقطة</span></div>
     <div class="row"><span>ركعات أوابين — كل ركعتين</span><span>2 نقطة</span></div>
@@ -123,6 +122,7 @@ tr.tr-day td.lbl{text-align:right;padding-right:8px;background:var(--primary-dar
     <div class="row"><span>صدقة يومية</span><span>1 نقطة</span></div>
     <div class="sec-title">تزكية</div>
     <div class="row neg"><span>جلوس على الجوال أكثر من ساعتين (دون واتساب)</span><span>−2 نقطة</span></div>
+    <div class="row" style="background:#fff8e1;border:1px solid #f0c040"><span>⭐ طلب علم شرعي (بونص)</span><span style="color:#b8860b">5 نقاط</span></div>
     <div class="sec-title">عداد</div>
     <div class="row"><span>أخذ موعد تسميع قرآن</span><span>5 نقاط/مرة</span></div>
     <div style="background:#f0faf3;border:1px solid #a8d8b8;border-radius:8px;padding:8px 10px;font-size:11px;color:#2d7a49;margin-top:8px">
@@ -255,10 +255,9 @@ const ROWS=[
   {cat:'الأذكار',ibada:'أذكار المساء',pts:5},
   {cat:'الأذكار',ibada:'أذكار النوم',pts:5},
   {cat:'القرآن',ibada:'ثلث البقرة',pts:10,badil:'ورد يا لطيف'},
-  {cat:'القرآن',ibada:'جزء قرآن',pts:10,badil:'أسماء الله الحسنى مع دعائها'},
-  {cat:'القرآن',ibada:'قراءة تفسير آيتين',pts:5},
+  {cat:'القرآن',ibada:'جزء قرآن',pts:10,badil:'٣× أسماء الله الحسنى مع دعائها — عن كل جزء'},
   {cat:'القرآن',ibada:'حفظ قرآن',pts:5},
-  {cat:'القيام',ibada:'قيام قبل الأذان بنصف ساعة',pts:10},
+  {cat:'القيام',ibada:'قيام قبل الأذان بنصف ساعة',pts:10,badil:'القراءة من <a href="https://drive.google.com/file/d/1IbWEFdrNM2LzlibcInj1fwvPcS3-uoXn/view?usp=sharing" target="_blank" rel="noopener" style="color:#0f4a28;text-decoration:underline;font-weight:700">هاد الكتاب</a>'},
   {cat:'الصلاة',ibada:'ركعات ضحى',pts:4,badil:'صيغ الاستغفار (عن الضحى والأوابين معاً)'},
   {cat:'الصلاة',ibada:'ركعات أوابين',pts:2,badil:'صيغ الاستغفار (عن الضحى والأوابين معاً)'},
   {cat:'الصلاة',ibada:'فروض الصلاة',pts:5,badil:'٣٣ الباقيات الصالحات عن كل صلاة وسنتها'},
@@ -269,6 +268,7 @@ const ROWS=[
   {cat:'الذكر',ibada:'تهليل ١٠٠',pts:10,note:'١٠٠ صباحاً و١٠٠ مساءً'},
   {cat:'صدقة',ibada:'صدقة يومية',pts:1},
   {cat:'تزكية',ibada:'جلوس على الجوال أكثر من ساعتين (دون واتساب)',pts:-2,negative:true},
+  {cat:'تزكية',ibada:'طلب علم شرعي',pts:5,bonus:true},
 ];
 
 const IBADA_NOTES={
@@ -410,8 +410,9 @@ function build(){
     const note=IBADA_NOTES[r.ibada];
     const noteHtml=note?'<div style="color:#b8860b;font-size:9px;line-height:1.4;margin-top:2px">'+note+'</div>':'';
     const badilHtml=r.badil?'<div style="color:#b8860b;font-size:9px;line-height:1.4;margin-top:2px">🔄 '+r.badil+'</div>':'';
+    const bonusHtml=r.bonus?'<div style="color:#b8860b;font-size:9px;font-weight:700;margin-top:2px">⭐ بونص</div>':'';
     if(r.negative){ti.innerHTML='<div style="color:#ef4444">'+r.ibada+'</div>'+noteHtml+badilHtml;}
-    else{ti.innerHTML='<div>'+r.ibada+'</div>'+noteHtml+badilHtml;}
+    else{ti.innerHTML='<div>'+r.ibada+'</div>'+noteHtml+badilHtml+bonusHtml;}
     tr.appendChild(ti);
     const tp=document.createElement('td');tp.className='pc';tp.id='pts_'+ri;
     // بيّن ↑ أو ↓ إذا في تعديل
@@ -431,7 +432,7 @@ function build(){
 }
 
 function getDayTotals(){return Array.from({length:DAYS},(_,i)=>{let t=0;ROWS.forEach((r,ri)=>{if((state[sk(ri,i+1)]||0)===1)t+=getPts(ri,i+1);});return t;});}
-function calcDayMax(){return ROWS.reduce((s,r)=>s+(r.pts>0?r.pts:0),0);}
+function calcDayMax(){return ROWS.reduce((s,r)=>s+((r.pts>0&&!r.bonus)?r.pts:0),0);}
 function calcDayTotal(d){let total=0;ROWS.forEach((r,ri)=>{if((state[sk(ri,d)]||0)===1)total+=getPts(ri,d);});return total;}
 
 function recalc(){
