@@ -323,7 +323,7 @@ function confirmReset(){
 }
 
 function getPts(ri,d){const key=ri+'_'+d;if(editedPts[key]!==undefined)return editedPts[key];return ROWS[ri].pts;}
-function applyCell(td,v){td.classList.remove('done','miss');if(v===1){td.classList.add('done');td.innerHTML='☑'}else if(v===2){td.classList.add('miss');td.textContent='✗'}else td.textContent='';}
+function applyCell(td,v){td.classList.remove('done','miss');if(v===1){td.classList.add('done');td.textContent='✔'}else if(v===2){td.classList.add('miss');td.textContent='✗'}else td.textContent='';}
 function toggle(ri,d,td){const k=sk(ri,d),next=((state[k]||0)+1)%3;if(next===0)delete state[k];else state[k]=next;applyCell(td,next);save();recalc();}
 
 let editingRi=-1,editingD=-1;
