@@ -353,12 +353,18 @@ function resetSelectedGirl(){
   resetGirl(name);
 }
 
-async function adminPost(payload,successMsg){
-  try{
-    await fetch(SCRIPT_URL,{method:'POST',mode:'no-cors',body:JSON.stringify(payload)});
+async function adminPost(payload, successMsg) {
+  try {
+    const url = SCRIPT_URL 
+      + '?type=' + encodeURIComponent(payload.type) 
+      + '&name=' + encodeURIComponent(payload.name);
+    await fetch(url, { method: 'GET', mode: 'no-cors' });
     showToast(successMsg);
-    setTimeout(loadData,700);
-  }catch(e){console.error(e);showToast('صار خطأ بالإجراء');}
+    setTimeout(loadData, 1500);
+  } catch(e) {
+    console.error(e);
+    showToast('صار خطأ بالإجراء');
+  }
 }
 function deleteGirl(name){
   if(!confirm('متأكدة من حذف '+name+' نهائياً من الشيت؟'))return;
