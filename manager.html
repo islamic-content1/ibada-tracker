@@ -41,6 +41,17 @@ body{font-family:'Amiri',system-ui,Tahoma,sans-serif;background:var(--bg);color:
 .rtrack{background:#e8f0e8;border-radius:10px;height:5px;overflow:hidden;margin-top:4px}
 .rfill{height:100%;background:linear-gradient(90deg,var(--gM),var(--gD));border-radius:10px}
 .rpts{font-size:15px;font-weight:700;color:var(--gD)}
+
+/* لوحة الإدارة المعدلة */
+.admin-panel{display:none;background:var(--sf);border:1.5px solid #f0c040;border-radius:14px;padding:12px;margin-bottom:1rem;box-shadow:var(--sh)}.admin-panel.open{display:block}
+.admin-panel-title{font-size:13px;font-weight:700;color:#856404;margin-bottom:8px}
+.admin-panel-grid{display:grid;grid-template-columns:1fr;gap:8px}
+.admin-panel select{font-family:inherit;font-size:13px;border:1.5px solid var(--bd);border-radius:9px;padding:9px;background:#fff;color:var(--tx);outline:none;width:100%}
+.admin-panel-actions{display:grid;grid-template-columns:1fr;gap:8px}
+.admin-btn{font-family:inherit;font-size:12px;font-weight:700;border-radius:9px;padding:10px;border:none;cursor:pointer}
+.admin-del{background:#fff8e1;color:#856404;border:1.5px solid #f0c040} /* منظر التصفير القديم */
+.admin-panel-note{font-size:10px;color:var(--mu);line-height:1.6;margin-top:7px;text-align:center}
+
 .collapsible-hdr{width:100%;display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:#f0f9f4;border:1px solid var(--gM);border-radius:10px;font-family:inherit;font-size:13px;font-weight:700;color:var(--gD);cursor:pointer;margin-bottom:6px}
 .collapsible-body{display:none;padding:4px 0}
 .collapsible-body.open{display:block}
@@ -75,18 +86,6 @@ body{font-family:'Amiri',system-ui,Tahoma,sans-serif;background:var(--bg);color:
 .detail-table td.cat{background:#e8f6ee;color:var(--gD);font-weight:700;writing-mode:vertical-lr;text-orientation:mixed;font-size:8px;max-width:18px}
 .id{width:17px;height:17px;border-radius:4px;font-size:8px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;border:0.5px solid var(--bd)}
 .id.d{background:var(--gL);color:var(--gD);border-color:var(--gM)}.id.m{background:var(--rL);color:var(--rD)}.id.e{background:#f5f5f5;color:#ccc}
-.section-btn{width:100%;display:flex;align-items:center;justify-content:space-between;padding:8px 10px;background:#fff;border:1px solid var(--bd);border-radius:9px;font-family:inherit;font-size:12px;font-weight:700;color:var(--gD);margin-top:8px;cursor:pointer}
-.admin-actions{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:9px}
-.admin-btn{font-family:inherit;font-size:12px;font-weight:700;border-radius:9px;padding:8px;border:none;cursor:pointer}
-.admin-del{background:#fff;color:#c0392b;border:1.5px solid #c0392b}
-.admin-reset{background:#fff8e1;color:#856404;border:1.5px solid #f0c040}
-.admin-panel{display:none;background:var(--sf);border:1.5px solid #f0c040;border-radius:14px;padding:12px;margin-bottom:1rem;box-shadow:var(--sh)}.admin-panel.open{display:block}
-.admin-panel-title{font-size:13px;font-weight:700;color:#856404;margin-bottom:8px}
-.admin-panel-grid{display:grid;grid-template-columns:1fr;gap:8px}
-.admin-panel select,.admin-panel input{font-family:inherit;font-size:13px;border:1.5px solid var(--bd);border-radius:9px;padding:9px;background:#fff;color:var(--tx);outline:none}
-.admin-panel select:focus,.admin-panel input:focus{border-color:#f0c040}
-.admin-panel-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.admin-panel-note{font-size:10px;color:var(--mu);line-height:1.6;margin-top:7px;text-align:center}
 .empty{text-align:center;padding:3rem 1rem;color:var(--mu);font-size:13px;line-height:2}
 #toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--gD);color:#fff;font-size:13px;padding:9px 22px;border-radius:30px;opacity:0;transition:all .3s;pointer-events:none;z-index:9999;white-space:nowrap}
 #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
@@ -102,6 +101,7 @@ body{font-family:'Amiri',system-ui,Tahoma,sans-serif;background:var(--bg);color:
 <div class="btns"><button class="btn btn-r" id="refreshBtn" onclick="loadData()">↻ تحديث النتائج</button><button class="btn btn-admin" onclick="toggleAdminPanel()">⚙️ إدارة</button><button class="btn btn-x" onclick="exportExcel()">⬇ Excel</button></div>
 <div class="last-up" id="lastUp"></div>
 
+<!-- لوحة الإدارة المعدلة -->
 <div class="admin-panel" id="adminPanel">
   <div class="admin-panel-title">⚙️ إدارة البنات</div>
   <div class="admin-panel-grid">
@@ -109,15 +109,15 @@ body{font-family:'Amiri',system-ui,Tahoma,sans-serif;background:var(--bg);color:
       <option value="">اختاري اسم البنت...</option>
     </select>
     <div class="admin-panel-actions">
-      <button class="admin-btn admin-reset" onclick="resetSelectedGirl()"> تصفير البيانات</button>
-      <button class="admin-btn admin-del" onclick="deleteSelectedGirl()"> حذف البنت</button>
+      <button class="admin-btn admin-del" onclick="deleteSelectedGirl()">🗑️ حذف البنت نهائياً من السجل</button>
     </div>
   </div>
-  <div class="admin-panel-note">الحذف يزيل البنت نهائياً من الشيت، أما التصفير يبقي الاسم ويمسح النقاط. يظهر تأكيد قبل تنفيذ أي إجراء.</div>
+  <div class="admin-panel-note">تحذير: سيتم إزالة البنت وجميع بياناتها من الشيت نهائياً.</div>
 </div>
 
 <div id="main"><div class="empty">🌿<br>اضغطي "تحديث" لتحميل نتائج البنات</div></div>
 <div id="toast"></div>
+
 <script>
 const SHEET_ID='1F28Gsxzg3EEuHu_Zw-9QtsnnlvHOAhThtADYpgTlmhc';
 const SCRIPT_URL='https://script.google.com/macros/s/AKfycbx5UVFbwRE-XpJ7CB8YJIKO6hEF5QPyNqj44tmRiZXLy0NRDRGbcakWz_IrXmITDk30OA/exec';
@@ -201,6 +201,7 @@ async function loadData(){
   }catch(e){console.error(e);showToast('خطأ في التحميل');}
   btn.textContent='↻ تحديث النتائج';btn.classList.remove('loading');btn.disabled=false;
 }
+
 function render(){
   const cont=document.getElementById('main');
   if(!girlsData.length){cont.innerHTML='<div class="empty">🌿<br>لا يوجد بيانات بعد</div>';['stTotal','stTop','stAvg'].forEach(id=>document.getElementById(id).textContent='—');return;}
@@ -230,6 +231,7 @@ function render(){
   girlsData.forEach((g,gi)=>{html+=girlCard(g,gi,sorted,maxG);});
   cont.innerHTML=html;
 }
+
 function perIbadaRanking(){
   let html='<div class="card"><div class="card-t">🏆 الأولى بكل عبادة</div>';
   CAT_ORDER.forEach((cat,ci)=>{
@@ -247,6 +249,7 @@ function perIbadaRanking(){
   });
   return html+'</div>';
 }
+
 function girlCard(g,gi,sorted,maxG){
   const pct=maxG>0?Math.round(g.grand/maxG*100):0;
   const rank=1+sorted.filter(s=>Number(s.grand)>Number(g.grand)).length;
@@ -274,6 +277,7 @@ function girlCard(g,gi,sorted,maxG){
     +'<div class="details" id="details_'+gi+'">'+body+'</div>'
     +'</div></div>';
 }
+
 function detailsTable(g){
   const dayMax=calcDayMaxForGirl(g);
   let html='<table class="detail-table"><thead><tr><th class="catH">الفئة</th><th class="ibH">العبادة</th><th class="ptsH">نقاط</th>';
@@ -296,6 +300,7 @@ function detailsTable(g){
   html+='<td style="border-top:2px solid var(--gM)"></td></tr>';
   return html+'</tbody></table>';
 }
+
 function notesHtml(g){
   const notes=g.notes||{};const keys=Object.keys(notes);if(!keys.length)return '';
   let html='<div class="custom-box" style="margin-top:10px"><div class="custom-title">📝 ملاحظات الأيام</div>';
@@ -326,29 +331,26 @@ function populateAdminSelect(){
     });
   if(current)sel.value=current;
 }
+
 function getSelectedGirlName(){
   const sel=document.getElementById('adminGirlSelect');
   const name=sel?sel.value.trim():'';
   if(!name){showToast('اختاري اسم البنت أولاً');return '';}
   return name;
 }
-function deleteSelectedGirl(){const name=getSelectedGirlName();if(!name)return;deleteGirl(name);}
-function resetSelectedGirl(){const name=getSelectedGirlName();if(!name)return;resetGirl(name);}
 
-// ✅ adminPost عبر iframe — الحل الوحيد الشغال مع Apps Script
+function deleteSelectedGirl(){const name=getSelectedGirlName();if(!name)return;deleteGirl(name);}
+
 function adminPost(payload, successMsg) {
   return new Promise((resolve) => {
     const params = new URLSearchParams({
       type: payload.type,
       name: payload.name
     });
-
     const iframe = document.createElement('iframe');
     iframe.style.display = 'none';
     iframe.src = SCRIPT_URL + '?' + params.toString() + '&t=' + Date.now();
-
     document.body.appendChild(iframe);
-
     setTimeout(() => {
       iframe.remove();
       showToast(successMsg);
@@ -359,18 +361,15 @@ function adminPost(payload, successMsg) {
 }
 
 function deleteGirl(name){
-  if(!confirm('متأكدة من حذف '+name+' نهائياً من الشيت؟'))return;
-  adminPost({type:'deleteGirl',name:name},'تم حذف البنت ✓');
-}
-function resetGirl(name){
-  if(!confirm('متأكدة من تصفير بيانات '+name+'؟ سيبقى الاسم موجود.'))return;
-  adminPost({type:'resetGirl',name:name},'تم تصفير بيانات البنت ✓');
+  if(!confirm('متأكدة من حذف '+name+' نهائياً من السجل؟'))return;
+  adminPost({type:'deleteGirl',name:name},'تم حذف البنت بنجاح ✓');
 }
 
 function toggleGirlCard(i){const b=document.getElementById('gbody_'+i);const arr=document.getElementById('garr_'+i);const open=b.style.display==='block';b.style.display=open?'none':'block';if(arr)arr.textContent=open?'▼':'▲';}
 function toggleDetails(i,btn){const d=document.getElementById('details_'+i);d.classList.toggle('open');const s=btn.querySelector('span:last-child');if(s)s.textContent=d.classList.contains('open')?'▲':'▼';}
 function togglePanel(id,btn){const d=document.getElementById(id);if(!d)return;const isOpen=d.style.display==='block';d.style.display=isOpen?'none':'block';const s=btn.querySelector('span:last-child');if(s)s.textContent=isOpen?'▼':'▲';}
 function toggleCollapsible(id,btn){const d=document.getElementById(id);if(!d)return;const open=d.classList.toggle('open');const s=btn.querySelector('span:last-child');if(s)s.textContent=open?'▲':'▼';}
+
 function exportExcel(){
   if(!girlsData.length){showToast('لا يوجد بيانات');return;}
   const wb=XLSX.utils.book_new();const sorted=[...girlsData].sort((a,b)=>b.grand-a.grand);
@@ -380,6 +379,7 @@ function exportExcel(){
   girlsData.forEach(g=>{const d=[['الفئة','العبادة','النقاط',...Array.from({length:DAYS},(_,i)=>'يوم '+(i+1)),'المجموع']];ROWS.forEach((r,ri)=>{const pts=r.pts;let s=0;const row=[r.cat,rowName(g,r),pts];for(let day=1;day<=DAYS;day++){const dpts=getPts(g,ri,day);const v=((g.state||{})[sk(ri,day)]||0)===1?dpts:0;row.push(v);s+=v;}row.push(s);d.push(row);});d.push(['عداد','أخذ موعد تسميع قرآن',5,'عدد المرات: '+(Number(g.counter)||0),'النقاط: '+counterPoints(g)]);XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(d),String(g.name).slice(0,28));});
   XLSX.writeFile(wb,'نتائج_البنات.xlsx');showToast('تم التصدير ✓');
 }
+
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);}
 loadData();
 </script>
