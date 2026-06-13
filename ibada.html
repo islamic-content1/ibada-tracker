@@ -295,13 +295,13 @@ let state={},editedPts={},counterVal=0,personalGoals={};
 
 // تعريف العبادات القابلة للتخصيص
 const GOAL_ITEMS=[
-  {ri:3, name:'ثلث البقرة', unit:'', base:1, baseLabel:'ثلث واحد', opts:['ثلث','نصف','كاملة'], optVals:[1,1.5,3], noCustom:true},
+  {ri:3, name:'ثلث البقرة', unit:'', base:1, baseLabel:'ثلث واحد', opts:['ثلث','نصف','كاملة'], optVals:[1,1.5,3], fixedPts:[10,15,20], noCustom:true},
   {ri:4, name:'جزء قرآن', unit:'جزء', base:1, baseLabel:'جزء واحد', opts:['جزء','جزآن','٣ أجزاء'], optVals:[1,2,3]},
   {ri:7, name:'ركعات ضحى', unit:'ركعة', base:4, baseLabel:'٤ ركعات', opts:['٢ ركعة','٤ ركعات','٨ ركعات'], optVals:[2,4,8]},
   {ri:8, name:'ركعات أوابين', unit:'ركعة', base:2, baseLabel:'٢ ركعتان', opts:['٢ ركعة','٤ ركعات','٦ ركعات'], optVals:[2,4,6]},
-  {ri:12, name:'صلاة على الرسول ﷺ', unit:'مرة', base:200, baseLabel:'٢٠٠ (١٠٠ صباح + ١٠٠ مساء)', opts:['١٠٠','٢٠٠','٣٠٠'], optVals:[100,200,300]},
-  {ri:13, name:'استغفار', unit:'مرة', base:200, baseLabel:'٢٠٠ (١٠٠ صباح + ١٠٠ مساء)', opts:['١٠٠','٢٠٠','٣٠٠'], optVals:[100,200,300]},
-  {ri:14, name:'تهليل', unit:'مرة', base:200, baseLabel:'٢٠٠ (١٠٠ صباح + ١٠٠ مساء)', opts:['١٠٠','٢٠٠','٣٠٠'], optVals:[100,200,300]},
+  {ri:12, name:'صلاة على الرسول ﷺ', unit:'مرة', base:200, baseLabel:'٢٠٠ (١٠٠ صباح + ١٠٠ مساء)', opts:['١٠٠','٢٠٠','٣٠٠'], optVals:[100,200,300], note:'الكمية تكون بمضاعفات ١٠٠'},
+  {ri:13, name:'استغفار', unit:'مرة', base:200, baseLabel:'٢٠٠ (١٠٠ صباح + ١٠٠ مساء)', opts:['١٠٠','٢٠٠','٣٠٠'], optVals:[100,200,300], note:'الكمية تكون بمضاعفات ١٠٠'},
+  {ri:14, name:'تهليل', unit:'مرة', base:200, baseLabel:'٢٠٠ (١٠٠ صباح + ١٠٠ مساء)', opts:['١٠٠','٢٠٠','٣٠٠'], optVals:[100,200,300], note:'الكمية تكون بمضاعفات ١٠٠'},
 ];
 const sk=(r,d)=>r+'-'+d;
 
@@ -374,6 +374,14 @@ function buildGoalsSection(){
     });
     ctrl.appendChild(optsDiv);
 
+    // ملاحظة (مثل مضاعفات ١٠٠)
+    if(g.note){
+      const noteEl=document.createElement('div');
+      noteEl.style.cssText='font-size:9px;color:var(--gold);margin-top:2px;text-align:left';
+      noteEl.textContent='⚠ '+g.note;
+      ctrl.appendChild(noteEl);
+    }
+
     // خانة مخصصة (بس للعبادات اللي مسموح فيها)
     if(!g.noCustom){
       const customRow=document.createElement('div');
@@ -423,13 +431,17 @@ function confirmReset(){
 function getPts(ri,d){
   const key=ri+'_'+d;
   if(editedPts[key]!==undefined)return editedPts[key];
-  // إذا في هدف شخصي لهاد الصف، احسب النقاط بناءً عليه
   const goalItem=GOAL_ITEMS.find(g=>g.ri===ri);
   if(goalItem){
     const goalVal=getGoalVal(ri);
+    // البقرة: نقاط ثابتة لكل خيار
+    if(goalItem.fixedPts){
+      const idx=goalItem.optVals.indexOf(goalVal);
+      if(idx>=0)return goalItem.fixedPts[idx];
+    }
+    // باقي العبادات: بالنسبة
     const baseVal=goalItem.base;
-    const basePts=ROWS[ri].pts; // نقاط الكمية الأساسية
-    // نقاط = (نسبة هدف / أساسي) × النقاط الأساسية، بحيث الزيادة تصبح بونص
+    const basePts=ROWS[ri].pts;
     return Math.round((goalVal/baseVal)*basePts);
   }
   return ROWS[ri].pts;
@@ -614,35 +626,53 @@ function build(){
   });
 
   const tf=document.createElement('tr');tf.className='tr-day';
-  const lbl=document.createElement('td');lbl.className='lbl';lbl.colSpan=2;lbl.textContent='مجموع اليوم';tf.appendChild(lbl);
+  const lbl=document.createElement('td');lbl.className='lbl';lbl.colSpan=2;lbl.textContent='مجموع اليوم (أساسي)';tf.appendChild(lbl);
   const ptsTotal=calcPtsTotal();
   const ptsTd=document.createElement('td');ptsTd.className='pts-total';ptsTd.textContent=ptsTotal;tf.appendChild(ptsTd);
   for(let d=1;d<=DAYS;d++){const td=document.createElement('td');td.id='dt'+d;tf.appendChild(td);}
   tb.appendChild(tf);
 
+  // صف البونص
+  const tb2=document.createElement('tr');
+  const blbl=document.createElement('td');blbl.colSpan=2;blbl.textContent='⭐ بونص اليوم';blbl.style.cssText='background:#fff3cd;color:#7a5c00;font-size:11px;font-weight:700;text-align:right;padding-right:8px;border-top:1px solid #f0c040';tb2.appendChild(blbl);
+  const bEmpty=document.createElement('td');bEmpty.style.cssText='background:#fff3cd;border:1px solid #f0c040;font-size:10px;color:#b8860b;text-align:center';bEmpty.textContent='⭐';tb2.appendChild(bEmpty);
+  for(let d=1;d<=DAYS;d++){const td=document.createElement('td');td.id='dbonus'+d;td.style.cssText='background:#fffde7;color:#b8860b;font-weight:700;font-size:11px;text-align:center;border:1px solid #f0c040;padding:3px 1px';tb2.appendChild(td);}
+  tb.appendChild(tb2);
+
   buildNotesRow(tb);buildDayPctRow(tb);recalc();
 }
 
-function getDayTotals(){return Array.from({length:DAYS},(_,i)=>{let t=0;ROWS.forEach((r,ri)=>{if((state[sk(ri,i+1)]||0)===1)t+=getPts(ri,i+1);});return t;});}
-function calcDayMax(){return ROWS.reduce((s,r,ri)=>s+((r.pts>0&&!r.bonus&&!r.negative)?r.pts:0),0);}
-// مجموع اليوم بالنقاط الأساسية فقط (للمعدل من 100)
-function calcDayTotalBase(d){
-  let total=0;
-  ROWS.forEach((r,ri)=>{
-    if((state[sk(ri,d)]||0)===1){
-      const basePts=getBasePts(ri);
-      total+=Math.min(getPts(ri,d),basePts>0?basePts:getPts(ri,d));
-    }
-  });
-  return total;
+// نقاط أساسية لعبادة محددة (بدون بونص الهدف الشخصي)
+function getBasePtsForCell(ri,d){
+  const key=ri+'_'+d;
+  if(editedPts[key]!==undefined)return editedPts[key]; // تعديل يدوي = يُعامَل كأساسي
+  return ROWS[ri].pts; // الأصلي دائماً
 }
-function calcDayTotal(d){let total=0;ROWS.forEach((r,ri)=>{if((state[sk(ri,d)]||0)===1)total+=getPts(ri,d);});return total;}
+// بونص الهدف الشخصي لخلية (الفرق بين الهدف والأصلي)
+function getBonusPtsForCell(ri,d){
+  if(editedPts[ri+'_'+d]!==undefined)return 0; // لو عدّلت يدوي ما في بونص
+  const goalItem=GOAL_ITEMS.find(g=>g.ri===ri);
+  if(!goalItem)return 0;
+  return Math.max(0, getPts(ri,d) - ROWS[ri].pts);
+}
+function getDayBase(d){let t=0;ROWS.forEach((r,ri)=>{if((state[sk(ri,d)]||0)===1)t+=getBasePtsForCell(ri,d);});return t;}
+function getDayBonus(d){let t=0;ROWS.forEach((r,ri)=>{if((state[sk(ri,d)]||0)===1)t+=getBonusPtsForCell(ri,d);});return t;}
+function getDayTotals(){return Array.from({length:DAYS},(_,i)=>getDayBase(i+1)+getDayBonus(i+1));}
+function calcDayMax(){return ROWS.reduce((s,r,ri)=>s+((r.pts>0&&!r.bonus&&!r.negative)?r.pts:0),0);}
+function calcDayTotalBase(d){return getDayBase(d);}
+function calcDayTotal(d){return getDayBase(d)+getDayBonus(d);}
 
 function recalc(){
-  const dt=getDayTotals();let grand=0;
-  ROWS.forEach((r,ri)=>{for(let d=1;d<=DAYS;d++)if((state[sk(ri,d)]||0)===1)grand+=getPts(ri,d);});
-  grand+=counterVal*5;
-  dt.forEach((v,i)=>{const el=document.getElementById('dt'+(i+1));if(el)el.textContent=v;});
+  let grandBase=0,grandBonus=0;
+  for(let d=1;d<=DAYS;d++){
+    const base=getDayBase(d);
+    const bonus=getDayBonus(d);
+    grandBase+=base;grandBonus+=bonus;
+    const elBase=document.getElementById('dt'+d);if(elBase)elBase.textContent=base||'';
+    const elBonus=document.getElementById('dbonus'+d);
+    if(elBonus)elBonus.textContent=bonus>0?'+'+bonus:'';
+  }
+  const grand=grandBase+grandBonus+counterVal*5;
   document.getElementById('grandVal').textContent=grand;
   let filled=0;for(let d=1;d<=DAYS;d++)if(ROWS.some((_,ri)=>(state[sk(ri,d)]||0)!==0))filled++;
   document.getElementById('filledVal').textContent=filled+'/'+DAYS;
@@ -653,7 +683,7 @@ function recalc(){
     const el=document.getElementById('dpct'+d);if(!el)continue;
     const hasData=ROWS.some((_,ri)=>(state[sk(ri,d)]||0)!==0);
     if(hasData){
-      const baseTotal=calcDayTotalBase(d);
+      const baseTotal=getDayBase(d);
       const pct=Math.min(100,Math.round(baseTotal/dayMax*100));
       el.textContent=pct+'%';
       el.style.color=pct>=80?'var(--done-text)':pct>=50?'var(--gold)':'var(--miss-text)';
