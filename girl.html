@@ -142,7 +142,7 @@ tr.tr-day td.pts-total{background:var(--primary-dark);font-size:11px;font-weight
     <div class="row"><span>صدقة يومية</span><span>1 نقطة</span></div>
     <div class="sec-title">تزكية</div>
     <div class="row neg"><span>جلوس على الجوال أكثر من ساعتين (دون واتساب)</span><span>−2 نقطة</span></div>
-    <div class="row" style="background:#fff8e1;border:1px solid #f0c040"><span>⭐ طلب علم شرعي (بونص)</span><span style="color:#b8860b">5 نقاط</span></div>
+    <div class="row" style="background:#fff8e1;border:1px solid #f0c040"><span>⭐ طلب علم شرعي (بونص فقط)</span><span style="color:#b8860b">+5 نقاط</span></div>
     <div class="sec-title">عداد</div>
     <div class="row"><span>أخذ موعد تسميع قرآن</span><span>5 نقاط/مرة</span></div>
   </div>
@@ -644,6 +644,10 @@ function build(){
 
 // نقاط أساسية لعبادة محددة (بدون بونص)
 function getBasePtsForCell(ri,d){
+  if(ROWS[ri].bonus){
+    // أي عبادة محددة كبونص لا تدخل بالمجموع الأساسي ولا بمعدل اليوم من 100
+    return 0;
+  }
   const key=ri+'_'+d;
   const originalPts=ROWS[ri].pts;
   if(editedPts[key]!==undefined){
@@ -654,6 +658,10 @@ function getBasePtsForCell(ri,d){
 }
 // بونص لخلية — الزيادة عن الأصلي سواء من هدف شخصي أو تعديل يدوي
 function getBonusPtsForCell(ri,d){
+  if(ROWS[ri].bonus){
+    // طلب العلم الشرعي: بونص فقط، يضاف إلى صف بونص اليوم ولا يدخل بالأساسي
+    return ROWS[ri].pts;
+  }
   const key=ri+'_'+d;
   const originalPts=ROWS[ri].pts;
   if(editedPts[key]!==undefined){
