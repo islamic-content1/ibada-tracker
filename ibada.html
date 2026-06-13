@@ -93,6 +93,17 @@ tr.tr-day td.pts-total{background:var(--primary-dark);font-size:11px;font-weight
 .overlay{position:fixed;inset:0;z-index:9500;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center}
 .overlay.show{display:flex}
 .modal-box{background:var(--sf);border-radius:14px;width:90%;max-width:340px;overflow:hidden;box-shadow:0 8px 32px rgba(58,158,95,.15)}
+.goal-row{display:flex;align-items:center;gap:8px;padding:9px 10px;border-radius:10px;background:#faf8f3;border:1px solid var(--bd);margin-bottom:8px}
+.goal-name{flex:1;font-size:12px;color:var(--tx);line-height:1.4}
+.goal-base{font-size:10px;color:var(--mu);margin-top:2px}
+.goal-ctrl{display:flex;flex-direction:column;align-items:flex-end;gap:4px;min-width:120px}
+.goal-opts{display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end}
+.goal-opt{font-size:10px;padding:4px 8px;border-radius:6px;border:1.5px solid var(--bd);background:#fff;color:var(--mu);cursor:pointer;font-family:inherit;white-space:nowrap}
+.goal-opt.active{border-color:var(--primary);background:var(--primary-light);color:var(--primary);font-weight:700}
+.goal-custom-row{display:flex;align-items:center;gap:6px}
+.goal-custom-inp{width:56px;border:1.5px solid var(--bd);border-radius:6px;padding:3px 6px;font-size:12px;text-align:center;font-family:inherit;outline:none;background:var(--sf)}
+.goal-custom-inp:focus{border-color:var(--gold)}
+.goal-unit{font-size:10px;color:var(--mu)}
 #toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--primary-dark);color:#fff;font-size:13px;padding:9px 22px;border-radius:30px;opacity:0;transition:all .3s;pointer-events:none;z-index:9999;white-space:nowrap}
 #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 </style>
@@ -134,9 +145,6 @@ tr.tr-day td.pts-total{background:var(--primary-dark);font-size:11px;font-weight
     <div class="row" style="background:#fff8e1;border:1px solid #f0c040"><span>⭐ طلب علم شرعي (بونص)</span><span style="color:#b8860b">5 نقاط</span></div>
     <div class="sec-title">عداد</div>
     <div class="row"><span>أخذ موعد تسميع قرآن</span><span>5 نقاط/مرة</span></div>
-    <div style="background:#f0faf3;border:1px solid #a8d8b8;border-radius:8px;padding:8px 10px;font-size:11px;color:#2d7a49;margin-top:8px">
-      اضغطي على رقم النقاط في الخلية (✓) لتعديله مباشرة — ↑ أخضر = زاد عن المطلوب &nbsp;|&nbsp; ↓ أحمر = أقل من المطلوب
-    </div>
   </div>
 </div>
 
@@ -152,6 +160,20 @@ tr.tr-day td.pts-total{background:var(--primary-dark);font-size:11px;font-weight
 </div>
 
 <div id="statusBar" class="status-bar"></div>
+
+<!-- قسم الأهداف الشخصية -->
+<div class="how-box" id="goalsBox">
+  <div class="how-hdr" onclick="toggleGoals()" style="background:var(--gold)"><span>🎯 حددي كميتك من هذه العبادات</span><span id="goalsArr">▼</span></div>
+  <div class="how-body" id="goalsBody" style="padding:14px">
+    <div style="font-size:11px;color:var(--mu);margin-bottom:12px;background:#fff8e1;border-radius:8px;padding:8px 10px;border:1px solid #f0c040;line-height:1.7">
+      حددي هدفك الشخصي لكل عبادة — الكمية الأساسية هي المعتمدة لحساب المعدل من 100، وأي زيادة تُحسب بونص إضافي ⭐
+    </div>
+    <div id="goalsRows"></div>
+    <div style="font-size:10px;color:var(--mu);text-align:center;margin-top:8px;background:#f0faf3;border-radius:6px;padding:6px">
+      الهدف يُطبَّق على الأيام العشرة — يمكنك تعديل يوم بعينه من داخل الجدول
+    </div>
+  </div>
+</div>
 
 <div class="tw">
   <table>
@@ -268,8 +290,19 @@ const IBADA_NOTES={
   'تهليل ١٠٠':'١٠٠ صباحاً و١٠٠ مساءً',
 };
 
-const DAYS=10,SK='ibada_v11',NK='ibada_name_v11',EDITK='ibada_edit_v11',COUNTERK='ibada_counter_v11';
-let state={},editedPts={},counterVal=0;
+const DAYS=10,SK='ibada_v11',NK='ibada_name_v11',EDITK='ibada_edit_v11',COUNTERK='ibada_counter_v11',GOALK='ibada_goals_v1';
+let state={},editedPts={},counterVal=0,personalGoals={};
+
+// تعريف العبادات القابلة للتخصيص
+const GOAL_ITEMS=[
+  {ri:3, name:'ثلث البقرة', unit:'', base:1, baseLabel:'ثلث واحد', opts:['ثلث','نصف','كاملة'], optVals:[1,1.5,3], noCustom:true},
+  {ri:4, name:'جزء قرآن', unit:'جزء', base:1, baseLabel:'جزء واحد', opts:['جزء','جزآن','٣ أجزاء'], optVals:[1,2,3]},
+  {ri:7, name:'ركعات ضحى', unit:'ركعة', base:4, baseLabel:'٤ ركعات', opts:['٢ ركعة','٤ ركعات','٨ ركعات'], optVals:[2,4,8]},
+  {ri:8, name:'ركعات أوابين', unit:'ركعة', base:2, baseLabel:'٢ ركعتان', opts:['٢ ركعة','٤ ركعات','٦ ركعات'], optVals:[2,4,6]},
+  {ri:12, name:'صلاة على الرسول ﷺ', unit:'مرة', base:200, baseLabel:'٢٠٠ (١٠٠ صباح + ١٠٠ مساء)', opts:['١٠٠','٢٠٠','٣٠٠'], optVals:[100,200,300]},
+  {ri:13, name:'استغفار', unit:'مرة', base:200, baseLabel:'٢٠٠ (١٠٠ صباح + ١٠٠ مساء)', opts:['١٠٠','٢٠٠','٣٠٠'], optVals:[100,200,300]},
+  {ri:14, name:'تهليل', unit:'مرة', base:200, baseLabel:'٢٠٠ (١٠٠ صباح + ١٠٠ مساء)', opts:['١٠٠','٢٠٠','٣٠٠'], optVals:[100,200,300]},
+];
 const sk=(r,d)=>r+'-'+d;
 
 function calcPtsTotal(){
@@ -284,6 +317,7 @@ function load(){
   try{const n=_ls.getItem(NK);if(n)document.getElementById('userName').value=n}catch(e){}
   try{const ep=_ls.getItem(EDITK);if(ep)editedPts=JSON.parse(ep)}catch(e){}
   try{const cv=_ls.getItem(COUNTERK);if(cv)counterVal=parseInt(cv)||0;}catch(e){}
+  try{const gv=_ls.getItem(GOALK);if(gv)personalGoals=JSON.parse(gv);}catch(e){}
   updateCounter();
 }
 function save(){
@@ -292,6 +326,81 @@ function save(){
 }
 function saveEditedPts(){try{_ls.setItem(EDITK,JSON.stringify(editedPts))}catch(e){}}
 function saveCounter(){try{_ls.setItem(COUNTERK,counterVal)}catch(e){}}
+function saveGoals(){try{_ls.setItem(GOALK,JSON.stringify(personalGoals))}catch(e){}}
+
+function getGoalVal(ri){
+  return personalGoals[ri]!==undefined?personalGoals[ri]:GOAL_ITEMS.find(g=>g.ri===ri)?.base||null;
+}
+
+function toggleGoals(){
+  const body=document.getElementById('goalsBody');
+  const arr=document.getElementById('goalsArr');
+  const open=body.style.display==='block';
+  body.style.display=open?'none':'block';
+  arr.textContent=open?'▼':'▲';
+}
+
+function buildGoalsSection(){
+  const container=document.getElementById('goalsRows');
+  if(!container)return;
+  container.innerHTML='';
+  GOAL_ITEMS.forEach(g=>{
+    const curVal=getGoalVal(g.ri);
+    const row=document.createElement('div');
+    row.className='goal-row';
+
+    const info=document.createElement('div');
+    info.style.flex='1';
+    info.innerHTML='<div class="goal-name">'+g.name+'</div><div class="goal-base">الأساسي: '+g.baseLabel+'</div>';
+    row.appendChild(info);
+
+    const ctrl=document.createElement('div');
+    ctrl.className='goal-ctrl';
+
+    // أزرار الخيارات
+    const optsDiv=document.createElement('div');
+    optsDiv.className='goal-opts';
+    g.opts.forEach((label,i)=>{
+      const btn=document.createElement('button');
+      btn.className='goal-opt'+(g.optVals[i]===curVal?' active':'');
+      btn.textContent=label;
+      btn.onclick=function(){
+        personalGoals[g.ri]=g.optVals[i];
+        saveGoals();
+        buildGoalsSection();
+        showToast('✓ هدفك: '+label);
+      };
+      optsDiv.appendChild(btn);
+    });
+    ctrl.appendChild(optsDiv);
+
+    // خانة مخصصة (بس للعبادات اللي مسموح فيها)
+    if(!g.noCustom){
+      const customRow=document.createElement('div');
+      customRow.className='goal-custom-row';
+      const customLbl=document.createElement('span');
+      customLbl.style.cssText='font-size:10px;color:var(--mu)';
+      customLbl.textContent='أو:';
+      const inp=document.createElement('input');
+      inp.className='goal-custom-inp';
+      inp.type='number';inp.min=1;inp.max=9999;
+      inp.placeholder='رقم';
+      const isCustom=!g.optVals.includes(curVal);
+      if(isCustom)inp.value=curVal;
+      inp.onchange=function(){
+        const v=parseFloat(inp.value);
+        if(!isNaN(v)&&v>0){personalGoals[g.ri]=v;saveGoals();buildGoalsSection();showToast('✓ هدفك: '+v+' '+g.unit);}
+      };
+      const unitSpan=document.createElement('span');
+      unitSpan.className='goal-unit';unitSpan.textContent=g.unit;
+      customRow.appendChild(customLbl);customRow.appendChild(inp);customRow.appendChild(unitSpan);
+      ctrl.appendChild(customRow);
+    }
+
+    row.appendChild(ctrl);
+    container.appendChild(row);
+  });
+}
 
 function changeCounter(delta){
   counterVal=Math.max(0,counterVal+delta);
@@ -304,17 +413,43 @@ function updateCounter(){
 
 function confirmReset(){
   document.getElementById('resetModal').classList.remove('show');
-  [SK,NK,EDITK,SNK,COUNTERK].forEach(k=>{try{_ls.removeItem(k);}catch(e){}});
-  state={};editedPts={};counterVal=0;
+  [SK,NK,EDITK,SNK,COUNTERK,GOALK].forEach(k=>{try{_ls.removeItem(k);}catch(e){}});
+  state={};editedPts={};counterVal=0;personalGoals={};
   document.getElementById('userName').value='';
-  updateCounter();build();
+  updateCounter();build();buildGoalsSection();
   showToast('✓ تم تفريغ الجدول');
 }
 
 function getPts(ri,d){
   const key=ri+'_'+d;
   if(editedPts[key]!==undefined)return editedPts[key];
+  // إذا في هدف شخصي لهاد الصف، احسب النقاط بناءً عليه
+  const goalItem=GOAL_ITEMS.find(g=>g.ri===ri);
+  if(goalItem){
+    const goalVal=getGoalVal(ri);
+    const baseVal=goalItem.base;
+    const basePts=ROWS[ri].pts; // نقاط الكمية الأساسية
+    // نقاط = (نسبة هدف / أساسي) × النقاط الأساسية، بحيث الزيادة تصبح بونص
+    return Math.round((goalVal/baseVal)*basePts);
+  }
   return ROWS[ri].pts;
+}
+
+// نقاط الكمية الأساسية فقط (للمعدل من 100)
+function getBasePts(ri){return ROWS[ri].pts;}
+
+// نقاط البونص لليوم (ما زاد عن الأساسي)
+function getBonusPtsForDay(d){
+  let bonus=0;
+  GOAL_ITEMS.forEach(g=>{
+    if((state[sk(g.ri,d)]||0)===1){
+      const editKey=g.ri+'_'+d;
+      const actualPts=editedPts[editKey]!==undefined?editedPts[editKey]:getPts(g.ri,d);
+      const basePts=g.pts||ROWS[g.ri].pts;
+      if(actualPts>basePts)bonus+=(actualPts-basePts);
+    }
+  });
+  return bonus;
 }
 
 // رسم خلية واحدة
@@ -490,6 +625,17 @@ function build(){
 
 function getDayTotals(){return Array.from({length:DAYS},(_,i)=>{let t=0;ROWS.forEach((r,ri)=>{if((state[sk(ri,i+1)]||0)===1)t+=getPts(ri,i+1);});return t;});}
 function calcDayMax(){return ROWS.reduce((s,r,ri)=>s+((r.pts>0&&!r.bonus&&!r.negative)?r.pts:0),0);}
+// مجموع اليوم بالنقاط الأساسية فقط (للمعدل من 100)
+function calcDayTotalBase(d){
+  let total=0;
+  ROWS.forEach((r,ri)=>{
+    if((state[sk(ri,d)]||0)===1){
+      const basePts=getBasePts(ri);
+      total+=Math.min(getPts(ri,d),basePts>0?basePts:getPts(ri,d));
+    }
+  });
+  return total;
+}
 function calcDayTotal(d){let total=0;ROWS.forEach((r,ri)=>{if((state[sk(ri,d)]||0)===1)total+=getPts(ri,d);});return total;}
 
 function recalc(){
@@ -502,13 +648,20 @@ function recalc(){
   document.getElementById('filledVal').textContent=filled+'/'+DAYS;
   document.getElementById('avgVal').textContent=filled>0?(grand/filled).toFixed(1):'—';
   const dayMax=calcDayMax();
+  let baseGrandSum=0;
   for(let d=1;d<=DAYS;d++){
     const el=document.getElementById('dpct'+d);if(!el)continue;
     const hasData=ROWS.some((_,ri)=>(state[sk(ri,d)]||0)!==0);
-    if(hasData){const pct=Math.round(calcDayTotal(d)/dayMax*100);el.textContent=pct+'%';el.style.color=pct>=80?'var(--done-text)':pct>=50?'var(--gold)':'var(--miss-text)';}
+    if(hasData){
+      const baseTotal=calcDayTotalBase(d);
+      const pct=Math.min(100,Math.round(baseTotal/dayMax*100));
+      el.textContent=pct+'%';
+      el.style.color=pct>=80?'var(--done-text)':pct>=50?'var(--gold)':'var(--miss-text)';
+      baseGrandSum+=baseTotal;
+    }
     else{el.textContent='—';el.style.color='var(--mu)';}
   }
-  document.getElementById('pctDayVal').textContent=filled>0?Math.round((grand/filled)/dayMax*100)+'%':'—';
+  document.getElementById('pctDayVal').textContent=filled>0?Math.min(100,Math.round((baseGrandSum/filled)/dayMax*100))+'%':'—';
 }
 
 function toggleHow(){const body=document.getElementById('howBody');const arr=document.getElementById('howArr');const open=body.style.display==='block';body.style.display=open?'none':'block';arr.textContent=open?'▼':'▲';}
@@ -566,7 +719,7 @@ async function submitDayNote(){
 
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);}
 document.getElementById('userName').addEventListener('input',save);
-load();build();
+load();build();buildGoalsSection();
 </script>
 </body>
 </html>
