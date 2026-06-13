@@ -145,6 +145,8 @@ function getPts(g,ri,d){
 }
 // نقاط أساسية (لا تتجاوز الأصلي)
 function getBasePts(g,ri,d){
+  // أي عبادة معلّمة كبونص لا تدخل في المجموع الأساسي ولا معدل اليوم من 100
+  if(ROWS[ri].bonus)return 0;
   const key=ri+'_'+d;
   const ep=g.editedPts||{};
   const orig=ROWS[ri].pts;
@@ -154,6 +156,8 @@ function getBasePts(g,ri,d){
 }
 // بونص الخلية
 function getBonusPts(g,ri,d){
+  // أي عبادة معلّمة كبونص تُحسب كاملة في البونص فقط
+  if(ROWS[ri].bonus)return ROWS[ri].pts;
   const key=ri+'_'+d;
   const ep=g.editedPts||{};
   const orig=ROWS[ri].pts;
@@ -321,8 +325,31 @@ function girlCard(g,gi,sorted,maxG){
     '<div class="custom-box"><div class="custom-title">🎯 الأهداف الشخصية</div><div class="chips">'+
     Object.entries(goals).map(([ri,val])=>{
       const label=GOAL_LABELS[ri]||ROWS[ri]?.ibada||'';
-      const unit=GOAL_UNITS[ri]||'';
-      return '<span class="chip">'+esc(label)+': '+val+(unit?' '+unit:'')+'</span>';
+      let shownVal=val;
+
+      // عرض البقرة بالكلمات بدل الأرقام
+      if(Number(ri)===3){
+        if(Number(val)===1) shownVal='ثلث';
+        else if(Number(val)===1.5) shownVal='نصف';
+        else if(Number(val)===3) shownVal='كاملة';
+      }
+      // عرض جزء القرآن بطريقة مفهومة
+      else if(Number(ri)===4){
+        if(Number(val)===1) shownVal='جزء';
+        else if(Number(val)===2) shownVal='جزآن';
+        else if(Number(val)===3) shownVal='3 أجزاء';
+        else shownVal=val+' جزء';
+      }
+      // الركعات
+      else if(Number(ri)===7 || Number(ri)===8){
+        shownVal=val+' ركعة';
+      }
+      // الأذكار
+      else if([12,13,14].includes(Number(ri))){
+        shownVal=val+' مرة';
+      }
+
+      return '<span class="chip">'+esc(label)+': '+esc(shownVal)+'</span>';
     }).join('')+
     '</div></div>':'' ;
 
