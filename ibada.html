@@ -469,11 +469,11 @@ function applyCell(td,v,ri,d){
   td.classList.remove('done','miss');
   if(v===1){
     td.classList.add('done');
-    const defPts=ROWS[ri].pts;
-    const curPts=getPts(ri,d);
+    const defPts=ROWS[ri].pts; // الأصلي دائماً
+    const curPts=getPts(ri,d); // الفعلي (هدف أو تعديل)
     const isFixed=ROWS[ri].fixed||false;
-    const isUp=!isFixed&&editedPts[ri+'_'+d]!==undefined&&curPts>defPts;
-    const isDown=!isFixed&&editedPts[ri+'_'+d]!==undefined&&curPts<defPts;
+    const isUp=!isFixed&&curPts>defPts;
+    const isDown=!isFixed&&curPts<defPts;
 
     const inner=document.createElement('div');
     inner.className='cell-inner';
@@ -642,18 +642,28 @@ function build(){
   buildNotesRow(tb);buildDayPctRow(tb);recalc();
 }
 
-// نقاط أساسية لعبادة محددة (بدون بونص الهدف الشخصي)
+// نقاط أساسية لعبادة محددة (بدون بونص)
 function getBasePtsForCell(ri,d){
   const key=ri+'_'+d;
-  if(editedPts[key]!==undefined)return editedPts[key]; // تعديل يدوي = يُعامَل كأساسي
-  return ROWS[ri].pts; // الأصلي دائماً
+  const originalPts=ROWS[ri].pts;
+  if(editedPts[key]!==undefined){
+    // التعديل اليدوي: الأساسي هو الأقل من الرقم المعدّل والأصلي
+    return Math.min(editedPts[key], originalPts);
+  }
+  return originalPts;
 }
-// بونص الهدف الشخصي لخلية (الفرق بين الهدف والأصلي)
+// بونص لخلية — الزيادة عن الأصلي سواء من هدف شخصي أو تعديل يدوي
 function getBonusPtsForCell(ri,d){
-  if(editedPts[ri+'_'+d]!==undefined)return 0; // لو عدّلت يدوي ما في بونص
+  const key=ri+'_'+d;
+  const originalPts=ROWS[ri].pts;
+  if(editedPts[key]!==undefined){
+    // لو التعديل اليدوي أكبر من الأصلي، الفرق بونص
+    return Math.max(0, editedPts[key] - originalPts);
+  }
+  // هدف شخصي
   const goalItem=GOAL_ITEMS.find(g=>g.ri===ri);
   if(!goalItem)return 0;
-  return Math.max(0, getPts(ri,d) - ROWS[ri].pts);
+  return Math.max(0, getPts(ri,d) - originalPts);
 }
 function getDayBase(d){let t=0;ROWS.forEach((r,ri)=>{if((state[sk(ri,d)]||0)===1)t+=getBasePtsForCell(ri,d);});return t;}
 function getDayBonus(d){let t=0;ROWS.forEach((r,ri)=>{if((state[sk(ri,d)]||0)===1)t+=getBonusPtsForCell(ri,d);});return t;}
