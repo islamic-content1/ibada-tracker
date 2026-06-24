@@ -147,6 +147,7 @@ tr.tr-day td.pts-total{background:var(--primary-dark);font-size:11px;font-weight
     <div class="row"><span>دعاء الاستيقاظ من النوم</span><span>3 نقاط</span></div>
     <div class="row"><span>قراءة خواتيم آل عمران</span><span>5 نقاط</span></div>
     <div class="row"><span>ركعات القيام (ركعتان أساسي + بونص ما فوق)</span><span>2 نقطة+</span></div>
+    <div class="row" style="background:#fff8e1;border:1px solid #f0c040"><span>⭐ ركعتين تسابيح (بونص)</span><span style="color:#b8860b">+6 نقاط</span></div>
     <div class="sec-title">الصلاة</div>
     <div class="row"><span>ركعات ضحى / أوابين — كل ركعتين</span><span>2 نقطة</span></div>
     <div class="row"><span>فروض الصلاة / سنن</span><span>5 نقاط</span></div>
@@ -275,6 +276,7 @@ const ROWS=[
   {cat:'القيام',ibada:'دعاء الاستيقاظ من النوم',pts:3,pdfLink:'c1',pdfTitle:'دعاء الاستيقاظ من النوم'},
   {cat:'القيام',ibada:'قراءة خواتيم آل عمران',pts:5,pdfLink:'c2',pdfTitle:'خواتيم آل عمران (190-200)'},
     {cat:'القيام',ibada:'ركعات القيام',pts:2,badilBook:true},
+  {cat:'القيام',ibada:'ركعتين تسابيح',pts:6,bonus:true},
   {cat:'الصلاة',ibada:'ركعات ضحى',pts:4,badil:'صيغ الاستغفار (عن الضحى والأوابين معاً)'},
   {cat:'الصلاة',ibada:'ركعات أوابين',pts:2,badil:'صيغ الاستغفار (عن الضحى والأوابين معاً)'},
   {cat:'الصلاة',ibada:'فروض الصلاة',pts:5,badil:'٣٣ الباقيات الصالحات عن كل صلاة وسنتها'},
@@ -289,11 +291,11 @@ const ROWS=[
 ];
 
 const IBADA_NOTES={
+
   'أذكار بعد الصلاة':'آية الكرسي وخواتيم البقرة والمعوذات',
   'صلاة على الرسول ١٠٠':'١٠٠ صباحاً و١٠٠ مساءً',
   'استغفار ١٠٠':'١٠٠ صباحاً و١٠٠ مساءً',
   'تهليل ١٠٠':'١٠٠ صباحاً و١٠٠ مساءً',
-  'ركعات القيام':'ركعتين كحد أدنى — أي زيادة بونص ⭐',
 };
 
 const DAYS=10,SK='ibada_v13',NK='ibada_name_v13',EDITK='ibada_edit_v13',COUNTERK='ibada_counter_v13',GOALK='ibada_goals_v3';
@@ -303,17 +305,17 @@ const GOAL_ITEMS=[
   {ri:3, name:'ثلث البقرة', unit:'', base:1, baseLabel:'ثلث واحد', opts:['ثلث','نصف','كاملة'], optVals:[1,1.5,3], fixedPts:[10,15,20], noCustom:true},
   {ri:4, name:'جزء قرآن', unit:'جزء', base:1, baseLabel:'جزء واحد', opts:['جزء','جزآن','٣ أجزاء'], optVals:[1,2,3]},
   {ri:8, name:'ركعات القيام', unit:'ركعة', base:2, baseLabel:'ركعتان (أدنى)', opts:['٢ ركعتان','٤ ركعات','٦ ركعات','٨ ركعات'], optVals:[2,4,6,8], note:'ركعتين أساسي — ما فوق بونص'},
-  {ri:9, name:'ركعات ضحى', unit:'ركعة', base:4, baseLabel:'٤ ركعات', opts:['٢ ركعة','٤ ركعات','٨ ركعات'], optVals:[2,4,8]},
-  {ri:10, name:'ركعات أوابين', unit:'ركعة', base:2, baseLabel:'٢ ركعتان', opts:['٢ ركعة','٤ ركعات','٦ ركعات'], optVals:[2,4,6]},
-  {ri:14, name:'صلاة على الرسول ﷺ', unit:'مرة', base:200, baseLabel:'٢٠٠ (١٠٠ صباح + ١٠٠ مساء)', opts:['١٠٠','٢٠٠','٣٠٠'], optVals:[100,200,300], note:'الكمية تكون بمضاعفات ١٠٠'},
-  {ri:15, name:'استغفار', unit:'مرة', base:200, baseLabel:'٢٠٠ (١٠٠ صباح + ١٠٠ مساء)', opts:['١٠٠','٢٠٠','٣٠٠'], optVals:[100,200,300], note:'الكمية تكون بمضاعفات ١٠٠'},
-  {ri:16, name:'تهليل', unit:'مرة', base:200, baseLabel:'٢٠٠ (١٠٠ صباح + ١٠٠ مساء)', opts:['١٠٠','٢٠٠','٣٠٠'], optVals:[100,200,300], note:'الكمية تكون بمضاعفات ١٠٠'},
+  {ri:10, name:'ركعات ضحى', unit:'ركعة', base:4, baseLabel:'٤ ركعات', opts:['٢ ركعة','٤ ركعات','٨ ركعات'], optVals:[2,4,8]},
+  {ri:11, name:'ركعات أوابين', unit:'ركعة', base:2, baseLabel:'٢ ركعتان', opts:['٢ ركعة','٤ ركعات','٦ ركعات'], optVals:[2,4,6]},
+  {ri:15, name:'صلاة على الرسول ﷺ', unit:'مرة', base:200, baseLabel:'٢٠٠ (١٠٠ صباح + ١٠٠ مساء)', opts:['١٠٠','٢٠٠','٣٠٠'], optVals:[100,200,300], note:'الكمية تكون بمضاعفات ١٠٠'},
+  {ri:16, name:'استغفار', unit:'مرة', base:200, baseLabel:'٢٠٠ (١٠٠ صباح + ١٠٠ مساء)', opts:['١٠٠','٢٠٠','٣٠٠'], optVals:[100,200,300], note:'الكمية تكون بمضاعفات ١٠٠'},
+  {ri:17, name:'تهليل', unit:'مرة', base:200, baseLabel:'٢٠٠ (١٠٠ صباح + ١٠٠ مساء)', opts:['١٠٠','٢٠٠','٣٠٠'], optVals:[100,200,300], note:'الكمية تكون بمضاعفات ١٠٠'},
 ];
 const sk=(r,d)=>r+'-'+d;
 
 function calcPtsTotal(){
   return ROWS.reduce((sum,r,ri)=>{
-    if(ri===18||ri===19)return sum;
+    if(ri===19||ri===20)return sum;
     return sum+(r.pts>0?r.pts:0);
   },0);
 }
@@ -591,7 +593,10 @@ function openReport(){
   const dt=getDayTotals();let grand=0;dt.forEach(v=>grand+=v);grand+=counterVal*5;
   let filled=0;for(let d=1;d<=DAYS;d++)if(ROWS.some((_,ri)=>(state[sk(ri,d)]||0)!==0))filled++;
   const avg=filled>0?(grand/filled).toFixed(1):'—';
-  const dayMax=calcDayMax();const pctDay=filled>0?Math.round((grand/filled)/dayMax*100)+'%':'—';
+  const dayMax=calcDayMax();
+  let baseGrandSumR=0;
+  for(let d=1;d<=DAYS;d++){if(ROWS.some((_,ri)=>(state[sk(ri,d)]||0)!==0))baseGrandSumR+=getDayBase(d);}
+  const pctDay=filled>0?Math.min(100,Math.round((baseGrandSumR/filled)/dayMax*100))+'%':'—';
   const maxVal=Math.max(...dt,1);
   const bars=dt.map((v,i)=>{const h=maxVal>0?Math.round((v/maxVal)*110):0;const col=v===0?'#e2d9c8':v>=maxVal*0.8?'#0f4a28':v>=maxVal*0.5?'#1a6b3c':'#a8d8b8';return '<div style="display:flex;flex-direction:column;align-items:center;flex:1;gap:2px"><div style="font-size:9px;font-weight:700;color:#1a6b3c">'+(v>0?v:'')+'</div><div style="width:75%;background:'+col+';border-radius:4px 4px 0 0;height:'+h+'px;min-height:2px"></div><div style="font-size:9px;color:#7a6a52">'+(i+1)+'</div></div>';}).join('');
   const cats={};
@@ -628,23 +633,7 @@ document.getElementById('userName').addEventListener('input',save);
 load();build();buildGoalsSection();
 
 </script>
-<div id="installBanner" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:8000;background:linear-gradient(90deg,#0f4a28,#1a6b3c);color:#fff;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 -2px 12px rgba(0,0,0,.2)">
-  <div style="font-size:12px;font-weight:700">📲 أضيفي التطبيق لشاشتك الرئيسية</div>
-  <div style="display:flex;gap:8px">
-    <button onclick="installApp()" style="background:#fff;color:#0f4a28;border:none;border-radius:6px;padding:6px 12px;font-family:inherit;font-size:12px;font-weight:700;cursor:pointer">إضافة</button>
-    <button onclick="document.getElementById('installBanner').style.display='none'" style="background:none;border:1px solid rgba(255,255,255,.5);color:#fff;border-radius:6px;padding:6px 10px;font-family:inherit;font-size:12px;cursor:pointer">لاحقاً</button>
-  </div>
-</div>
-<script>
-let deferredPrompt;
-window.addEventListener('beforeinstallprompt',e=>{
-  e.preventDefault();deferredPrompt=e;
-  document.getElementById('installBanner').style.display='flex';
-});
-function installApp(){
-  if(deferredPrompt){deferredPrompt.prompt();deferredPrompt.chooseAction().then(()=>{deferredPrompt=null;document.getElementById('installBanner').style.display='none';});}
-}
-window.addEventListener('appinstalled',()=>{document.getElementById('installBanner').style.display='none';});
-</script>
+
 </body>
 </html>
+  
