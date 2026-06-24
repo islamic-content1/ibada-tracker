@@ -364,7 +364,15 @@ function buildGoalsSection(){
       const btn=document.createElement('button');
       btn.className='goal-opt'+(g.optVals[i]===curVal?' active':'');
       btn.textContent=label;
-      btn.onclick=function(){personalGoals[g.ri]=g.optVals[i];saveGoals();buildGoalsSection();showToast('✓ هدفك: '+label);};
+      btn.onclick=function(){
+        personalGoals[g.ri]=g.optVals[i];
+        // امسح editedPts لهاد الصف حتى يطبق الهدف الجديد
+        for(let d=1;d<=DAYS;d++){delete editedPts[g.ri+'_'+d];}
+        saveGoals();saveEditedPts();
+        // أعد رسم الخلايا اللي فيها ✓
+        for(let d=1;d<=DAYS;d++){const td=document.getElementById('cell_'+g.ri+'_'+d);if(td)applyCell(td,state[sk(g.ri,d)]||0,g.ri,d);}
+        recalc();buildGoalsSection();showToast('✓ هدفك: '+label);
+      };
       optsDiv.appendChild(btn);
     });
     ctrl.appendChild(optsDiv);
@@ -378,7 +386,13 @@ function buildGoalsSection(){
       inp.onchange=function(){
         let v=parseFloat(inp.value);
         if(g.ri===8)v=Math.max(2,Math.round(v/2)*2);
-        if(!isNaN(v)&&v>0){personalGoals[g.ri]=v;saveGoals();buildGoalsSection();showToast('✓ هدفك: '+v+' '+g.unit);}
+        if(!isNaN(v)&&v>0){
+          personalGoals[g.ri]=v;
+          for(let d=1;d<=DAYS;d++){delete editedPts[g.ri+'_'+d];}
+          saveGoals();saveEditedPts();
+          for(let d=1;d<=DAYS;d++){const td=document.getElementById('cell_'+g.ri+'_'+d);if(td)applyCell(td,state[sk(g.ri,d)]||0,g.ri,d);}
+          recalc();buildGoalsSection();showToast('✓ هدفك: '+v+' '+g.unit);
+        }
       };
       const unitSpan=document.createElement('span');unitSpan.className='goal-unit';unitSpan.textContent=g.unit;
       customRow.appendChild(customLbl);customRow.appendChild(inp);customRow.appendChild(unitSpan);ctrl.appendChild(customRow);
@@ -636,4 +650,3 @@ load();build();buildGoalsSection();
 
 </body>
 </html>
-  
