@@ -145,7 +145,7 @@ tr.tr-day td.pts-total{background:var(--primary-dark);font-size:11px;font-weight
     <div class="row"><span>حفظ قرآن</span><span>5 نقاط</span></div>
     <div class="sec-title">القيام</div>
     <div class="row"><span>دعاء الاستيقاظ من النوم</span><span>3 نقاط</span></div>
-    <div class="row"><span>قراءة خواتيم آل عمران</span><span>3 نقاط</span></div>
+    <div class="row"><span>قراءة خواتيم آل عمران</span><span>5 نقاط</span></div>
     <div class="row"><span>ركعات القيام (ركعتان أساسي + بونص ما فوق)</span><span>2 نقطة+</span></div>
     <div class="row" style="background:#fff8e1;border:1px solid #f0c040"><span>⭐ ركعتين تسابيح (بونص)</span><span style="color:#b8860b">+6 نقاط</span></div>
     <div class="sec-title">الصلاة</div>
@@ -274,7 +274,7 @@ const ROWS=[
   {cat:'القرآن',ibada:'جزء قرآن',pts:10,badil:'٣× أسماء الله الحسنى مع دعائها — عن كل جزء'},
   {cat:'القرآن',ibada:'حفظ قرآن',pts:5,fixed:true},
   {cat:'القيام',ibada:'دعاء الاستيقاظ من النوم',pts:3,pdfLink:'c1',pdfTitle:'دعاء الاستيقاظ من النوم'},
-  {cat:'القيام',ibada:'قراءة خواتيم آل عمران',pts:3,pdfLink:'c2',pdfTitle:'خواتيم آل عمران (190-200)'},
+  {cat:'القيام',ibada:'قراءة خواتيم آل عمران',pts:5,pdfLink:'c2',pdfTitle:'خواتيم آل عمران (190-200)'},
     {cat:'القيام',ibada:'ركعات القيام',pts:2,badilBook:true},
   {cat:'القيام',ibada:'ركعتين تسابيح',pts:6,bonus:true},
   {cat:'الصلاة',ibada:'ركعات ضحى',pts:4,badil:'صيغ الاستغفار (عن الضحى والأوابين معاً)'},
@@ -648,6 +648,48 @@ load();build();buildGoalsSection();
 
 </script>
 
+
+<script>
+// ===== Service Worker مدمج =====
+if('serviceWorker' in navigator){
+  const swCode = `
+    const CACHE='ibada-v1';
+    const urlsToCache=[self.location.pathname||'/'];
+    self.addEventListener('install',e=>{
+      e.waitUntil(
+        caches.open(CACHE).then(cache=>{
+          return cache.addAll(urlsToCache);
+        })
+      );
+      self.skipWaiting();
+    });
+    self.addEventListener('activate',e=>{
+      e.waitUntil(
+        caches.keys().then(keys=>Promise.all(
+          keys.filter(k=>k!==CACHE).map(k=>caches.delete(k))
+        ))
+      );
+      self.clients.claim();
+    });
+    self.addEventListener('fetch',e=>{
+      e.respondWith(
+        caches.match(e.request).then(cached=>{
+          // جرب الشبكة أولاً، لو ما في رجع من الكاش
+          return fetch(e.request).then(response=>{
+            const clone=response.clone();
+            caches.open(CACHE).then(cache=>cache.put(e.request,clone));
+            return response;
+          }).catch(()=>cached);
+        })
+      );
+    });
+  `;
+  const blob=new Blob([swCode],{type:'application/javascript'});
+  const swUrl=URL.createObjectURL(blob);
+  navigator.serviceWorker.register(swUrl).then(reg=>{
+    console.log('SW registered');
+  }).catch(err=>console.log('SW error:',err));
+}
+</script>
 </body>
 </html>
-
