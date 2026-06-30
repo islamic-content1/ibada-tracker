@@ -131,7 +131,7 @@ tr.tr-day td.pts-total{background:var(--primary-dark);font-size:11px;font-weight
 <body>
 <div class="hdr">
   <div class="bsm">بسم الله الرحمن الرحيم</div>
-  <h1>برنااااامج عبادة</h1>
+  <h1>برنامج عبادة</h1>
   <div class="journey-quote">فِي رحلة العمر والأيام مسرعة<br>لا تنس من أنت أو ما وجهة السفر<br><span> أنت = مسلم &nbsp;|&nbsp; وجهة السفر = الجنة</span></div>
   <p>كبسة = عملته ✓ &nbsp;|&nbsp; كبستين = ما عملته ✗ &nbsp;|&nbsp; ثلاث = إلغاء</p>
 </div>
@@ -649,47 +649,6 @@ load();build();buildGoalsSection();
 </script>
 
 
-<script>
-// ===== Service Worker مدمج (تحديث تلقائي دائم) =====
-if('serviceWorker' in navigator){
-  const CACHE_VERSION='ibada-v'+Date.now(); // نسخة فريدة كل مرة تُحمَّل الصفحة
-  const swCode = `
-    const CACHE='${CACHE_VERSION}';
-    self.addEventListener('install',e=>{ self.skipWaiting(); });
-    self.addEventListener('activate',e=>{
-      e.waitUntil(
-        caches.keys().then(keys=>Promise.all(keys.map(k=>caches.delete(k))))
-      );
-      self.clients.claim();
-    });
-    self.addEventListener('fetch',e=>{
-      // شبكة أولاً دائماً — وما بنخزن كاش لصفحة الـ HTML نفسها حتى يجي التحديث فوراً
-      e.respondWith(
-        fetch(e.request,{cache:'no-store'}).catch(()=>caches.match(e.request))
-      );
-    });
-  `;
-  const blob=new Blob([swCode],{type:'application/javascript'});
-  const swUrl=URL.createObjectURL(blob);
 
-  navigator.serviceWorker.getRegistrations().then(regs=>{
-    // امسح أي تسجيل قديم أولاً
-    regs.forEach(r=>r.unregister());
-  }).finally(()=>{
-    navigator.serviceWorker.register(swUrl).then(reg=>{
-      // افرض التحديث فوراً
-      reg.update();
-      if(reg.waiting){reg.waiting.postMessage({type:'SKIP_WAITING'});}
-    }).catch(err=>console.log('SW error:',err));
-  });
-
-  // لو في تحديث جديد، أعد تحميل الصفحة تلقائياً
-  let refreshing=false;
-  navigator.serviceWorker.addEventListener('controllerchange',()=>{
-    if(refreshing)return;refreshing=true;
-    window.location.reload();
-  });
-}
-</script>
 </body>
 </html>
