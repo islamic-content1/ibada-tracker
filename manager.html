@@ -19,9 +19,9 @@ body{font-family:'Amiri',system-ui,Tahoma,sans-serif;background:var(--bg);color:
 .sc{background:var(--sf);border-radius:12px;padding:11px 6px;text-align:center;border:1px solid var(--bd);box-shadow:0 1px 6px rgba(0,0,0,.05)}
 .sv{font-size:22px;font-weight:700;color:var(--gD);line-height:1}
 .sl{font-size:10px;color:var(--mu);margin-top:2px}
-.btns{display:flex;gap:8px;margin-bottom:.8rem}
+.btns{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:.8rem}
 .btn{font-family:inherit;font-size:13px;font-weight:600;padding:10px;border-radius:10px;cursor:pointer;border:none;flex:1;text-align:center}
-.btn-r{background:var(--gD);color:#fff}.btn-r.loading{background:var(--gM)}.btn-x{background:#217346;color:#fff}.btn-admin{background:#fff8e1;color:#856404;border:1.5px solid #f0c040}
+.btn-r{background:var(--gD);color:#fff}.btn-r.loading{background:var(--gM)}.btn-x{background:#217346;color:#fff}.btn-admin{background:#fff8e1;color:#856404;border:1.5px solid #f0c040}.btn-pairs{background:linear-gradient(135deg,#0f4a28,#1a6b3c);color:#fff;border:1.5px solid var(--gD)}
 .last-up{text-align:center;font-size:11px;color:var(--mu);margin-bottom:1rem}
 .card,.girl-card{background:var(--sf);border-radius:14px;border:1px solid var(--bd);margin-bottom:14px;box-shadow:var(--sh);overflow:hidden}
 .card{padding:12px}
@@ -139,7 +139,7 @@ body{font-family:'Amiri',system-ui,Tahoma,sans-serif;background:var(--bg);color:
   <div class="sc"><div class="sv" id="stTop">—</div><div class="sl">أعلى مجموع</div></div>
   <div class="sc"><div class="sv" id="stAvg">—</div><div class="sl">متوسط المجموعة</div></div>
 </div>
-<div class="btns"><button class="btn btn-r" id="refreshBtn" onclick="loadData()">↻ تحديث النتائج</button><button class="btn btn-admin" onclick="toggleAdminPanel()">⚙️ إدارة</button><button class="btn btn-admin" onclick="togglePairsPanel()">👭 ثنائيات</button><button class="btn btn-x" onclick="exportExcel()">⬇ Excel</button></div>
+<div class="btns"><button class="btn btn-r" id="refreshBtn" onclick="loadData()">↻ تحديث النتائج</button><button class="btn btn-pairs" onclick="togglePairsPanel()">👭 مجموع الثنائيات</button><button class="btn btn-admin" onclick="toggleAdminPanel()">⚙️ إدارة</button><button class="btn btn-x" onclick="exportExcel()">⬇ Excel</button></div>
 <div class="last-up" id="lastUp"></div>
 <div class="admin-panel" id="adminPanel">
   <div class="admin-panel-title">⚙️ إدارة البنات</div>
@@ -148,7 +148,7 @@ body{font-family:'Amiri',system-ui,Tahoma,sans-serif;background:var(--bg);color:
   <div class="admin-panel-note">تحذير: سيتم إزالة البنت وجميع بياناتها من الشيت نهائياً.</div>
 </div>
 <div class="admin-panel" id="pairsPanel">
-  <div class="admin-panel-title">👭 ثنائيات — تقسيم البنات إلى 5 مجموعات</div>
+  <div class="admin-panel-title" style="font-size:15px;color:var(--gD)">👭 مجموع الثنائيات والثلاثيات</div>
   <div class="admin-panel-note" style="margin:0 0 9px">اختاري بنتين لكل مجموعة، ويمكن إضافة بنت ثالثة. لا يمكن تكرار البنت في مجموعتين.</div>
   <div class="pairs-grid" id="pairsGrid"></div>
   <button class="admin-btn pairs-save" onclick="savePairGroups()">حفظ المجموعات</button>
