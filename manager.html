@@ -50,7 +50,7 @@ body{font-family:'Amiri',system-ui,Tahoma,sans-serif;background:var(--bg);color:
 .admin-btn{font-family:inherit;font-size:12px;font-weight:700;border-radius:9px;padding:10px;border:none;cursor:pointer;width:100%;margin-top:8px}
 .admin-del{background:#fff8e1;color:#856404;border:1.5px solid #f0c040}
 .admin-panel-note{font-size:10px;color:var(--mu);line-height:1.6;margin-top:7px;text-align:center}
-.pairs-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px}.pair-card{background:#fff;border:1.5px solid var(--bd);border-radius:12px;padding:10px}.pair-title{font-size:12px;font-weight:700;color:var(--gD);margin-bottom:7px}.pair-card select{margin-bottom:6px}.pair-summary{display:flex;flex-wrap:wrap;gap:5px;margin-top:4px;min-height:24px}.pair-chip{background:#e8f6ee;color:var(--gD);border:1px solid #a8d8b8;border-radius:999px;padding:3px 8px;font-size:10px;font-weight:700}.pairs-save{background:var(--gD);color:#fff}.pairs-empty{color:var(--mu);font-size:10px;padding:3px 0}
+.pairs-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px}.pair-card{background:#fff;border:1.5px solid var(--bd);border-radius:12px;padding:10px}.pair-title{font-size:12px;font-weight:700;color:var(--gD);margin-bottom:7px}.pair-card select{margin-bottom:6px}.pair-summary{display:flex;flex-wrap:wrap;gap:5px;margin-top:4px;min-height:24px}.pair-chip{background:#e8f6ee;color:var(--gD);border:1px solid #a8d8b8;border-radius:999px;padding:3px 8px;font-size:10px;font-weight:700}.pair-total{margin-top:7px;padding:8px;border-radius:9px;background:linear-gradient(135deg,#0f4a28,#1a6b3c);color:#fff;text-align:center;font-size:11px}.pair-total b{display:block;font-size:20px;line-height:1.2}.pairs-save{background:var(--gD);color:#fff}.pairs-empty{color:var(--mu);font-size:10px;padding:3px 0}
 .cat-rank-btn,.toggle-btn{width:100%;padding:8px 10px;background:#e8f6ee;color:var(--gDD);border:1px solid var(--gM);border-radius:9px;font-family:inherit;font-size:12px;font-weight:700;cursor:pointer;margin:5px 0;text-align:right;display:flex;justify-content:space-between;align-items:center}
 .cat-rank-body{display:none;background:#fff;border:1px solid var(--bd);border-radius:9px;padding:8px;margin-bottom:8px}
 .how-box{background:var(--sf);border:1.5px solid var(--bd);border-radius:14px;margin-bottom:1rem;overflow:hidden;box-shadow:var(--sh)}
@@ -123,9 +123,9 @@ body{font-family:'Amiri',system-ui,Tahoma,sans-serif;background:var(--bg);color:
     <div class="row"><span>فروض الصلاة</span><span>5 نقاط</span></div>
     <div class="row"><span>سنن الصلوات</span><span>21 نقطة</span></div>
     <div style="font-size:9px;color:var(--mu);line-height:1.6;margin:2px 8px 5px">٢ الفجر، ٤ الظهر القبلية، ٤ الظهر البعدية، ٤ العصر، ٢ المغرب، ٢ العشاء، و٣ الشفع والوتر (المجموع ٢١ ركعة)</div>
-    <div class="row"><span>أذكار بعد الصلاة</span><span>5 نقاط</span></div>
+    <div class="row"><span>أذكار بعد الصلاة<br><small>آية الكرسي وخواتيم البقرة والمعوذات و١٠ من الباقيات الصالحات</small></span><span>5 نقاط</span></div>
     <div class="sec-title">الذكر</div>
-    <div class="row"><span>صلاة على الرسول / استغفار / تهليل<br><small>الحد الأقصى لكل ذكر: ٣٠٠ صباحاً و٣٠٠ مساءً</small></span><span>30 نقطة لكل ذكر</span></div>
+    <div class="row"><span>صلاة على الرسول / استغفار / تهليل<br><small>تُحدَّد الكمية لكل ذكر في «حددي كميتك» — بحد أقصى ٣٠٠ صباحاً و٣٠٠ مساءً</small></span><span>10–30 نقطة لكل ذكر</span></div>
     <div class="row" style="background:#fff8e1;border:1px solid #f0c040"><span>⭐ سبحان الله وبحمده<br><small>١٠٠ صباحاً و١٠٠ مساءً</small></span><span style="color:#b8860b">+10 نقاط</span></div>
     <div class="sec-title">صدقة</div><div class="row"><span>صدقة يومية</span><span>1 نقطة</span></div>
     <div class="sec-title">تزكية</div>
@@ -177,10 +177,10 @@ const ROWS=[
   {cat:'الصلاة',ibada:'ركعات أوابين',pts:2},                                            // ri=11
   {cat:'الصلاة',ibada:'فروض الصلاة',pts:5},                                             // ri=12
   {cat:'الصلاة',ibada:'سنن الصلوات',pts:21,note:'٢ الفجر، ٤ الظهر القبلية، ٤ الظهر البعدية، ٤ العصر، ٢ المغرب، ٢ العشاء، و٣ الشفع والوتر (المجموع ٢١ ركعة)'}, // ri=13
-  {cat:'الصلاة',ibada:'أذكار بعد الصلاة',pts:5,note:'آية الكرسي وخواتيم البقرة والمعوذات'}, // ri=14
-  {cat:'الذكر',ibada:'صلاة على الرسول ٦٠٠',pts:30,fixed:true,note:'٣٠٠ صباحاً و٣٠٠ مساءً — الحد الأقصى'}, // ri=15
-  {cat:'الذكر',ibada:'استغفار ٦٠٠',pts:30,fixed:true,note:'٣٠٠ صباحاً و٣٠٠ مساءً — الحد الأقصى'},     // ri=16
-  {cat:'الذكر',ibada:'تهليل ٦٠٠',pts:30,fixed:true,note:'٣٠٠ صباحاً و٣٠٠ مساءً — الحد الأقصى'},      // ri=17
+  {cat:'الصلاة',ibada:'أذكار بعد الصلاة',pts:5,note:'آية الكرسي وخواتيم البقرة والمعوذات و١٠ من الباقيات الصالحات'}, // ri=14
+  {cat:'الذكر',ibada:'صلاة على الرسول',pts:10,note:'حددي كميتك — بحد أقصى ٣٠٠ صباحاً و٣٠٠ مساءً'}, // ri=15
+  {cat:'الذكر',ibada:'استغفار',pts:10,note:'حددي كميتك — بحد أقصى ٣٠٠ صباحاً و٣٠٠ مساءً'},     // ri=16
+  {cat:'الذكر',ibada:'تهليل',pts:10,note:'حددي كميتك — بحد أقصى ٣٠٠ صباحاً و٣٠٠ مساءً'},      // ri=17
   {cat:'الذكر',ibada:'سبحان الله وبحمده ٢٠٠',pts:10,fixed:true,bonus:true,note:'١٠٠ صباحاً و١٠٠ مساءً'}, // ri=18
   {cat:'صدقة',ibada:'صدقة يومية',pts:1},                                               // ri=19
   {cat:'تزكية',ibada:'جلوس على الجوال أكثر من ساعتين (دون واتساب)',pts:-2,negative:true}, // ri=20
@@ -193,10 +193,13 @@ const GOAL_LABELS={
   4:'جزء قرآن',
   8:'ركعات القيام',   // جديد
   10:'ركعات ضحى',
-  11:'ركعات أوابين'
+  11:'ركعات أوابين',
+  15:'صلاة على الرسول',
+  16:'استغفار',
+  17:'تهليل'
 };
-const GOAL_UNITS={3:'',4:'جزء',8:'ركعة',10:'ركعة',11:'ركعة'};
-const VARIABLE_BONUS_ROWS=new Set([3,4,8,10,11]);
+const GOAL_UNITS={3:'',4:'جزء',8:'ركعة',10:'ركعة',11:'ركعة',15:'مرة يومياً',16:'مرة يومياً',17:'مرة يومياً'};
+const VARIABLE_BONUS_ROWS=new Set([3,4,8,10,11,15,16,17]);
 const EDITABLE_BASIC_ROWS=new Set([13,14]);
 const CAT_ORDER=['الأذكار','القرآن','القيام','الصلاة','الذكر','صدقة','تزكية'];
 let girlsData=[];
@@ -276,7 +279,7 @@ function calcGoalPts(ri,goalVal){
   }
   if(ri===8)return Math.floor(Number(goalVal)/2)*2;
   const orig=ROWS[ri].pts;
-  const baseVals={4:1,10:4,11:2};
+  const baseVals={4:1,10:4,11:2,15:200,16:200,17:200};
   const base=baseVals[ri]||1;
   return Math.round((Number(goalVal)/base)*orig);
 }
@@ -428,6 +431,7 @@ function girlCard(g,gi,sorted,maxG){
       if(Number(ri)===3){if(Number(val)===1)shownVal='ثلث';else if(Number(val)===1.5)shownVal='نصف';else if(Number(val)===3)shownVal='كاملة';}
       else if(Number(ri)===4){if(Number(val)===1)shownVal='جزء';else if(Number(val)===2)shownVal='جزآن';else if(Number(val)===3)shownVal='3 أجزاء';else shownVal=val+' جزء';}
       else if([8,10,11].includes(Number(ri))){shownVal=val+' ركعة';}
+      else if([15,16,17].includes(Number(ri))){shownVal=val+' مرة يومياً';}
       return '<span class="chip">'+esc(label)+': '+esc(shownVal)+'</span>';
     }).join('')+'</div></div>':'';
   const bonusHtml=totalBonus>0?
@@ -515,7 +519,11 @@ function buildPairGroups(){
     const summary=document.createElement('div');summary.className='pair-summary';
     const selected=group.filter(Boolean);
     summary.innerHTML=selected.length?selected.map(name=>'<span class="pair-chip">'+esc(name)+'</span>').join(''):'<span class="pairs-empty">لم يتم اختيار البنات بعد</span>';
-    card.appendChild(summary);grid.appendChild(card);
+    card.appendChild(summary);
+    const total=document.createElement('div');total.className='pair-total';
+    const combined=selected.reduce((sum,name)=>{const girl=girlsData.find(g=>String(g.name||'').trim()===name);return sum+(girl?Number(girl.grand)||0:0);},0);
+    total.innerHTML='<span>مجموع المجموعة</span><b>'+combined+' نقطة</b>';
+    card.appendChild(total);grid.appendChild(card);
   });
 }
 function onPairSelection(e){
