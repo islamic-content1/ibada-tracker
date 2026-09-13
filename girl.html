@@ -577,7 +577,7 @@ function getBonusPtsForCell(ri,d){
   if(ROWS[ri].bonus)return ROWS[ri].pts;
   if(!VARIABLE_BONUS_ROWS.has(ri))return 0;
   const key=ri+'_'+d,originalPts=ROWS[ri].pts;
-  if(editedPts[key]!==undefined)return Math.max(0,editedPts[key]-originalPts);
+  if(editedPts[key]!==undefined)return Math.max(0,getPts(ri,d)-originalPts);
   const goalItem=GOAL_ITEMS.find(g=>g.ri===ri);
   if(!goalItem)return 0;
   return Math.max(0,getPts(ri,d)-originalPts);
