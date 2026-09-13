@@ -125,7 +125,7 @@ body{font-family:'Amiri',system-ui,Tahoma,sans-serif;background:var(--bg);color:
     <div style="font-size:9px;color:var(--mu);line-height:1.6;margin:2px 8px 5px">٢ الفجر، ٤ الظهر القبلية، ٤ الظهر البعدية، ٤ العصر، ٢ المغرب، ٢ العشاء، و٣ الشفع والوتر (المجموع ٢١ ركعة)</div>
     <div class="row"><span>أذكار بعد الصلاة<br><small>آية الكرسي وخواتيم البقرة والمعوذات و١٠ من الباقيات الصالحات</small></span><span>5 نقاط</span></div>
     <div class="sec-title">الذكر</div>
-    <div class="row"><span>صلاة على الرسول / استغفار / تهليل<br><small>تُحدَّد الكمية لكل ذكر في «حددي كميتك» — بحد أقصى ٣٠٠ صباحاً و٣٠٠ مساءً</small></span><span>10–30 نقطة لكل ذكر</span></div>
+    <div class="row"><span>صلاة على الرسول / استغفار / تهليل<br><small>تُحدَّد الكمية لكل ذكر في «حددي كميتك» — بحد أقصى ٣٠٠ يومياً</small></span><span>5–15 نقطة لكل ذكر</span></div>
     <div class="row" style="background:#fff8e1;border:1px solid #f0c040"><span>⭐ سبحان الله وبحمده<br><small>١٠٠ صباحاً و١٠٠ مساءً</small></span><span style="color:#b8860b">+10 نقاط</span></div>
     <div class="sec-title">صدقة</div><div class="row"><span>صدقة يومية</span><span>1 نقطة</span></div>
     <div class="sec-title">تزكية</div>
@@ -179,9 +179,9 @@ const ROWS=[
   {cat:'الصلاة',ibada:'فروض الصلاة',pts:5},                                             // ri=12
   {cat:'الصلاة',ibada:'سنن الصلوات',pts:21,note:'٢ الفجر، ٤ الظهر القبلية، ٤ الظهر البعدية، ٤ العصر، ٢ المغرب، ٢ العشاء، و٣ الشفع والوتر (المجموع ٢١ ركعة)'}, // ri=13
   {cat:'الصلاة',ibada:'أذكار بعد الصلاة',pts:5,note:'آية الكرسي وخواتيم البقرة والمعوذات و١٠ من الباقيات الصالحات'}, // ri=14
-  {cat:'الذكر',ibada:'صلاة على الرسول',pts:10,note:'حددي كميتك — بحد أقصى ٣٠٠ صباحاً و٣٠٠ مساءً'}, // ri=15
-  {cat:'الذكر',ibada:'استغفار',pts:10,note:'حددي كميتك — بحد أقصى ٣٠٠ صباحاً و٣٠٠ مساءً'},     // ri=16
-  {cat:'الذكر',ibada:'تهليل',pts:10,note:'حددي كميتك — بحد أقصى ٣٠٠ صباحاً و٣٠٠ مساءً'},      // ri=17
+  {cat:'الذكر',ibada:'صلاة على الرسول',pts:10,note:'حددي كميتك — بحد أقصى ٣٠٠ يومياً'}, // ri=15
+  {cat:'الذكر',ibada:'استغفار',pts:10,note:'حددي كميتك — بحد أقصى ٣٠٠ يومياً'},     // ri=16
+  {cat:'الذكر',ibada:'تهليل',pts:10,note:'حددي كميتك — بحد أقصى ٣٠٠ يومياً'},      // ri=17
   {cat:'الذكر',ibada:'سبحان الله وبحمده ٢٠٠',pts:10,fixed:true,bonus:true,note:'١٠٠ صباحاً و١٠٠ مساءً'}, // ri=18
   {cat:'صدقة',ibada:'صدقة يومية',pts:1},                                               // ri=19
   {cat:'تزكية',ibada:'جلوس على الجوال أكثر من ساعتين (دون واتساب)',pts:-2,negative:true}, // ri=20
@@ -203,6 +203,7 @@ const GOAL_LABELS={
 const GOAL_UNITS={3:'',4:'جزء',8:'ركعة',10:'ركعة',11:'ركعة',15:'مرة يومياً',16:'مرة يومياً',17:'مرة يومياً'};
 const VARIABLE_BONUS_ROWS=new Set([3,4,8,10,11,15,16,17]);
 const EDITABLE_BASIC_ROWS=new Set([13,14]);
+const DHIKR_ROWS=new Set([15,16,17]);
 const CAT_ORDER=['الأذكار','القرآن','القيام','الصلاة','الذكر','صدقة','تزكية'];
 let girlsData=[];
 const PAIRS_KEY='manager_pair_groups_v1';
@@ -233,7 +234,7 @@ function getPts(g,ri,d){
   const ep=g.editedPts||{};
   if(EDITABLE_BASIC_ROWS.has(ri))return ep[key]!==undefined?Math.max(0,Math.min(Number(ep[key])||0,ROWS[ri].pts)):ROWS[ri].pts;
   if(ROWS[ri].fixed||ROWS[ri].bonus||!VARIABLE_BONUS_ROWS.has(ri))return ROWS[ri].pts;
-  if(ep[key]!==undefined)return Number(ep[key])||0;
+  if(ep[key]!==undefined)return DHIKR_ROWS.has(ri)?Math.max(0,Math.min(15,Number(ep[key])||0)):Number(ep[key])||0;
   // هدف شخصي لركعات القيام (ri=8)
   const goals=g.personalGoals||{};
   if(ri===8&&goals[8]!==undefined)return Math.floor(Number(goals[8])/2)*2;
@@ -274,6 +275,7 @@ function getBonusPts(g,ri,d){
 }
 
 function calcGoalPts(ri,goalVal){
+  if(ri===15||ri===16||ri===17)goalVal=Math.max(100,Math.min(300,Number(goalVal)||200));
   if(ri===3){
     if(Number(goalVal)===1.5)return 15;
     if(Number(goalVal)===3)return 20;
@@ -509,9 +511,17 @@ function buildPairGroups(){
   const grid=document.getElementById('pairsGrid');if(!grid)return;
   const names=girlsData.map(g=>String(g.name||'').trim()).filter(Boolean).sort((a,b)=>a.localeCompare(b,'ar'));
   grid.innerHTML='';
-  pairGroups.forEach((group,gi)=>{
+  const rankedGroups=pairGroups.map((group,originalIndex)=>{
+    const selected=group.filter(Boolean);
+    const combined=selected.reduce((sum,name)=>{const girl=girlsData.find(g=>String(g.name||'').trim()===name);return sum+(girl?Number(girl.grand)||0:0);},0);
+    return {group,originalIndex,selected,combined};
+  }).sort((a,b)=>b.combined-a.combined||b.selected.length-a.selected.length||a.originalIndex-b.originalIndex);
+  rankedGroups.forEach((entry,rankIndex)=>{
+    const {group,originalIndex:gi,selected,combined}=entry;
     const card=document.createElement('div');card.className='pair-card';
-    const title=document.createElement('div');title.className='pair-title';title.textContent='المجموعة '+(gi+1);card.appendChild(title);
+    const title=document.createElement('div');title.className='pair-title';
+    const medal=rankIndex===0?'🥇':rankIndex===1?'🥈':rankIndex===2?'🥉':'#'+(rankIndex+1);
+    title.textContent=medal+' المجموعة '+(gi+1);card.appendChild(title);
     for(let si=0;si<3;si++){
       const sel=document.createElement('select');sel.dataset.group=gi;sel.dataset.slot=si;
       sel.innerHTML='<option value="">'+(si===2?'البنت الثالثة (اختياري)':'اختاري البنت '+(si+1))+'</option>';
@@ -519,11 +529,9 @@ function buildPairGroups(){
       sel.onchange=onPairSelection;card.appendChild(sel);
     }
     const summary=document.createElement('div');summary.className='pair-summary';
-    const selected=group.filter(Boolean);
     summary.innerHTML=selected.length?selected.map(name=>'<span class="pair-chip">'+esc(name)+'</span>').join(''):'<span class="pairs-empty">لم يتم اختيار البنات بعد</span>';
     card.appendChild(summary);
     const total=document.createElement('div');total.className='pair-total';
-    const combined=selected.reduce((sum,name)=>{const girl=girlsData.find(g=>String(g.name||'').trim()===name);return sum+(girl?Number(girl.grand)||0:0);},0);
     total.innerHTML='<span>مجموع المجموعة</span><b>'+combined+' نقطة</b>';
     card.appendChild(total);grid.appendChild(card);
   });
