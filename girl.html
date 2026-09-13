@@ -10,7 +10,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>برنامج عبادة</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-  
 <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -171,7 +170,7 @@ window.APP_VERSION = "2026.08.30.5";
     <div style="font-size:9px;color:var(--mu);line-height:1.6;margin:2px 8px 5px">٢ الفجر، ٤ الظهر القبلية، ٤ الظهر البعدية، ٤ العصر، ٢ المغرب، ٢ العشاء، و٣ الشفع والوتر (المجموع ٢١ ركعة)</div>
     <div class="row"><span>أذكار بعد الصلاة<br><small>آية الكرسي وخواتيم البقرة والمعوذات و١٠ من الباقيات الصالحات</small></span><span>5 نقاط</span></div>
     <div class="sec-title">الذكر</div>
-    <div class="row"><span>صلاة على الرسول / استغفار / تهليل<br><small>تُحدَّد الكمية لكل ذكر في «حددي كميتك» — بحد أقصى ٣٠٠ يومياً</small></span><span>5–15 نقطة لكل ذكر</span></div>
+    <div class="row"><span>صلاة على الرسول / استغفار / تهليل<br><small>تُحدَّد الكمية لكل ذكر في «حددي كميتك» — بحد أقصى ٣٠٠ صباحاً و٣٠٠ مساءً</small></span><span>10–30 نقطة لكل ذكر</span></div>
     <div class="row" style="background:#fff8e1;border:1px solid #f0c040"><span>⭐ سبحان الله وبحمده<br><small>١٠٠ صباحاً و١٠٠ مساءً</small></span><span style="color:#b8860b">+10 نقاط</span></div>
     <div class="sec-title">صدقة</div><div class="row"><span>صدقة يومية</span><span>1 نقطة</span></div>
     <div class="sec-title">تزكية</div>
@@ -290,9 +289,9 @@ const ROWS=[
   {cat:'الصلاة',ibada:'فروض الصلاة',pts:5,badil:'٣٣ الباقيات الصالحات عن كل صلاة وسنتها'},
   {cat:'الصلاة',ibada:'سنن الصلوات',pts:21,badil:'٣٣ الباقيات الصالحات عن كل صلاة وسنتها',note:'٢ الفجر، ٤ الظهر القبلية، ٤ الظهر البعدية، ٤ العصر، ٢ المغرب، ٢ العشاء، و٣ الشفع والوتر (المجموع ٢١ ركعة)'},
   {cat:'الصلاة',ibada:'أذكار بعد الصلاة',pts:5,fixed:true,note:'آية الكرسي وخواتيم البقرة والمعوذات و١٠ من الباقيات الصالحات'},
-  {cat:'الذكر',ibada:'صلاة على الرسول',pts:10,note:'حددي كميتك — بحد أقصى ٣٠٠ يومياً'},
-  {cat:'الذكر',ibada:'استغفار',pts:10,note:'حددي كميتك — بحد أقصى ٣٠٠ يومياً'},
-  {cat:'الذكر',ibada:'تهليل',pts:10,note:'حددي كميتك — بحد أقصى ٣٠٠ يومياً'},
+  {cat:'الذكر',ibada:'صلاة على الرسول',pts:10,note:'حددي كميتك — بحد أقصى ٣٠٠ صباحاً و٣٠٠ مساءً'},
+  {cat:'الذكر',ibada:'استغفار',pts:10,note:'حددي كميتك — بحد أقصى ٣٠٠ صباحاً و٣٠٠ مساءً'},
+  {cat:'الذكر',ibada:'تهليل',pts:10,note:'حددي كميتك — بحد أقصى ٣٠٠ صباحاً و٣٠٠ مساءً'},
   {cat:'الذكر',ibada:'سبحان الله وبحمده ٢٠٠',pts:10,fixed:true,bonus:true,note:'١٠٠ صباحاً و١٠٠ مساءً'},
   {cat:'صدقة',ibada:'صدقة يومية',pts:1,fixed:true},
   {cat:'تزكية',ibada:'جلوس على الجوال أكثر من ساعتين (دون واتساب)',pts:-2,negative:true,fixed:true},
@@ -303,9 +302,9 @@ const ROWS=[
 const IBADA_NOTES={
 
   'أذكار بعد الصلاة':'آية الكرسي وخواتيم البقرة والمعوذات و١٠ من الباقيات الصالحات',
-  'صلاة على الرسول':'حددي كميتك — بحد أقصى ٣٠٠ يومياً',
-  'استغفار':'حددي كميتك — بحد أقصى ٣٠٠ يومياً',
-  'تهليل':'حددي كميتك — بحد أقصى ٣٠٠ يومياً',
+  'صلاة على الرسول':'حددي كميتك — بحد أقصى ٣٠٠ صباحاً و٣٠٠ مساءً',
+  'استغفار':'حددي كميتك — بحد أقصى ٣٠٠ صباحاً و٣٠٠ مساءً',
+  'تهليل':'حددي كميتك — بحد أقصى ٣٠٠ صباحاً و٣٠٠ مساءً',
   'سبحان الله وبحمده ٢٠٠':'١٠٠ صباحاً و١٠٠ مساءً',
 };
 
@@ -318,9 +317,9 @@ const GOAL_ITEMS=[
   {ri:8, name:'ركعات القيام', unit:'ركعة', base:2, baseLabel:'ركعتان (أدنى)', opts:['٢ ركعتان','٤ ركعات','٦ ركعات','٨ ركعات'], optVals:[2,4,6,8], note:'ركعتين أساسي — ما فوق بونص'},
   {ri:10, name:'ركعات ضحى', unit:'ركعة', base:4, baseLabel:'٤ ركعات', opts:['٢ ركعة','٤ ركعات','٨ ركعات'], optVals:[2,4,8]},
   {ri:11, name:'ركعات أوابين', unit:'ركعة', base:2, baseLabel:'٢ ركعتان', opts:['٢ ركعة','٤ ركعات','٦ ركعات'], optVals:[2,4,6]},
-  {ri:15, name:'صلاة على الرسول', unit:'مرة يومياً', base:200, baseLabel:'٢٠٠ مرة', opts:['١٠٠','٢٠٠','٣٠٠'], optVals:[100,200,300], max:300, noCustom:true},
-  {ri:16, name:'استغفار', unit:'مرة يومياً', base:200, baseLabel:'٢٠٠ مرة', opts:['١٠٠','٢٠٠','٣٠٠'], optVals:[100,200,300], max:300, noCustom:true},
-  {ri:17, name:'تهليل', unit:'مرة يومياً', base:200, baseLabel:'٢٠٠ مرة', opts:['١٠٠','٢٠٠','٣٠٠'], optVals:[100,200,300], max:300, noCustom:true},
+  {ri:15, name:'صلاة على الرسول', unit:'', base:200, baseLabel:'١٠٠ ص + ١٠٠ م', opts:['١٠٠+١٠٠','٢٠٠+٢٠٠','٣٠٠+٣٠٠'], optVals:[200,400,600], max:600, noCustom:true},
+  {ri:16, name:'استغفار', unit:'', base:200, baseLabel:'١٠٠ ص + ١٠٠ م', opts:['١٠٠+١٠٠','٢٠٠+٢٠٠','٣٠٠+٣٠٠'], optVals:[200,400,600], max:600, noCustom:true},
+  {ri:17, name:'تهليل', unit:'', base:200, baseLabel:'١٠٠ ص + ١٠٠ م', opts:['١٠٠+١٠٠','٢٠٠+٢٠٠','٣٠٠+٣٠٠'], optVals:[200,400,600], max:600, noCustom:true},
 ];
 const VARIABLE_BONUS_ROWS=new Set([3,4,8,10,11,15,16,17]);
 const EDITABLE_BASIC_ROWS=new Set([13,14]);
@@ -341,7 +340,9 @@ function load(){
   try{const cv=_ls.getItem(COUNTERK);if(cv)counterVal=parseInt(cv)||0;}catch(e){}
   try{const gv=_ls.getItem(GOALK);if(gv)personalGoals=JSON.parse(gv);}catch(e){}
   [15,16,17].forEach(ri=>{
-    if(personalGoals[ri]!==undefined)personalGoals[ri]=Math.max(100,Math.min(300,Number(personalGoals[ri])||200));
+    if(Number(personalGoals[ri])===100)personalGoals[ri]=200;
+    else if(Number(personalGoals[ri])===300)personalGoals[ri]=600;
+    else if(personalGoals[ri]!==undefined)personalGoals[ri]=Math.max(200,Math.min(600,Number(personalGoals[ri])||200));
   });
   saveGoals();
   migrateStateToSchema2();
@@ -452,7 +453,7 @@ function getPts(ri,d){
   const key=ri+'_'+d;
   if(EDITABLE_BASIC_ROWS.has(ri))return editedPts[key]!==undefined?Math.max(0,Math.min(Number(editedPts[key])||0,ROWS[ri].pts)):ROWS[ri].pts;
   if(ROWS[ri].fixed||ROWS[ri].bonus||!VARIABLE_BONUS_ROWS.has(ri))return ROWS[ri].pts;
-  if(editedPts[key]!==undefined)return DHIKR_ROWS.has(ri)?Math.max(0,Math.min(15,Number(editedPts[key])||0)):editedPts[key];
+  if(editedPts[key]!==undefined)return DHIKR_ROWS.has(ri)?Math.max(0,Math.min(30,Number(editedPts[key])||0)):editedPts[key];
   const goalItem=GOAL_ITEMS.find(g=>g.ri===ri);
   if(goalItem){
     const goalVal=getGoalVal(ri);
@@ -487,8 +488,8 @@ function applyCell(td,v,ri,d){
 }
 
 function openInlineEdit(ri,d,numSpan,curPts){
-  const input=document.createElement('input');input.type='number';input.className='pts-inline-input';input.value=curPts;input.min=EDITABLE_BASIC_ROWS.has(ri)?0:-99;input.max=EDITABLE_BASIC_ROWS.has(ri)?ROWS[ri].pts:(DHIKR_ROWS.has(ri)?15:999);
-  function commit(){let val=parseInt(input.value);if(!isNaN(val)){if(EDITABLE_BASIC_ROWS.has(ri))val=Math.max(0,Math.min(val,ROWS[ri].pts));if(DHIKR_ROWS.has(ri))val=Math.max(0,Math.min(15,val));editedPts[ri+'_'+d]=val;saveEditedPts();const def=ROWS[ri].pts;showToast('✓ تم الحفظ: '+val+' نقطة'+(val>def?' ↑':val<def?' ↓':''));recalc();}const td=document.getElementById('cell_'+ri+'_'+d);if(td)applyCell(td,state[sk(ri,d)]||0,ri,d);}
+  const input=document.createElement('input');input.type='number';input.className='pts-inline-input';input.value=curPts;input.min=EDITABLE_BASIC_ROWS.has(ri)?0:-99;input.max=EDITABLE_BASIC_ROWS.has(ri)?ROWS[ri].pts:(DHIKR_ROWS.has(ri)?30:999);
+  function commit(){let val=parseInt(input.value);if(!isNaN(val)){if(EDITABLE_BASIC_ROWS.has(ri))val=Math.max(0,Math.min(val,ROWS[ri].pts));if(DHIKR_ROWS.has(ri))val=Math.max(0,Math.min(30,val));editedPts[ri+'_'+d]=val;saveEditedPts();const def=ROWS[ri].pts;showToast('✓ تم الحفظ: '+val+' نقطة'+(val>def?' ↑':val<def?' ↓':''));recalc();}const td=document.getElementById('cell_'+ri+'_'+d);if(td)applyCell(td,state[sk(ri,d)]||0,ri,d);}
   input.onblur=commit;
   input.onkeydown=function(e){if(e.key==='Enter')input.blur();if(e.key==='Escape'){const td=document.getElementById('cell_'+ri+'_'+d);if(td)applyCell(td,state[sk(ri,d)]||0,ri,d);}e.stopPropagation();};
   input.onclick=e=>e.stopPropagation();numSpan.replaceWith(input);input.focus();input.select();
