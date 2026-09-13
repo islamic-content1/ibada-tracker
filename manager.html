@@ -268,7 +268,7 @@ function getBonusPts(g,ri,d){
   const key=ri+'_'+d;
   const ep=g.editedPts||{};
   const orig=ROWS[ri].pts;
-  if(ep[key]!==undefined)return Math.max(0,(Number(ep[key])||0)-orig);
+  if(ep[key]!==undefined)return Math.max(0,getPts(g,ri,d)-orig);
   const goals=g.personalGoals||{};
   if(goals[ri]!==undefined)return Math.max(0,calcGoalPts(ri,goals[ri])-orig);
   return 0;
@@ -299,6 +299,8 @@ function calcDayMax(){
 
 function rowEarned(g,ri){let t=0;for(let d=1;d<=DAYS;d++)if(((g.state||{})[sk(ri,d)]||0)===1)t+=getPts(g,ri,d);return t;}
 function counterPoints(g){return (Number(g.counter)||0)*5;}
+function calculatedGrand(g){return ROWS.reduce((sum,_,ri)=>sum+rowEarned(g,ri),0)+counterPoints(g);}
+function calculatedDayTotal(g,d){let t=0;ROWS.forEach((_,ri)=>{if(((g.state||{})[sk(ri,d)]||0)===1)t+=getPts(g,ri,d);});return t;}
 function rankMedal(rank){return rank===1?'🥇':rank===2?'🥈':rank===3?'🥉':'#'+rank;}
 function rankItemClass(rank){return rank===1?'t1':rank===2?'t2':rank===3?'t3':'';}
 function rankNumClass(rank){return rank===1?'r1':rank===2?'r2':rank===3?'r3':'';}
@@ -339,7 +341,7 @@ async function loadData(){
       const state=migrateManagerState(readJSON(c[16]&&c[16].v,{}));
       const editedPts=readJSON(c[19]&&c[19].v,{});
       const personalGoals=readJSON(c[21]&&c[21].v,{});
-      return {
+      const girl={
         name:c[0].v,
         grand:c[1]?Number(c[1].v)||0:0,
         avg:c[2]?c[2].v:'—',
@@ -351,6 +353,9 @@ async function loadData(){
         personalGoals:personalGoals,
         lastUpdate:c[17]&&c[17].v?c[17].v.toString():'',
       };
+      girl.grand=calculatedGrand(girl);
+      girl.dayTotals=Array.from({length:DAYS},(_,i)=>calculatedDayTotal(girl,i+1));
+      return girl;
     });
     document.getElementById('lastUp').textContent='آخر تحديث: '+new Date().toLocaleTimeString('ar');
     render();populateAdminSelect();buildPairGroups();showToast('تم التحديث ✓ — '+girlsData.length+' بنت');
@@ -435,7 +440,7 @@ function girlCard(g,gi,sorted,maxG){
       if(Number(ri)===3){if(Number(val)===1)shownVal='ثلث';else if(Number(val)===1.5)shownVal='نصف';else if(Number(val)===3)shownVal='كاملة';}
       else if(Number(ri)===4){if(Number(val)===1)shownVal='جزء';else if(Number(val)===2)shownVal='جزآن';else if(Number(val)===3)shownVal='3 أجزاء';else shownVal=val+' جزء';}
       else if([8,10,11].includes(Number(ri))){shownVal=val+' ركعة';}
-      else if([15,16,17].includes(Number(ri))){shownVal=val+' مرة يومياً';}
+      else if([15,16,17].includes(Number(ri))){shownVal=(Number(val)/2)+' صباحاً + '+(Number(val)/2)+' مساءً';}
       return '<span class="chip">'+esc(label)+': '+esc(shownVal)+'</span>';
     }).join('')+'</div></div>':'';
   const bonusHtml=totalBonus>0?
