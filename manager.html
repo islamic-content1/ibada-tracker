@@ -125,7 +125,7 @@ body{font-family:'Amiri',system-ui,Tahoma,sans-serif;background:var(--bg);color:
     <div style="font-size:9px;color:var(--mu);line-height:1.6;margin:2px 8px 5px">٢ الفجر، ٤ الظهر القبلية، ٤ الظهر البعدية، ٤ العصر، ٢ المغرب، ٢ العشاء، و٣ الشفع والوتر (المجموع ٢١ ركعة)</div>
     <div class="row"><span>أذكار بعد الصلاة<br><small>آية الكرسي وخواتيم البقرة والمعوذات و١٠ من الباقيات الصالحات</small></span><span>5 نقاط</span></div>
     <div class="sec-title">الذكر</div>
-    <div class="row"><span>صلاة على الرسول / استغفار / تهليل<br><small>تُحدَّد الكمية لكل ذكر في «حددي كميتك» — بحد أقصى ٣٠٠ يومياً</small></span><span>5–15 نقطة لكل ذكر</span></div>
+    <div class="row"><span>صلاة على الرسول / استغفار / تهليل<br><small>تُحدَّد الكمية لكل ذكر في «حددي كميتك» — بحد أقصى ٣٠٠ صباحاً و٣٠٠ مساءً</small></span><span>10–30 نقطة لكل ذكر</span></div>
     <div class="row" style="background:#fff8e1;border:1px solid #f0c040"><span>⭐ سبحان الله وبحمده<br><small>١٠٠ صباحاً و١٠٠ مساءً</small></span><span style="color:#b8860b">+10 نقاط</span></div>
     <div class="sec-title">صدقة</div><div class="row"><span>صدقة يومية</span><span>1 نقطة</span></div>
     <div class="sec-title">تزكية</div>
@@ -179,9 +179,9 @@ const ROWS=[
   {cat:'الصلاة',ibada:'فروض الصلاة',pts:5},                                             // ri=12
   {cat:'الصلاة',ibada:'سنن الصلوات',pts:21,note:'٢ الفجر، ٤ الظهر القبلية، ٤ الظهر البعدية، ٤ العصر، ٢ المغرب، ٢ العشاء، و٣ الشفع والوتر (المجموع ٢١ ركعة)'}, // ri=13
   {cat:'الصلاة',ibada:'أذكار بعد الصلاة',pts:5,note:'آية الكرسي وخواتيم البقرة والمعوذات و١٠ من الباقيات الصالحات'}, // ri=14
-  {cat:'الذكر',ibada:'صلاة على الرسول',pts:10,note:'حددي كميتك — بحد أقصى ٣٠٠ يومياً'}, // ri=15
-  {cat:'الذكر',ibada:'استغفار',pts:10,note:'حددي كميتك — بحد أقصى ٣٠٠ يومياً'},     // ri=16
-  {cat:'الذكر',ibada:'تهليل',pts:10,note:'حددي كميتك — بحد أقصى ٣٠٠ يومياً'},      // ri=17
+  {cat:'الذكر',ibada:'صلاة على الرسول',pts:10,note:'حددي كميتك — بحد أقصى ٣٠٠ صباحاً و٣٠٠ مساءً'}, // ri=15
+  {cat:'الذكر',ibada:'استغفار',pts:10,note:'حددي كميتك — بحد أقصى ٣٠٠ صباحاً و٣٠٠ مساءً'},     // ri=16
+  {cat:'الذكر',ibada:'تهليل',pts:10,note:'حددي كميتك — بحد أقصى ٣٠٠ صباحاً و٣٠٠ مساءً'},      // ri=17
   {cat:'الذكر',ibada:'سبحان الله وبحمده ٢٠٠',pts:10,fixed:true,bonus:true,note:'١٠٠ صباحاً و١٠٠ مساءً'}, // ri=18
   {cat:'صدقة',ibada:'صدقة يومية',pts:1},                                               // ri=19
   {cat:'تزكية',ibada:'جلوس على الجوال أكثر من ساعتين (دون واتساب)',pts:-2,negative:true}, // ri=20
@@ -234,7 +234,7 @@ function getPts(g,ri,d){
   const ep=g.editedPts||{};
   if(EDITABLE_BASIC_ROWS.has(ri))return ep[key]!==undefined?Math.max(0,Math.min(Number(ep[key])||0,ROWS[ri].pts)):ROWS[ri].pts;
   if(ROWS[ri].fixed||ROWS[ri].bonus||!VARIABLE_BONUS_ROWS.has(ri))return ROWS[ri].pts;
-  if(ep[key]!==undefined)return DHIKR_ROWS.has(ri)?Math.max(0,Math.min(15,Number(ep[key])||0)):Number(ep[key])||0;
+  if(ep[key]!==undefined)return DHIKR_ROWS.has(ri)?Math.max(0,Math.min(30,Number(ep[key])||0)):(Number(ep[key])||0);
   // هدف شخصي لركعات القيام (ri=8)
   const goals=g.personalGoals||{};
   if(ri===8&&goals[8]!==undefined)return Math.floor(Number(goals[8])/2)*2;
@@ -275,7 +275,7 @@ function getBonusPts(g,ri,d){
 }
 
 function calcGoalPts(ri,goalVal){
-  if(ri===15||ri===16||ri===17)goalVal=Math.max(100,Math.min(300,Number(goalVal)||200));
+  if(ri===15||ri===16||ri===17)goalVal=Math.max(200,Math.min(600,Number(goalVal)||200));
   if(ri===3){
     if(Number(goalVal)===1.5)return 15;
     if(Number(goalVal)===3)return 20;
