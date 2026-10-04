@@ -124,6 +124,24 @@ tr.tr-day td.pts-total{background:var(--primary-dark);font-size:11px;font-weight
 .goal-unit{font-size:10px;color:var(--mu)}
 #toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--primary-dark);color:#fff;font-size:13px;padding:9px 22px;border-radius:30px;opacity:0;transition:all .3s;pointer-events:none;z-index:9999;white-space:nowrap}
 #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ===== Appearance + 30-day tabs ===== */
+.appearance-bar{display:flex;gap:8px;align-items:center;justify-content:center;flex-wrap:wrap;margin:-.35rem 0 1rem}
+.appearance-btn,.theme-select{font-family:inherit;font-size:12px;font-weight:700;border:1.5px solid var(--bd);background:var(--sf);color:var(--tx);border-radius:10px;padding:7px 11px;cursor:pointer;box-shadow:var(--sh)}
+.theme-select{outline:none}
+.day-pages{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:0 0 8px}
+.day-page-btn{font-family:inherit;font-size:12px;font-weight:700;padding:8px 6px;border-radius:9px;border:1.5px solid var(--bd);background:var(--sf);color:var(--mu);cursor:pointer}
+.day-page-btn.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+html[data-mode="dark"]{--bg:#111713;--sf:#18211b;--bd:#344239;--tx:#f3f2eb;--mu:#b9b6aa;--sh:0 2px 14px rgba(0,0,0,.35);--primary-light:#21372a}
+html[data-mode="dark"] body{background:var(--bg);color:var(--tx)}
+html[data-mode="dark"] .goal-row,html[data-mode="dark"] td.pc{background:#1e2821}
+html[data-mode="dark"] td.ic,html[data-mode="dark"] td.cell,html[data-mode="dark"] .goal-opt,html[data-mode="dark"] .pts-inline-input{background:var(--sf);color:var(--tx)}
+html[data-mode="dark"] .sc.pct-box{background:linear-gradient(135deg,#183022,#1d3b29)}
+html[data-theme="rose"]{--gL:#f7dfe6;--gM:#d8899e;--gD:#a44763;--gDD:#743247;--primary:#a44763;--primary-dark:#743247;--primary-light:#f8e8ed;--done-bg:#f7dfe6;--done-border:#d8899e;--done-text:#8f3f58}
+html[data-theme="blue"]{--gL:#dcecf8;--gM:#79a9cc;--gD:#376f9b;--gDD:#244b69;--primary:#376f9b;--primary-dark:#244b69;--primary-light:#e8f2fa;--done-bg:#dcecf8;--done-border:#79a9cc;--done-text:#2f638b}
+html[data-theme="purple"]{--gL:#eadff7;--gM:#a98bd0;--gD:#7652a6;--gDD:#533875;--primary:#7652a6;--primary-dark:#533875;--primary-light:#f0eafa;--done-bg:#eadff7;--done-border:#a98bd0;--done-text:#694996}
+html[data-theme="beige"]{--gL:#eee3d3;--gM:#b79b78;--gD:#80654a;--gDD:#5c4734;--primary:#80654a;--primary-dark:#5c4734;--primary-light:#f4eee6;--done-bg:#eee3d3;--done-border:#b79b78;--done-text:#70583f}
+
 </style>
 <link rel="manifest" href="manifest.json?v=2026.08.30.5">
 <meta name="mobile-web-app-capable" content="yes">
@@ -187,20 +205,27 @@ window.APP_VERSION = "2026.08.30.5";
 </div>
 <div class="nr"><label>الاسم:</label><input type="text" id="userName" placeholder="اسمك هنا..."/></div>
 <div id="statusBar" class="status-bar"></div>
+<div class="appearance-bar">
+  <button class="appearance-btn" id="modeBtn" type="button" onclick="toggleMode()">🌙 الوضع الليلي</button>
+  <select class="theme-select" id="themeSelect" onchange="setTheme(this.value)" aria-label="اختيار الثيم">
+    <option value="green">🌿 أخضر</option><option value="rose">🌸 وردي</option><option value="blue">💙 أزرق</option><option value="purple">💜 بنفسجي</option><option value="beige">🤎 بيج</option>
+  </select>
+</div>
 <div class="how-box" id="goalsBox">
   <div class="how-hdr" onclick="toggleGoals()" style="background:var(--gold)"><span>🎯 حددي كميتك من هذه العبادات</span><span id="goalsArr">▼</span></div>
   <div class="how-body" id="goalsBody" style="padding:14px">
     <div style="font-size:11px;color:var(--mu);margin-bottom:12px;background:#fff8e1;border-radius:8px;padding:8px 10px;border:1px solid #f0c040;line-height:1.7">حددي هدفك الشخصي لكل عبادة — الكمية الأساسية هي المعتمدة لحساب المعدل من 100، وأي زيادة تُحسب بونص إضافي ⭐</div>
     <div id="goalsRows"></div>
-    <div style="font-size:10px;color:var(--mu);text-align:center;margin-top:8px;background:#e8f6ee;border-radius:6px;padding:6px">الهدف يُطبَّق على الأيام العشرة — يمكنك تعديل يوم بعينه من داخل الجدول</div>
+    <div style="font-size:10px;color:var(--mu);text-align:center;margin-top:8px;background:#e8f6ee;border-radius:6px;padding:6px">الهدف يُطبَّق على الأيام الثلاثين — ويمكنك تعديل يوم بعينه من داخل الجدول</div>
   </div>
 </div>
+<div class="day-pages" id="dayPages">
+  <button class="day-page-btn active" type="button" onclick="setDayPage(0)">الأيام 1–10</button>
+  <button class="day-page-btn" type="button" onclick="setDayPage(1)">الأيام 11–20</button>
+  <button class="day-page-btn" type="button" onclick="setDayPage(2)">الأيام 21–30</button>
+</div>
 <div class="tw"><table>
-  <thead><tr>
-    <th class="tc">الفئة</th><th class="ti">العبادة</th><th class="tp">نقاط</th>
-    <th class="td">١</th><th class="td">٢</th><th class="td">٣</th><th class="td">٤</th><th class="td">٥</th>
-    <th class="td">٦</th><th class="td">٧</th><th class="td">٨</th><th class="td">٩</th><th class="td">١٠</th>
-  </tr></thead>
+  <thead><tr id="tableHead"></tr></thead>
   <tbody id="tbody"></tbody>
 </table></div>
 <div class="counter-box">
@@ -218,7 +243,7 @@ window.APP_VERSION = "2026.08.30.5";
 <div class="gc">
   <div class="sc"><div class="sl">المجموع</div><div class="sv" id="grandVal">0</div></div>
   <div class="sc"><div class="sl">المعدل</div><div class="sv" id="avgVal">—</div></div>
-  <div class="sc"><div class="sl">الأيام</div><div class="sv" id="filledVal">0/10</div></div>
+  <div class="sc"><div class="sl">الأيام</div><div class="sv" id="filledVal">0/30</div></div>
 </div>
 <div class="gc2"><div class="sc pct-box">
   <div class="sl">📊 معدل اليوم من 100</div>
@@ -308,8 +333,9 @@ const IBADA_NOTES={
   'سبحان الله وبحمده ٢٠٠':'١٠٠ صباحاً و١٠٠ مساءً',
 };
 
-const DAYS=10,SK='ibada_v13',NK='ibada_name_v13',EDITK='ibada_edit_v13',COUNTERK='ibada_counter_v13',GOALK='ibada_goals_v3',SCHEMA_VERSION=2;
+const DAYS=30,SK='ibada_v13',NK='ibada_name_v13',EDITK='ibada_edit_v13',COUNTERK='ibada_counter_v13',GOALK='ibada_goals_v3',SCHEMA_VERSION=2;
 let state={},editedPts={},counterVal=0,personalGoals={};
+let dayPage=0;
 
 const GOAL_ITEMS=[
   {ri:3, name:'ثلث البقرة', unit:'', base:1, baseLabel:'ثلث واحد', opts:['ثلث','نصف','كاملة'], optVals:[1,1.5,3], fixedPts:[10,15,20], noCustom:true},
@@ -325,6 +351,14 @@ const VARIABLE_BONUS_ROWS=new Set([3,4,8,10,11,15,16,17]);
 const EDITABLE_BASIC_ROWS=new Set([13,14]);
 const DHIKR_ROWS=new Set([15,16,17]);
 const sk=(r,d)=>r+'-'+d;
+
+
+function visibleDays(){const start=dayPage*10+1;return Array.from({length:10},(_,i)=>start+i);}
+function setDayPage(page){dayPage=Math.max(0,Math.min(2,Number(page)||0));document.querySelectorAll('#dayPages .day-page-btn').forEach((b,i)=>b.classList.toggle('active',i===dayPage));build();}
+function setTheme(theme){const allowed=['green','rose','blue','purple','beige'];theme=allowed.includes(theme)?theme:'green';document.documentElement.dataset.theme=theme;try{_ls.setItem('ibada_theme_v1',theme)}catch(e){}const sel=document.getElementById('themeSelect');if(sel)sel.value=theme;}
+function applyMode(mode){mode=mode==='dark'?'dark':'light';document.documentElement.dataset.mode=mode;try{_ls.setItem('ibada_mode_v1',mode)}catch(e){}const btn=document.getElementById('modeBtn');if(btn)btn.textContent=mode==='dark'?'☀️ الوضع النهاري':'🌙 الوضع الليلي';}
+function toggleMode(){applyMode(document.documentElement.dataset.mode==='dark'?'light':'dark');}
+function loadAppearance(){let theme='green',mode='light';try{theme=_ls.getItem('ibada_theme_v1')||'green';mode=_ls.getItem('ibada_mode_v1')||'light'}catch(e){}setTheme(theme);applyMode(mode);}
 
 function calcPtsTotal(){
   return ROWS.reduce((sum,r,ri)=>{
@@ -506,12 +540,14 @@ function buildDayPctRow(tb){
   const lbl=document.createElement('td');lbl.className='lbl';lbl.colSpan=3;
   lbl.style.cssText='background:var(--primary-light);color:var(--primary-dark);font-size:10px;font-weight:700;text-align:right;padding-right:8px;border-top:2px solid var(--primary)';
   lbl.textContent='معدل اليوم من 100';tr.appendChild(lbl);
-  for(let d=1;d<=DAYS;d++){const td=document.createElement('td');td.id='dpct'+d;td.style.cssText='text-align:center;font-size:10px;font-weight:700;color:var(--primary);background:var(--primary-light);border:1px solid #a8d8b8;border-top:2px solid var(--primary);padding:3px 1px';td.textContent='—';tr.appendChild(td);}
+  for(const d of visibleDays()){const td=document.createElement('td');td.id='dpct'+d;td.style.cssText='text-align:center;font-size:10px;font-weight:700;color:var(--primary);background:var(--primary-light);border:1px solid #a8d8b8;border-top:2px solid var(--primary);padding:3px 1px';td.textContent='—';tr.appendChild(td);}
   tb.appendChild(tr);
 }
 
 function build(){
   const tb=document.getElementById('tbody');tb.innerHTML='';let lastCat='';
+  const days=visibleDays();
+  const head=document.getElementById('tableHead');if(head)head.innerHTML='<th class="tc">الفئة</th><th class="ti">العبادة</th><th class="tp">نقاط</th>'+days.map(d=>'<th class="td">'+d+'</th>').join('');
   ROWS.forEach((r,ri)=>{
     const tr=document.createElement('tr');
     if(r.cat!==lastCat){
@@ -540,7 +576,7 @@ function build(){
     else if(r.bonus)tp.style.color='#b8860b';
     tp.textContent=r.pts;
     tr.appendChild(tp);
-    for(let d=1;d<=DAYS;d++){
+    for(const d of days){
       const tc=document.createElement('td');tc.className='cell';tc.id='cell_'+ri+'_'+d;
       applyCell(tc,state[sk(ri,d)]||0,ri,d);
       tc.onclick=()=>toggle(ri,d,tc);
@@ -552,13 +588,13 @@ function build(){
   const tf=document.createElement('tr');tf.className='tr-day';
   const lbl=document.createElement('td');lbl.className='lbl';lbl.colSpan=2;lbl.textContent='مجموع اليوم (أساسي)';tf.appendChild(lbl);
   const ptsTd=document.createElement('td');ptsTd.className='pts-total';ptsTd.textContent=calcPtsTotal();tf.appendChild(ptsTd);
-  for(let d=1;d<=DAYS;d++){const td=document.createElement('td');td.id='dt'+d;tf.appendChild(td);}
+  for(const d of days){const td=document.createElement('td');td.id='dt'+d;tf.appendChild(td);}
   tb.appendChild(tf);
 
   const tb2=document.createElement('tr');
   const blbl=document.createElement('td');blbl.colSpan=2;blbl.textContent='⭐ بونص اليوم';blbl.style.cssText='background:#fff3cd;color:#7a5c00;font-size:11px;font-weight:700;text-align:right;padding-right:8px;border-top:1px solid #f0c040';tb2.appendChild(blbl);
   const bEmpty=document.createElement('td');bEmpty.style.cssText='background:#fff3cd;border:1px solid #f0c040;font-size:10px;color:#b8860b;text-align:center';bEmpty.textContent='⭐';tb2.appendChild(bEmpty);
-  for(let d=1;d<=DAYS;d++){const td=document.createElement('td');td.id='dbonus'+d;td.style.cssText='background:#fffde7;color:#b8860b;font-weight:700;font-size:11px;text-align:center;border:1px solid #f0c040;padding:3px 1px';tb2.appendChild(td);}
+  for(const d of days){const td=document.createElement('td');td.id='dbonus'+d;td.style.cssText='background:#fffde7;color:#b8860b;font-weight:700;font-size:11px;text-align:center;border:1px solid #f0c040;padding:3px 1px';tb2.appendChild(td);}
   tb.appendChild(tb2);
   buildDayPctRow(tb);recalc();
 }
@@ -657,7 +693,7 @@ function openReport(){
 
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);}
 document.getElementById('userName').addEventListener('input',save);
-load();build();buildGoalsSection();
+load();loadAppearance();build();buildGoalsSection();
 
 </script>
 
