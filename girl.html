@@ -114,6 +114,21 @@ tr.tr-day td.pts-total{font-size:11.5px;font-weight:700;color:var(--primary)}
 .pdf-btn{display:inline-flex;align-items:center;gap:3px;font-size:10px;color:var(--primary-dark);background:var(--primary-light);border:1px solid var(--bd2);border-radius:999px;padding:2px 8px;cursor:pointer;margin-top:3px;text-decoration:none;font-weight:700}
 .pdf-btn:hover{border-color:var(--gM)}
 
+/* ===== خانة الأذكار المدمجة ===== */
+td.cell.azkar-cell{cursor:default;height:58px;padding:2px 1px}
+.azkar-stack{display:flex;flex-direction:column;gap:2px;align-items:center;justify-content:center}
+.azkar-btn{width:100%;max-width:26px;height:16px;border-radius:4px;border:1px solid var(--bd2);background:var(--soft);color:var(--mu);font-size:9.5px;font-weight:700;line-height:1;padding:0;cursor:pointer;display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.azkar-btn.done{background:var(--done-bg);border-color:var(--done-border);color:var(--done-text)}
+.azkar-btn.miss{background:var(--miss-bg);border-color:var(--miss-border);color:var(--miss-text)}
+td.ic .azkar-key{font-size:10px;color:var(--mu);margin-top:2px}
+
+/* ===== ملحق البونص ===== */
+.bonus-tw{border-color:var(--gold-bd)}
+.bonus-head{display:flex;align-items:baseline;justify-content:space-between;gap:8px;padding:10px 12px;background:var(--gold-l);color:var(--gold);font-size:14px;font-weight:700;border-bottom:1px solid var(--gold-bd)}
+.bonus-head small{font-size:11px;font-weight:400;color:var(--mu)}
+.bonus-tw thead th{background:var(--sf);color:var(--gold)}
+.bonus-tw td.cell.done{background:var(--gold-l)}
+
 /* ===== عارض الملفات ===== */
 .pdf-overlay{position:fixed;inset:0;z-index:9800;background:rgba(30,24,14,.55);display:none;flex-direction:column}
 .pdf-overlay.show{display:flex}
@@ -225,7 +240,7 @@ window.APP_VERSION = "2026.08.30.5";
 <div class="how-box">
   <div class="how-hdr" onclick="toggleHow()"><span>كيف تُحسب النقاط؟</span><span id="howArr">▼</span></div>
   <div class="how-body" id="howBody">
-    <div class="sec-title">الأذكار</div><div class="row"><span>أذكار الصباح / المساء / النوم</span><span>5 نقاط</span></div>
+    <div class="sec-title">الأذكار</div><div class="row"><span>أذكار الصباح / المساء / النوم<br><small>خانة وحدة بالجدول، كل ذكر 5 نقاط</small></span><span>15 نقطة</span></div>
     <div class="sec-title">القرآن</div>
     <div class="row"><span>ثلث / نصف / كاملة البقرة</span><span>10 / 15 / 20 نقطة</span></div>
     <div class="row"><span>جزء قرآن</span><span>10 نقاط</span></div>
@@ -282,6 +297,13 @@ window.APP_VERSION = "2026.08.30.5";
   <thead><tr id="tableHead"></tr></thead>
   <tbody id="tbody"></tbody>
 </table></div>
+<div class="tw bonus-tw">
+  <div class="bonus-head"><span>⭐ ملحق البونص</span><small>نقاط إضافية فوق المجموع الأساسي</small></div>
+  <table>
+    <thead><tr id="bonusHead"></tr></thead>
+    <tbody id="bonusBody"></tbody>
+  </table>
+</div>
 <div class="counter-box">
   <div class="counter-title">📖 أخذ موعد تسميع قرآن — 5 نقاط لكل مرة</div>
   <div class="counter-row">
@@ -593,6 +615,22 @@ function openInlineEdit(ri,d,numSpan,curPts){
   input.onclick=e=>e.stopPropagation();numSpan.replaceWith(input);input.focus();input.select();
 }
 
+// خانة الأذكار: ثلاث كبسات (صباح/مساء/نوم) تحفظ بنفس الصفوف 0،1،2
+const AZKAR_ROWS=[0,1,2],AZKAR_LABELS=['ص','م','ن'];
+function renderAzkarCell(td,d){
+  td.innerHTML='';
+  const stack=document.createElement('div');stack.className='azkar-stack';
+  AZKAR_ROWS.forEach((ri,i)=>{
+    const v=state[sk(ri,d)]||0;
+    const b=document.createElement('button');b.type='button';
+    b.className='azkar-btn'+(v===1?' done':v===2?' miss':'');
+    b.textContent=AZKAR_LABELS[i];b.title=ROWS[ri].ibada;
+    b.onclick=e=>{e.stopPropagation();const k=sk(ri,d),next=((state[k]||0)+1)%3;if(next===0)delete state[k];else state[k]=next;renderAzkarCell(td,d);save();recalc();};
+    stack.appendChild(b);
+  });
+  td.appendChild(stack);
+}
+
 function toggle(ri,d,td){
   const k=sk(ri,d),next=((state[k]||0)+1)%3;
   if(next===0)delete state[k];else state[k]=next;
@@ -609,17 +647,18 @@ function buildDayPctRow(tb){
 }
 
 function build(){
-  const tb=document.getElementById('tbody');tb.innerHTML='';let lastCat='';
+  const tb=document.getElementById('tbody');tb.innerHTML='';
+  const bb=document.getElementById('bonusBody');if(bb)bb.innerHTML='';
   const days=visibleDays();
-  const head=document.getElementById('tableHead');if(head)head.innerHTML='<th class="tc">الفئة</th><th class="ti">العبادة</th><th class="tp">نقاط</th>'+days.map(d=>'<th class="td">'+d+'</th>').join('');
-  ROWS.forEach((r,ri)=>{
-    const tr=document.createElement('tr');
-    if(r.cat!==lastCat){
-      const span=ROWS.filter(x=>x.cat===r.cat).length;
-      const td=document.createElement('td');td.className='cc';td.rowSpan=span;
-      const abbr={'الأذكار':'أذكار','القرآن':'قرآن','القيام':'قيام','الصلاة':'صلاة','الذكر':'ذكر','صدقة':'صدقة'};
-      td.textContent=abbr[r.cat]||r.cat;tr.appendChild(td);lastCat=r.cat;
-    }
+  const dayHeads=days.map(d=>'<th class="td">'+d+'</th>').join('');
+  const head=document.getElementById('tableHead');if(head)head.innerHTML='<th class="tc">الفئة</th><th class="ti">العبادة</th><th class="tp">نقاط</th>'+dayHeads;
+  const bHead=document.getElementById('bonusHead');if(bHead)bHead.innerHTML='<th class="ti" colspan="2">العبادة</th><th class="tp">نقاط</th>'+dayHeads;
+  // الصفوف المعروضة بالجدول الأساسي: بدون البونص، والأذكار الثلاثة بصف واحد
+  const mainRows=ROWS.map((r,ri)=>ri).filter(ri=>!ROWS[ri].bonus&&ri!==1&&ri!==2);
+  const bonusRows=ROWS.map((r,ri)=>ri).filter(ri=>ROWS[ri].bonus);
+  const abbr={'الأذكار':'أذكار','القرآن':'قرآن','القيام':'قيام','الصلاة':'صلاة','الذكر':'ذكر','صدقة':'صدقة'};
+
+  function ibadaCell(r){
     const ti=document.createElement('td');ti.className='ic';
     const note=IBADA_NOTES[r.ibada];
     const noteHtml=note?'<div style="color:var(--gold);font-size:10px;line-height:1.4;margin-top:2px">'+note+'</div>':'';
@@ -630,21 +669,42 @@ function build(){
     }else if(r.badil){
       badilHtml='<div style="color:var(--gold);font-size:10px;line-height:1.4;margin-top:2px">🔄 '+r.badil+'</div>';
     }
-    const bonusHtml=r.bonus?'<div style="color:var(--gold);font-size:10px;font-weight:700;margin-top:2px">⭐ بونص</div>':'';
     const pdfHtml=r.pdfLink?'<button class="pdf-btn" onclick="openPdf(\''+r.pdfLink+'\',\''+r.pdfTitle+'\')">📄 افتحي الملف</button>':'';
     if(r.negative){ti.innerHTML='<div style="color:var(--miss-text)">'+r.ibada+'</div>'+noteHtml+badilHtml;}
-    else{ti.innerHTML='<div>'+r.ibada+'</div>'+noteHtml+badilHtml+bonusHtml+pdfHtml;}
-    tr.appendChild(ti);
+    else{ti.innerHTML='<div>'+r.ibada+'</div>'+noteHtml+badilHtml+pdfHtml;}
+    return ti;
+  }
+  function ptsCell(r,txt){
     const tp=document.createElement('td');tp.className='pc';
     if(r.negative)tp.style.color='var(--miss-text)';
     else if(r.bonus)tp.style.color='var(--gold)';
-    tp.textContent=r.pts;
-    tr.appendChild(tp);
+    tp.textContent=txt;return tp;
+  }
+  function dayCells(tr,ri){
     for(const d of days){
       const tc=document.createElement('td');tc.className='cell';tc.id='cell_'+ri+'_'+d;
       applyCell(tc,state[sk(ri,d)]||0,ri,d);
       tc.onclick=()=>toggle(ri,d,tc);
       tr.appendChild(tc);
+    }
+  }
+
+  // الجدول الأساسي
+  let lastCat='';
+  mainRows.forEach(ri=>{
+    const r=ROWS[ri];const tr=document.createElement('tr');
+    if(r.cat!==lastCat){
+      const td=document.createElement('td');td.className='cc';td.rowSpan=mainRows.filter(x=>ROWS[x].cat===r.cat).length;
+      td.textContent=abbr[r.cat]||r.cat;tr.appendChild(td);lastCat=r.cat;
+    }
+    if(ri===0){
+      const ti=document.createElement('td');ti.className='ic';
+      ti.innerHTML='<div>أذكار الصباح والمساء والنوم</div><div class="azkar-key">ص = صباح · م = مساء · ن = نوم</div>';
+      tr.appendChild(ti);
+      tr.appendChild(ptsCell(r,ROWS[0].pts+ROWS[1].pts+ROWS[2].pts));
+      for(const d of days){const tc=document.createElement('td');tc.className='cell azkar-cell';renderAzkarCell(tc,d);tr.appendChild(tc);}
+    }else{
+      tr.appendChild(ibadaCell(r));tr.appendChild(ptsCell(r,r.pts));dayCells(tr,ri);
     }
     tb.appendChild(tr);
   });
@@ -654,13 +714,21 @@ function build(){
   const ptsTd=document.createElement('td');ptsTd.className='pts-total';ptsTd.textContent=calcPtsTotal();tf.appendChild(ptsTd);
   for(const d of days){const td=document.createElement('td');td.id='dt'+d;tf.appendChild(td);}
   tb.appendChild(tf);
+  buildDayPctRow(tb);
 
-  const tb2=document.createElement('tr');
-  const blbl=document.createElement('td');blbl.colSpan=2;blbl.textContent='⭐ بونص اليوم';blbl.style.cssText='background:var(--gold-l);color:var(--gold);font-size:11.5px;font-weight:700;text-align:right;padding-right:8px;border-top:1px solid var(--gold-bd)';tb2.appendChild(blbl);
-  const bEmpty=document.createElement('td');bEmpty.style.cssText='background:var(--gold-l);border:1px solid var(--gold-bd);font-size:10px;color:var(--gold);text-align:center';bEmpty.textContent='⭐';tb2.appendChild(bEmpty);
-  for(const d of days){const td=document.createElement('td');td.id='dbonus'+d;td.style.cssText='background:var(--gold-l);color:var(--gold);font-weight:700;font-size:11.5px;text-align:center;border:1px solid var(--gold-bd);padding:3px 1px';tb2.appendChild(td);}
-  tb.appendChild(tb2);
-  buildDayPctRow(tb);recalc();
+  // ملحق البونص
+  if(bb){
+    bonusRows.forEach(ri=>{
+      const r=ROWS[ri];const tr=document.createElement('tr');
+      const ti=ibadaCell(r);ti.colSpan=2;tr.appendChild(ti);
+      tr.appendChild(ptsCell(r,'+'+r.pts));dayCells(tr,ri);bb.appendChild(tr);
+    });
+    const tb2=document.createElement('tr');tb2.className='tr-day';
+    const blbl=document.createElement('td');blbl.className='lbl';blbl.colSpan=3;blbl.innerHTML='بونص اليوم<div style="font-size:10px;font-weight:400;color:var(--mu)">يشمل الزيادة فوق هدفك</div>';tb2.appendChild(blbl);
+    for(const d of days){const td=document.createElement('td');td.id='dbonus'+d;td.style.color='var(--gold)';tb2.appendChild(td);}
+    bb.appendChild(tb2);
+  }
+  recalc();
 }
 
 function getBasePtsForCell(ri,d){
