@@ -1,4 +1,5 @@
-const CACHE_VERSION = "ibadah-2026.06.30.1";
+// رقم الإصدار: غيّريه مع كل تحديث للصفحة عشان الجوال يجيب النسخة الجديدة
+const CACHE_VERSION = "ibadah-2026.10.05.1";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -26,6 +27,7 @@ self.addEventListener("fetch", event => {
   const req = event.request;
   if (req.method !== "GET") return;
 
+  // الصفحة نفسها: من الإنترنت أولاً، والنسخة المخزّنة بس إذا ما في نت
   if (req.mode === "navigate") {
     event.respondWith(
       fetch(req, {cache: "no-store"})
@@ -39,6 +41,7 @@ self.addEventListener("fetch", event => {
     return;
   }
 
+  // باقي الملفات: من الكاش أولاً
   event.respondWith(
     caches.match(req).then(cached => cached || fetch(req).then(res => {
       const copy = res.clone();
