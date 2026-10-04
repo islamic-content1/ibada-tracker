@@ -150,7 +150,6 @@ html[data-mode="dark"] .goal-custom-inp{background:#2f343b;color:var(--tx)}
 html[data-mode="dark"] .ld.e{background:var(--sf)}
 
 
-.period-stats-wrap{margin:0 0 12px}.period-stats-title{font-size:12px;font-weight:800;color:var(--primary-dark);margin-bottom:6px}.period-stats-scroll{display:flex;gap:8px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;padding:1px 0 5px}.period-stat-card{min-width:82%;scroll-snap-align:center;background:var(--sf);border:1px solid var(--bd);border-radius:12px;padding:10px;box-shadow:var(--sh)}.period-stat-card.active{border-color:var(--primary);box-shadow:0 0 0 1px var(--primary),var(--sh)}.period-stat-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px}.period-stat-name{font-size:12px;font-weight:800;color:var(--primary)}.period-stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.period-mini{background:var(--primary-light);border-radius:8px;padding:7px 4px;text-align:center}.period-mini b{display:block;font-size:17px;color:var(--primary);line-height:1.1}.period-mini span{font-size:9px;color:var(--mu)}html[data-mode="dark"] .period-mini{background:#3d444d}.period-note{font-size:8.5px;color:var(--mu);margin-top:6px;text-align:center}
 
 </style>
 <link rel="manifest" href="manifest.json?v=2026.08.30.5">
@@ -235,14 +234,6 @@ window.APP_VERSION = "2026.08.30.5";
   <button class="day-page-btn" type="button" onclick="setDayPage(1)">الأيام 11–20</button>
   <button class="day-page-btn" type="button" onclick="setDayPage(2)">الأيام 21–30</button>
 </div>
-<div class="period-stats-wrap">
-  <div class="period-stats-title">نتيجتك لكل 10 أيام</div>
-  <div class="period-stats-scroll" id="periodStatsScroll">
-    <div class="period-stat-card active" id="periodStat0"></div>
-    <div class="period-stat-card" id="periodStat1"></div>
-    <div class="period-stat-card" id="periodStat2"></div>
-  </div>
-</div>
 <div class="tw"><table>
   <thead><tr id="tableHead"></tr></thead>
   <tbody id="tbody"></tbody>
@@ -260,14 +251,14 @@ window.APP_VERSION = "2026.08.30.5";
   </div>
 </div>
 <div class="gc">
-  <div class="sc"><div class="sl">المجموع</div><div class="sv" id="grandVal">0</div></div>
-  <div class="sc"><div class="sl">المعدل</div><div class="sv" id="avgVal">—</div></div>
-  <div class="sc"><div class="sl">الأيام</div><div class="sv" id="filledVal">0/30</div></div>
+  <div class="sc"><div class="sl" id="grandLabel">مجموع الأيام 1–10</div><div class="sv" id="grandVal">0</div></div>
+  <div class="sc"><div class="sl" id="avgLabel">متوسط النقاط / يوم</div><div class="sv" id="avgVal">—</div></div>
+  <div class="sc"><div class="sl">الأيام المسجلة</div><div class="sv" id="filledVal">0/10</div></div>
 </div>
 <div class="gc2"><div class="sc pct-box">
-  <div class="sl">📊 معدل اليوم من 100</div>
+  <div class="sl" id="pctLabel">📊 معدل الأيام 1–10 من 100</div>
   <div class="sv" style="color:#15803d;font-size:20px" id="pctDayVal">—</div>
-  <div style="font-size:9px;color:var(--mu);margin-top:3px">معدل أدائك اليومي من 100</div>
+  <div style="font-size:9px;color:var(--mu);margin-top:3px">متوسط أدائك في الأيام المسجلة من هذه الفترة</div>
 </div></div>
 <div id="resetModal" class="overlay"><div class="modal-box">
   <div style="background:#ef4444;padding:12px 16px;display:flex;justify-content:space-between;align-items:center">
@@ -373,7 +364,7 @@ const sk=(r,d)=>r+'-'+d;
 
 
 function visibleDays(){const start=dayPage*10+1;return Array.from({length:10},(_,i)=>start+i);}
-function setDayPage(page){dayPage=Math.max(0,Math.min(2,Number(page)||0));document.querySelectorAll('#dayPages .day-page-btn').forEach((b,i)=>b.classList.toggle('active',i===dayPage));document.querySelectorAll('.period-stat-card').forEach((c,i)=>c.classList.toggle('active',i===dayPage));build();const card=document.getElementById('periodStat'+dayPage);if(card&&card.scrollIntoView)card.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});}
+function setDayPage(page){dayPage=Math.max(0,Math.min(2,Number(page)||0));document.querySelectorAll('#dayPages .day-page-btn').forEach((b,i)=>b.classList.toggle('active',i===dayPage));build();recalc();}
 function updateThemeColor(){
   const mode=document.documentElement.dataset.mode==='dark'?'dark':'light';
   const theme=document.documentElement.dataset.theme||'green';
@@ -661,34 +652,29 @@ function periodStats(start,end){
   const pct=filled&&dayMax?Math.min(100,Math.round((base/filled)/dayMax*100)):null;
   return {points,pct,filled};
 }
-function renderPeriodStats(){
-  [[1,10],[11,20],[21,30]].forEach(([start,end],i)=>{
-    const s=periodStats(start,end),el=document.getElementById('periodStat'+i);if(!el)return;
-    el.innerHTML='<div class="period-stat-head"><div class="period-stat-name">الأيام '+start+'–'+end+'</div><div style="font-size:9px;color:var(--mu)">'+s.filled+'/10 أيام</div></div><div class="period-stat-grid"><div class="period-mini"><b>'+s.points+'</b><span>مجموع النقاط</span></div><div class="period-mini"><b>'+(s.pct===null?'—':s.pct+'%')+'</b><span>المعدل من 100</span></div><div class="period-mini"><b>'+s.filled+'</b><span>أيام مسجلة</span></div></div>'+(i===2?'<div class="period-note">عداد التسميع يبقى ضمن المجموع الكلي لأنه غير مرتبط بيوم محدد.</div>':'');
-  });
-}
-
 function recalc(){
-  let grandBase=0,grandBonus=0;
+  // نحافظ على حساب كل الأيام داخلياً، لكن البطاقات أسفل عداد التسميع تتبع العشرة أيام المفتوحة فقط.
   for(let d=1;d<=DAYS;d++){
-    const base=getDayBase(d),bonus=getDayBonus(d);grandBase+=base;grandBonus+=bonus;
+    const base=getDayBase(d),bonus=getDayBonus(d);
     const elBase=document.getElementById('dt'+d);if(elBase)elBase.textContent=base||'';
     const elBonus=document.getElementById('dbonus'+d);if(elBonus)elBonus.textContent=bonus>0?'+'+bonus:'';
   }
-  const grand=grandBase+grandBonus+counterVal*5;
-  document.getElementById('grandVal').textContent=grand;
-  let filled=0;for(let d=1;d<=DAYS;d++)if(ROWS.some((_,ri)=>(state[sk(ri,d)]||0)!==0))filled++;
-  document.getElementById('filledVal').textContent=filled+'/'+DAYS;
-  document.getElementById('avgVal').textContent=filled>0?(grand/filled).toFixed(1):'—';
-  const dayMax=calcDayMax();let baseGrandSum=0;
-  for(let d=1;d<=DAYS;d++){
+  const startDay=dayPage*10+1,endDay=startDay+9;
+  const ps=periodStats(startDay,endDay);
+  document.getElementById('grandVal').textContent=ps.points;
+  document.getElementById('filledVal').textContent=ps.filled+'/10';
+  document.getElementById('avgVal').textContent=ps.filled>0?(ps.points/ps.filled).toFixed(1):'—';
+  const gl=document.getElementById('grandLabel');if(gl)gl.textContent='مجموع الأيام '+startDay+'–'+endDay;
+  const pl=document.getElementById('pctLabel');if(pl)pl.textContent='📊 معدل الأيام '+startDay+'–'+endDay+' من 100';
+
+  const dayMax=calcDayMax();
+  for(let d=startDay;d<=endDay;d++){
     const el=document.getElementById('dpct'+d);if(!el)continue;
     const hasData=ROWS.some((_,ri)=>(state[sk(ri,d)]||0)!==0);
-    if(hasData){const baseTotal=getDayBase(d);const pct=Math.min(100,Math.round(baseTotal/dayMax*100));el.textContent=pct+'%';el.style.color=pct>=80?'var(--done-text)':pct>=50?'var(--gold)':'var(--miss-text)';baseGrandSum+=baseTotal;}
+    if(hasData){const baseTotal=getDayBase(d);const pct=Math.min(100,Math.round(baseTotal/dayMax*100));el.textContent=pct+'%';el.style.color=pct>=80?'var(--done-text)':pct>=50?'var(--gold)':'var(--miss-text)';}
     else{el.textContent='—';el.style.color='var(--mu)';}
   }
-  document.getElementById('pctDayVal').textContent=filled>0?Math.min(100,Math.round((baseGrandSum/filled)/dayMax*100))+'%':'—';
-  renderPeriodStats();
+  document.getElementById('pctDayVal').textContent=ps.pct===null?'—':ps.pct+'%';
 }
 
 function toggleHow(){const body=document.getElementById('howBody');const arr=document.getElementById('howArr');const open=body.style.display==='block';body.style.display=open?'none':'block';arr.textContent=open?'▼':'▲';}
