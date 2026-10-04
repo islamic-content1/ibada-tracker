@@ -53,7 +53,7 @@ thead th.tc{background:var(--primary-dark);width:18px}
 thead th.ti{text-align:right;padding-right:8px;width:32%}
 thead th.tp{width:28px;font-size:10px;opacity:.85}
 thead th.td{width:5.5%}
-td.cc{background:#e8f6ee;color:var(--gD);font-weight:700;text-align:center;padding:3px 1px;border:1px solid #c8e8d4;writing-mode:vertical-lr;text-orientation:mixed;font-size:9px;vertical-align:middle;max-width:18px;overflow:hidden}
+td.cc{background:var(--primary-light);color:var(--gD);font-weight:700;text-align:center;padding:3px 1px;border:1px solid #c8e8d4;writing-mode:vertical-lr;text-orientation:mixed;font-size:9px;vertical-align:middle;max-width:18px;overflow:hidden}
 td.ic{font-size:10.5px;color:var(--tx);padding:4px 6px 4px 3px;border:1px solid #ede7db;background:var(--sf);overflow:hidden;white-space:normal;line-height:1.35}
 td.pc{text-align:center;color:var(--mu);font-size:11px;padding:4px 1px;border:1px solid #ede7db;background:#faf8f3;font-weight:600;position:relative;min-width:32px;cursor:default}
 td.cell{text-align:center;padding:0;border:1px solid #ede7db;cursor:pointer;user-select:none;background:var(--sf);transition:background .1s;height:40px;-webkit-tap-highlight-color:transparent;touch-action:manipulation;vertical-align:middle}
@@ -132,15 +132,22 @@ tr.tr-day td.pts-total{background:var(--primary-dark);font-size:11px;font-weight
 .day-pages{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:0 0 8px}
 .day-page-btn{font-family:inherit;font-size:12px;font-weight:700;padding:8px 6px;border-radius:9px;border:1.5px solid var(--bd);background:var(--sf);color:var(--mu);cursor:pointer}
 .day-page-btn.active{background:var(--primary);color:#fff;border-color:var(--primary)}
-html[data-mode="dark"]{--bg:#111713;--sf:#18211b;--bd:#344239;--tx:#f3f2eb;--mu:#b9b6aa;--sh:0 2px 14px rgba(0,0,0,.35);--primary-light:#21372a}
+/* متغيرات الثيم: كل لون يغيّر الأزرار والرؤوس والحالات والتفاصيل معًا */
+html[data-theme="green"]{--gL:#d4f4e2;--gM:#5cb87a;--gD:#1a6b3c;--gDD:#0f4a28;--primary:#1a6b3c;--primary-dark:#0f4a28;--primary-light:#e8f6ee;--done-bg:#d4f4e2;--done-border:#5cb87a;--done-text:#1a6b3c;--theme-tint:#f3faf6;--theme-dark-sf:#26312a;--theme-dark-soft:#303d34;--theme-dark-line:#46564b}
+html[data-theme="rose"]{--gL:#f7dfe6;--gM:#d8899e;--gD:#a44763;--gDD:#743247;--primary:#a44763;--primary-dark:#743247;--primary-light:#f8e8ed;--done-bg:#f7dfe6;--done-border:#d8899e;--done-text:#8f3f58;--theme-tint:#fff7f9;--theme-dark-sf:#35292e;--theme-dark-soft:#443239;--theme-dark-line:#61464f}
+html[data-theme="blue"]{--gL:#dcecf8;--gM:#79a9cc;--gD:#376f9b;--gDD:#244b69;--primary:#376f9b;--primary-dark:#244b69;--primary-light:#e8f2fa;--done-bg:#dcecf8;--done-border:#79a9cc;--done-text:#2f638b;--theme-tint:#f5faff;--theme-dark-sf:#27323a;--theme-dark-soft:#303e48;--theme-dark-line:#465b6a}
+html[data-theme="purple"]{--gL:#eadff7;--gM:#a98bd0;--gD:#7652a6;--gDD:#533875;--primary:#7652a6;--primary-dark:#533875;--primary-light:#f0eafa;--done-bg:#eadff7;--done-border:#a98bd0;--done-text:#694996;--theme-tint:#fbf8ff;--theme-dark-sf:#302a37;--theme-dark-soft:#3c3347;--theme-dark-line:#574966}
+html[data-theme="beige"]{--gL:#eee3d3;--gM:#b79b78;--gD:#80654a;--gDD:#5c4734;--primary:#80654a;--primary-dark:#5c4734;--primary-light:#f4eee6;--done-bg:#eee3d3;--done-border:#b79b78;--done-text:#70583f;--theme-tint:#fcfaf7;--theme-dark-sf:#332f2a;--theme-dark-soft:#403a33;--theme-dark-line:#5d5449}
+
+/* Dark mode دافئ وأخف من الأسود الصريح */
+html[data-mode="dark"]{--bg:#202521;--sf:var(--theme-dark-sf);--bd:var(--theme-dark-line);--tx:#f4f1e9;--mu:#c4beb3;--sh:0 3px 14px rgba(0,0,0,.20);--primary-light:var(--theme-dark-soft);--done-bg:var(--theme-dark-soft);--miss-bg:#4a3030;--miss-border:#9b5d5d;--miss-text:#ffd3d3}
 html[data-mode="dark"] body{background:var(--bg);color:var(--tx)}
-html[data-mode="dark"] .goal-row,html[data-mode="dark"] td.pc{background:#1e2821}
-html[data-mode="dark"] td.ic,html[data-mode="dark"] td.cell,html[data-mode="dark"] .goal-opt,html[data-mode="dark"] .pts-inline-input{background:var(--sf);color:var(--tx)}
-html[data-mode="dark"] .sc.pct-box{background:linear-gradient(135deg,#183022,#1d3b29)}
-html[data-theme="rose"]{--gL:#f7dfe6;--gM:#d8899e;--gD:#a44763;--gDD:#743247;--primary:#a44763;--primary-dark:#743247;--primary-light:#f8e8ed;--done-bg:#f7dfe6;--done-border:#d8899e;--done-text:#8f3f58}
-html[data-theme="blue"]{--gL:#dcecf8;--gM:#79a9cc;--gD:#376f9b;--gDD:#244b69;--primary:#376f9b;--primary-dark:#244b69;--primary-light:#e8f2fa;--done-bg:#dcecf8;--done-border:#79a9cc;--done-text:#2f638b}
-html[data-theme="purple"]{--gL:#eadff7;--gM:#a98bd0;--gD:#7652a6;--gDD:#533875;--primary:#7652a6;--primary-dark:#533875;--primary-light:#f0eafa;--done-bg:#eadff7;--done-border:#a98bd0;--done-text:#694996}
-html[data-theme="beige"]{--gL:#eee3d3;--gM:#b79b78;--gD:#80654a;--gDD:#5c4734;--primary:#80654a;--primary-dark:#5c4734;--primary-light:#f4eee6;--done-bg:#eee3d3;--done-border:#b79b78;--done-text:#70583f}
+html[data-mode="dark"] .goal-row,html[data-mode="dark"] td.pc,html[data-mode="dark"] .how-body .row{background:var(--theme-dark-soft)}
+html[data-mode="dark"] td.ic,html[data-mode="dark"] td.cell,html[data-mode="dark"] .goal-opt,html[data-mode="dark"] .pts-inline-input,html[data-mode="dark"] .theme-select,html[data-mode="dark"] .appearance-btn{background:var(--sf);color:var(--tx)}
+html[data-mode="dark"] .sc.pct-box{background:linear-gradient(135deg,var(--theme-dark-soft),var(--sf));border-color:var(--gM)}
+html[data-mode="dark"] .counter-box,html[data-mode="dark"] .how-box,html[data-mode="dark"] .tw,html[data-mode="dark"] .sc{background:var(--sf)}
+html[data-mode="dark"] .goal-custom-inp{background:var(--bg);color:var(--tx)}
+html[data-mode="dark"] .ld.e{background:var(--sf)}
 
 </style>
 <link rel="manifest" href="manifest.json?v=2026.08.30.5">
@@ -208,7 +215,7 @@ window.APP_VERSION = "2026.08.30.5";
 <div class="appearance-bar">
   <button class="appearance-btn" id="modeBtn" type="button" onclick="toggleMode()">🌙 الوضع الليلي</button>
   <select class="theme-select" id="themeSelect" onchange="setTheme(this.value)" aria-label="اختيار الثيم">
-    <option value="green">🌿 أخضر</option><option value="rose">🌸 وردي</option><option value="blue">💙 أزرق</option><option value="purple">💜 بنفسجي</option><option value="beige">🤎 بيج</option>
+    <option value="green">أخضر</option><option value="rose">وردي</option><option value="blue">أزرق</option><option value="purple">بنفسجي</option><option value="beige">بيج</option>
   </select>
 </div>
 <div class="how-box" id="goalsBox">
@@ -216,7 +223,7 @@ window.APP_VERSION = "2026.08.30.5";
   <div class="how-body" id="goalsBody" style="padding:14px">
     <div style="font-size:11px;color:var(--mu);margin-bottom:12px;background:#fff8e1;border-radius:8px;padding:8px 10px;border:1px solid #f0c040;line-height:1.7">حددي هدفك الشخصي لكل عبادة — الكمية الأساسية هي المعتمدة لحساب المعدل من 100، وأي زيادة تُحسب بونص إضافي ⭐</div>
     <div id="goalsRows"></div>
-    <div style="font-size:10px;color:var(--mu);text-align:center;margin-top:8px;background:#e8f6ee;border-radius:6px;padding:6px">الهدف يُطبَّق على الأيام الثلاثين — ويمكنك تعديل يوم بعينه من داخل الجدول</div>
+    <div style="font-size:10px;color:var(--mu);text-align:center;margin-top:8px;background:var(--primary-light);border-radius:6px;padding:6px">الهدف يُطبَّق على الأيام الثلاثين — ويمكنك تعديل يوم بعينه من داخل الجدول</div>
   </div>
 </div>
 <div class="day-pages" id="dayPages">
@@ -508,7 +515,7 @@ function applyCell(td,v,ri,d){
     const inner=document.createElement('div');inner.className='cell-inner';
     const svgNS='http://www.w3.org/2000/svg';
     const svg=document.createElementNS(svgNS,'svg');svg.setAttribute('viewBox','0 0 24 24');svg.setAttribute('width','13');svg.setAttribute('height','13');
-    const path=document.createElementNS(svgNS,'path');path.setAttribute('d','M4 12.5L9.5 18L20 6');path.setAttribute('fill','none');path.setAttribute('stroke','#1A6B3C');path.setAttribute('stroke-width','2.8');path.setAttribute('stroke-linecap','round');path.setAttribute('stroke-linejoin','round');
+    const path=document.createElementNS(svgNS,'path');path.setAttribute('d','M4 12.5L9.5 18L20 6');path.setAttribute('fill','none');path.setAttribute('stroke','var(--done-text)');path.setAttribute('stroke-width','2.8');path.setAttribute('stroke-linecap','round');path.setAttribute('stroke-linejoin','round');
     svg.appendChild(path);inner.appendChild(svg);
     const ptsRow=document.createElement('div');ptsRow.className='pts-row';
     if(isUp||isDown){const arrow=document.createElement('span');arrow.className='cell-arrow '+(isUp?'up':'down');arrow.textContent=isUp?'↑':'↓';ptsRow.appendChild(arrow);}
@@ -540,7 +547,7 @@ function buildDayPctRow(tb){
   const lbl=document.createElement('td');lbl.className='lbl';lbl.colSpan=3;
   lbl.style.cssText='background:var(--primary-light);color:var(--primary-dark);font-size:10px;font-weight:700;text-align:right;padding-right:8px;border-top:2px solid var(--primary)';
   lbl.textContent='معدل اليوم من 100';tr.appendChild(lbl);
-  for(const d of visibleDays()){const td=document.createElement('td');td.id='dpct'+d;td.style.cssText='text-align:center;font-size:10px;font-weight:700;color:var(--primary);background:var(--primary-light);border:1px solid #a8d8b8;border-top:2px solid var(--primary);padding:3px 1px';td.textContent='—';tr.appendChild(td);}
+  for(const d of visibleDays()){const td=document.createElement('td');td.id='dpct'+d;td.style.cssText='text-align:center;font-size:10px;font-weight:700;color:var(--primary);background:var(--primary-light);border:1px solid var(--gM);border-top:2px solid var(--primary);padding:3px 1px';td.textContent='—';tr.appendChild(td);}
   tb.appendChild(tr);
 }
 
