@@ -8,20 +8,19 @@
 <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap');
 
 /* ===== الألوان الأساسية ===== */
 :root{
   --gD:#2f6f4e;--gDD:#245a3e;--gL:#e9f2ed;--gM:#8bb39c;
   --rL:#fbecea;--rD:#b4483c;--gold:#a8822a;--goldL:#fbf5e6;
-  --bg:#f5f6f4;--sf:#ffffff;--bd:#e3e7e4;--bd2:#eef1ee;--tx:#1f2a24;--mu:#6b756f;
+  --bg:#fdfaf5;--sf:#ffffff;--bd:#e2d9c8;--bd2:#efe8dc;--tx:#2c2416;--mu:#7a6a52;
   --done-bg:#e9f2ed;--done-border:#bfd6c8;--done-text:#2f6f4e;
-  --sh:0 1px 3px rgba(20,30,24,.06),0 1px 2px rgba(20,30,24,.04);
+  --sh:0 1px 3px rgba(60,45,20,.06),0 1px 2px rgba(60,45,20,.04);
   --r:12px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{overflow-x:hidden;width:100%;background:var(--bg);min-height:100%}
-body{font-family:'Tajawal',system-ui,Tahoma,sans-serif;background:var(--bg);color:var(--tx);padding:1rem .75rem 4rem;font-size:14px;line-height:1.5;max-width:900px;margin:0 auto}
+body{font-family:'Amiri',system-ui,Tahoma,sans-serif;background:var(--bg);color:var(--tx);padding:1rem .75rem 4rem;font-size:14px;line-height:1.5;max-width:900px;margin:0 auto}
 button,select{font-family:inherit}
 
 /* ===== الهيدر ===== */
@@ -145,7 +144,7 @@ button,select{font-family:inherit}
 .days-row{display:flex;gap:4px;margin-bottom:10px;flex-wrap:wrap}
 .dd{width:30px;height:30px;border-radius:7px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:10px;font-weight:700;border:1px solid var(--bd2)}
 .dd.f{background:var(--done-bg);border-color:var(--done-border);color:var(--done-text)}
-.dd.e{background:var(--bg);color:#b5bcb7}
+.dd.e{background:var(--bg);color:#c4b8a4}
 .dd .dn{font-size:8.5px;color:inherit;opacity:.7}
 .details{display:none;margin-top:8px}
 .details.open{display:block}
@@ -255,7 +254,7 @@ button,select{font-family:inherit}
 .full-rank-points{font-size:15px;font-weight:800;color:var(--gD);white-space:nowrap}
 
 /* ===== التبويبات الرئيسية ===== */
-.manager-main-tabs{position:sticky;top:8px;z-index:50;display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:4px;margin:0 0 6px;background:var(--bd2);border:1px solid var(--bd);border-radius:12px;box-shadow:0 4px 14px rgba(20,30,24,.06)}
+.manager-main-tabs{position:sticky;top:8px;z-index:50;display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:4px;margin:0 0 6px;background:var(--bd2);border:1px solid var(--bd);border-radius:12px;box-shadow:0 4px 14px rgba(60,45,20,.06)}
 .manager-main-tab{border:0;background:transparent;color:var(--mu);border-radius:9px;padding:9px 4px;font-size:12.5px;font-weight:700;cursor:pointer;line-height:1.25}
 .manager-main-tab.active{background:var(--sf);color:var(--gD);box-shadow:var(--sh)}
 .manager-page-shell{overflow:hidden;touch-action:pan-y}
