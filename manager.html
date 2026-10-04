@@ -9,7 +9,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
 :root{--gD:#1a6b3c;--gDD:#0f4a28;--gL:#d4f4e2;--gM:#5cb87a;--rL:#fcd5d5;--rD:#c0392b;--gold:#b8860b;--bg:#fdfaf5;--sf:#ffffff;--bd:#e2d9c8;--tx:#2c2416;--mu:#7a6a52;--done-bg:#d4f4e2;--done-border:#5cb87a;--done-text:#1a6b3c;--sh:0 2px 16px rgba(0,0,0,.08)}
-*{box-sizing:border-box;margin:0;padding:0}html,body{overflow-x:hidden;width:100%}
+*{box-sizing:border-box;margin:0;padding:0}html,body{overflow-x:hidden;width:100%;background:var(--bg);min-height:100%}
 body{font-family:'Amiri',system-ui,Tahoma,sans-serif;background:var(--bg);color:var(--tx);padding:1rem .6rem 4rem}
 .hdr{text-align:center;padding:1.4rem .8rem;background:linear-gradient(135deg,var(--gDD),var(--gD));border-radius:16px;color:#fff;margin-bottom:1.1rem;box-shadow:var(--sh)}
 .bsm{font-size:15px;color:var(--gold);margin-bottom:5px}
@@ -106,18 +106,18 @@ body{font-family:'Amiri',system-ui,Tahoma,sans-serif;background:var(--bg);color:
 .appearance-btn{font-family:inherit;font-size:12px;font-weight:700;border:1.5px solid var(--bd);background:var(--sf);color:var(--tx);border-radius:10px;padding:7px 11px;cursor:pointer}
 .pairs-actions{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:9px}.pairs-add{background:var(--gD);color:#fff}.pairs-clear{background:#fff0f0;color:#b42318;border:1.5px solid #ef9a9a}.pair-delete{width:100%;margin-top:7px;border:1px solid #ef9a9a;background:#fff5f5;color:#b42318;border-radius:8px;padding:6px;font-family:inherit;font-size:10px;font-weight:700;cursor:pointer}
 .detail-day-pages{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin:0 0 7px}.detail-day-btn{font-family:inherit;font-size:10px;font-weight:700;border:1px solid var(--bd);background:var(--sf);color:var(--mu);border-radius:7px;padding:6px 3px;cursor:pointer}.detail-day-btn.active{background:var(--gD);border-color:var(--gD);color:#fff}
-html[data-mode="dark"]{--bg:#202521;--sf:#29312b;--bd:#465249;--tx:#f4f1e9;--mu:#c4beb3;--done-bg:#33483a;--done-border:#64836e;--done-text:#d7efdf;--sh:0 3px 16px rgba(0,0,0,.20)}
-html[data-mode="dark"] body{background:var(--bg);color:var(--tx)}
+html[data-mode="dark"]{--bg:#2c3036;--sf:#343941;--bd:#4a525d;--tx:#f5f1e8;--mu:#c9c2b4;--done-bg:#3b4a40;--done-border:#6e9579;--done-text:#e2f4e6;--sh:0 3px 16px rgba(0,0,0,.14)}
+html[data-mode="dark"],html[data-mode="dark"] body{background:var(--bg);color:var(--tx)}
 html[data-mode="dark"] .card,html[data-mode="dark"] .girl-card,html[data-mode="dark"] .admin-panel,html[data-mode="dark"] .completion-card,html[data-mode="dark"] .pair-card,html[data-mode="dark"] .worship-status,html[data-mode="dark"] .cat-rank-body,html[data-mode="dark"] .rank-item{background:var(--sf);color:var(--tx)}
-html[data-mode="dark"] .pair-card select,html[data-mode="dark"] .admin-panel select,html[data-mode="dark"] .appearance-btn,html[data-mode="dark"] .detail-day-btn{background:#333c35;color:var(--tx)}
-html[data-mode="dark"] .rtrack,html[data-mode="dark"] .prog-t{background:#3a463e}
-html[data-mode="dark"] .rank-item.t1{background:#403a29;border-color:#8c7a42}
-html[data-mode="dark"] .rank-item.t2{background:#343a3b;border-color:#667174}
-html[data-mode="dark"] .rank-item.t3{background:#3e332c;border-color:#7a604b}
-html[data-mode="dark"] .custom-box,html[data-mode="dark"] .bonus-box{background:#3b382b}
-html[data-mode="dark"] .status-line.done{background:#30443a;color:#d7efdf}
-html[data-mode="dark"] .status-line.missed{background:#493232;color:#ffd6d6}
-html[data-mode="dark"] .status-line.pending{background:#383934;color:var(--mu)}
+html[data-mode="dark"] .pair-card select,html[data-mode="dark"] .admin-panel select,html[data-mode="dark"] .appearance-btn,html[data-mode="dark"] .detail-day-btn{background:#3b424b;color:var(--tx)}
+html[data-mode="dark"] .rtrack,html[data-mode="dark"] .prog-t{background:#444b54}
+html[data-mode="dark"] .rank-item.t1{background:#4a4330;border-color:#9c8950}
+html[data-mode="dark"] .rank-item.t2{background:#40454a;border-color:#74818a}
+html[data-mode="dark"] .rank-item.t3{background:#4a3d35;border-color:#876753}
+html[data-mode="dark"] .custom-box,html[data-mode="dark"] .bonus-box{background:#454131}
+html[data-mode="dark"] .status-line.done{background:#36473d;color:#e2f4e6}
+html[data-mode="dark"] .status-line.missed{background:#503a3a;color:#ffe0e0}
+html[data-mode="dark"] .status-line.pending{background:#3e4246;color:var(--mu)}
 
 
 /* ===== جدول المسؤولة بنفس هوية جدول البنت ===== */
@@ -136,6 +136,7 @@ html[data-mode="dark"] .status-line.pending{background:#383934;color:var(--mu)}
 .manager-detail-table .mgr-day-pct td{background:#e8f6ee;color:var(--gD);font-weight:700;font-size:10px;padding:5px 2px;text-align:center;border-top:2px solid var(--gM)}
 .manager-detail-table .mgr-day-pct td:first-child{text-align:right;padding-right:8px;color:var(--gDD)}
 .ten-rank-title{font-size:13px;font-weight:800;color:var(--gDD);margin-bottom:8px}.ten-rank-sub{font-size:10px;color:var(--mu);margin-bottom:8px}.ten-rank-period{margin-bottom:12px}.ten-rank-period:last-child{margin-bottom:0}
+.ten-rank-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}.ten-rank-help{font-size:10px;color:var(--mu)}.ten-rank-carousel{overflow:hidden;position:relative;touch-action:pan-y}.ten-rank-track{display:flex;transition:transform .25s ease}.ten-rank-slide{min-width:100%;padding:2px 0}.ten-rank-controls{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:8px}.ten-rank-nav-btn{font-family:inherit;font-size:11px;font-weight:700;padding:6px 10px;border-radius:8px;border:1px solid var(--bd);background:var(--sf);color:var(--tx);cursor:pointer}.ten-rank-dots{display:flex;gap:6px;justify-content:center;align-items:center;flex:1}.ten-rank-dot{width:10px;height:10px;border-radius:50%;border:none;background:#d6ddd7;cursor:pointer}.ten-rank-dot.active{background:var(--gD)}.swipe-hint{font-size:10px;color:var(--mu);text-align:center;margin-top:6px}.detail-swipe-hint{font-size:9.5px;color:var(--mu);text-align:center;margin-bottom:6px}
 html[data-mode="dark"] .manager-detail-table td.cat,html[data-mode="dark"] .manager-detail-table .mgr-day-pct td{background:#33483a;color:var(--done-text);border-color:#506557}
 html[data-mode="dark"] .manager-detail-table td.ibada,html[data-mode="dark"] .manager-detail-table td.day-cell{background:var(--sf);color:var(--tx);border-color:var(--bd)}
 html[data-mode="dark"] .manager-detail-table td.pts{background:#333c35;color:var(--mu);border-color:var(--bd)}
@@ -287,9 +288,10 @@ function addPairGroup(){pairGroups.push(['','','']);persistPairGroups();buildPai
 function deletePairGroup(index){pairGroups.splice(index,1);persistPairGroups();buildPairGroups();showToast('تم حذف المجموعة');}
 function clearAllPairGroups(){if(!pairGroups.length){showToast('لا توجد مجموعات للحذف');return;}if(!confirm('حذف كل المجموعات المحفوظة؟'))return;pairGroups=[];persistPairGroups();buildPairGroups();showToast('تم حذف كل المجموعات');}
 
-function applyMode(mode){mode=mode==='dark'?'dark':'light';document.documentElement.dataset.mode=mode;try{localStorage.setItem('manager_mode_v1',mode)}catch(e){}const btn=document.getElementById('modeBtn');if(btn)btn.textContent=mode==='dark'?'☀️ الوضع النهاري':'🌙 الوضع الليلي';}
+function updateManagerThemeColor(){const meta=document.querySelector('meta[name="theme-color"]');const color=document.documentElement.dataset.mode==='dark'?'#2c3036':'#1a6b3c';if(meta)meta.setAttribute('content',color);document.documentElement.style.background=getComputedStyle(document.documentElement).getPropertyValue('--bg').trim();document.body.style.background=getComputedStyle(document.documentElement).getPropertyValue('--bg').trim();}
+function applyMode(mode){mode=mode==='dark'?'dark':'light';document.documentElement.dataset.mode=mode;try{localStorage.setItem('manager_mode_v1',mode)}catch(e){}const btn=document.getElementById('modeBtn');if(btn)btn.textContent=mode==='dark'?'☀️ الوضع النهاري':'🌙 الوضع الليلي';updateManagerThemeColor();}
 function toggleMode(){applyMode(document.documentElement.dataset.mode==='dark'?'light':'dark');}
-function loadAppearance(){let mode='light';try{mode=localStorage.getItem('manager_mode_v1')||'light'}catch(e){}applyMode(mode);}
+function loadAppearance(){let mode='light';try{mode=localStorage.getItem('manager_mode_v1')||'light'}catch(e){}applyMode(mode);updateManagerThemeColor();}
 
 function getPts(g,ri,d){
   const key=ri+'_'+d;
@@ -443,7 +445,9 @@ function render(){
   html+=perIbadaRanking()+'<div class="card-t" style="margin-bottom:10px">👥 تفصيل أداء كل بنت</div>';
   girlsData.forEach((g,gi)=>{html+=girlCard(g,gi,sorted,maxG);});
   cont.innerHTML=html;
+  setTenRankingPage(tenRankingPage);
 }
+
 
 function setSummaryDay(day){
   selectedSummaryDay=Math.max(1,Math.min(DAYS,Number(day)||1));
@@ -500,9 +504,15 @@ function topRankings(sorted,maxG){
   return html+'</div></div>';
 }
 
+let tenRankingPage=0;let swipeState=null;
+function startSwipe(event,kind,index){const t=(event.changedTouches&&event.changedTouches[0])||(event.touches&&event.touches[0]);if(!t)return;swipeState={x:t.clientX,kind,index};}
+function endSwipe(event,kind,index){const t=event.changedTouches&&event.changedTouches[0];if(!t||!swipeState)return;const dx=t.clientX-swipeState.x;swipeState=null;if(Math.abs(dx)<40)return;const step=dx<0?1:-1;if(kind==='rank')setTenRankingPage(tenRankingPage+step);if(kind==='detail')setManagerDayPage(index,(managerDayPages[index]||0)+step);}
+function setTenRankingPage(page){tenRankingPage=Math.max(0,Math.min(2,Number(page)||0));const track=document.getElementById('tenRankTrack');if(track)track.style.transform='translateX(-'+(tenRankingPage*100)+'%)';const dots=document.querySelectorAll('.ten-rank-dot');dots.forEach((dot,i)=>dot.classList.toggle('active',i===tenRankingPage));}
+
 function tenDayRankings(){
-  let html='';
-  [[1,10],[11,20],[21,30]].forEach(([start,end])=>{
+  const periods=[[1,10],[11,20],[21,30]];
+  let html='<div class="card"><div class="ten-rank-head"><div><div class="ten-rank-title">أوائل كل 10 أيام</div><div class="ten-rank-help">مرري يمينًا ويسارًا أو استخدمي الأزرار للتنقل بين الفترات</div></div></div><div class="ten-rank-carousel" id="tenRankingsCarousel" ontouchstart="startSwipe(event,'rank')" ontouchend="endSwipe(event,'rank')"><div class="ten-rank-track" id="tenRankTrack">';
+  periods.forEach(([start,end])=>{
     const ranked=girlsData.map(g=>{
       let total=0,base=0,daysWithData=0;
       for(let d=start;d<=end;d++){
@@ -513,14 +523,16 @@ function tenDayRankings(){
       const avgPct=daysWithData?Math.min(100,Math.round((base/daysWithData)/calcDayMax()*100)):null;
       return {g,total,avgPct,daysWithData};
     }).filter(x=>x.daysWithData>0).sort((a,b)=>b.total-a.total || (b.avgPct||0)-(a.avgPct||0));
-    html+='<div class="card ten-rank-period"><div class="ten-rank-title">أوائل الأيام '+start+'–'+end+'</div><div class="ten-rank-sub">الترتيب حسب مجموع نقاط هذه الأيام فقط.</div>';
-    if(!ranked.length){html+='<div style="font-size:11px;color:var(--mu);text-align:center;padding:8px">لا توجد بيانات لهذه الفترة بعد</div>';}
-    ranked.slice(0,3).forEach((item,i)=>{
-      const rank=i+1,pct=item.avgPct===null?'—':item.avgPct+'%';
-      html+='<div class="rank-item '+rankItemClass(rank)+'"><div class="rnum '+rankNumClass(rank)+'">'+rankMedal(rank)+'</div><div class="rinfo"><div class="rname">'+esc(item.g.name)+'</div><div class="rmeta">مجموع الفترة: '+item.total+' | المعدل: '+pct+' | أيام مسجلة: '+item.daysWithData+'/10</div></div><div class="rpts">'+item.total+'</div></div>';
-    });
-    html+='</div>';
+    html+='<div class="ten-rank-slide"><div class="ten-rank-period"><div class="ten-rank-title">الأيام '+start+'–'+end+'</div><div class="ten-rank-sub">الترتيب حسب مجموع نقاط هذه الأيام فقط.</div>';
+    if(!ranked.length){html+='<div style="font-size:11px;color:var(--mu);text-align:center;padding:8px">لا توجد بيانات لهذه الفترة بعد</div>';}else{
+      ranked.slice(0,3).forEach((item,i)=>{
+        const rank=i+1,pct=item.avgPct===null?'—':item.avgPct+'%';
+        html+='<div class="rank-item '+rankItemClass(rank)+'"><div class="rnum '+rankNumClass(rank)+'">'+rankMedal(rank)+'</div><div class="rinfo"><div class="rname">'+esc(item.g.name)+'</div><div class="rmeta">مجموع الفترة: '+item.total+' | المعدل: '+pct+' | أيام مسجلة: '+item.daysWithData+'/10</div></div><div class="rpts">'+item.total+'</div></div>';
+      });
+    }
+    html+='</div></div>';
   });
+  html+='</div></div><div class="ten-rank-controls"><button type="button" class="ten-rank-nav-btn" onclick="setTenRankingPage(tenRankingPage-1)">السابق</button><div class="ten-rank-dots">'+periods.map((_,i)=>'<button type="button" class="ten-rank-dot '+(i===tenRankingPage?'active':'')+'" onclick="setTenRankingPage('+i+')" aria-label="الفترة '+(i+1)+'"></button>').join('')+'</div><button type="button" class="ten-rank-nav-btn" onclick="setTenRankingPage(tenRankingPage+1)">التالي</button></div><div class="swipe-hint">الفترات: 1–10، 11–20، 21–30</div></div>';
   return html;
 }
 
@@ -592,7 +604,8 @@ function detailsTable(g,gi){
   const startDay=page*10+1;
   const days=Array.from({length:10},(_,i)=>startDay+i);
   let html='<div class="detail-day-pages">'+[0,1,2].map(p=>'<button type="button" class="detail-day-btn '+(p===page?'active':'')+'" onclick="setManagerDayPage('+gi+','+p+',event)">الأيام '+(p*10+1)+'–'+(p*10+10)+'</button>').join('')+'</div>';
-  html+='<div class="manager-table-wrap"><table class="manager-detail-table"><thead><tr><th class="catH">الفئة</th><th class="ibH">العبادة</th><th class="ptsH">نقاط</th>';
+  html+='<div class="detail-swipe-hint">مرري يمينًا ويسارًا داخل الجدول للتنقل بين النتائج</div>';
+  html+='<div class="manager-table-wrap" ontouchstart="startSwipe(event,\'detail\','+gi+')" ontouchend="endSwipe(event,\'detail\','+gi+')"><table class="manager-detail-table"><thead><tr><th class="catH">الفئة</th><th class="ibH">العبادة</th><th class="ptsH">نقاط</th>';
   days.forEach(d=>html+='<th class="dayH">'+d+'</th>');
   html+='</tr></thead><tbody>';
   let lastCat='',catRows={};ROWS.forEach(r=>catRows[r.cat]=(catRows[r.cat]||0)+1);
