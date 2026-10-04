@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
   
@@ -12,145 +11,190 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet">
 <style>
+/* ===== الألوان الأساسية ===== */
 :root{
   --gL:#d4f4e2;--gM:#5cb87a;--gD:#1a6b3c;--gDD:#0f4a28;
-  --rL:#fcd5d5;--rM:#e07a7a;--rD:#c0392b;--gold:#b8860b;
-  --bg:#fdfaf5;--sf:#ffffff;--bd:#e2d9c8;--tx:#2c2416;--mu:#7a6a52;
+  --rL:#fcd5d5;--rM:#e07a7a;--rD:#c0392b;--gold:#a8822a;--gold-l:#fbf5e6;--gold-bd:#efe2bf;
+  --bg:#fdfaf5;--sf:#ffffff;--bd:#e2d9c8;--bd2:#efe8dc;--soft:#faf6ef;--tx:#2c2416;--mu:#7a6a52;
   --primary:#1a6b3c;--primary-dark:#0f4a28;--primary-light:#e8f6ee;
   --done-bg:#d4f4e2;--done-border:#5cb87a;--done-text:#1a6b3c;
-  --miss-bg:#fcd5d5;--miss-border:#e07a7a;--miss-text:#c0392b;
-  --edit-color:#b8860b;--sh:0 2px 12px rgba(0,0,0,.08);
+  --miss-bg:#fbe6e3;--miss-border:#e3a59d;--miss-text:#b4483c;
+  --edit-color:#a8822a;
+  --sh:0 1px 3px rgba(60,45,20,.06),0 1px 2px rgba(60,45,20,.04);
+  --r:14px;
 }
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Amiri',serif!important}
 html,body{overflow-x:hidden;width:100%;background:var(--bg);min-height:100%}
 button,input,textarea,select,table,thead,tbody,tr,th,td,a,span,div,p,label{font-family:'Amiri',serif!important;}
-body{font-family:'Amiri',system-ui,Tahoma,sans-serif;background:var(--bg);color:var(--tx);padding:1.2rem 0.8rem 3rem}
-.hdr{text-align:center;margin-bottom:1.4rem;padding-bottom:1rem;border-bottom:1.5px solid var(--bd)}
-.bsm{font-size:16px;color:var(--gold);margin-bottom:5px;font-weight:600}
-.hdr h1{font-size:24px;font-weight:700;color:#d4a017;font-family:'Amiri',serif;text-shadow:0 1px 3px rgba(0,0,0,.2)}
-.hdr p{font-size:12px;color:var(--mu);margin-top:5px}
-.journey-quote{font-size:14px;color:var(--tx);line-height:1.9;margin-top:10px;font-weight:700}
-.journey-quote span{color:var(--gold);font-size:13px}
-.how-box{background:var(--sf);border:1.5px solid var(--bd);border-radius:12px;margin-bottom:1rem;overflow:hidden;box-shadow:var(--sh)}
-.how-hdr{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--gD);color:#fff;cursor:pointer;font-size:13px;font-weight:700}
-.how-body{display:none;padding:12px 14px;font-size:11.5px;color:var(--tx)}
-.how-body .sec-title{font-weight:700;color:var(--primary);margin:8px 0 3px;font-size:12px}
-.how-body .row{display:flex;justify-content:space-between;padding:3px 8px;border-radius:6px;background:var(--bg);margin-bottom:2px}
-.how-body .row span:last-child{font-weight:700;color:var(--primary)}
-.how-body .row.neg span:last-child{color:#ef4444}
-.leg{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:1rem;font-size:12px;color:var(--mu)}
-.li{display:flex;align-items:center;gap:5px}
-.ld{width:16px;height:16px;border-radius:4px;display:inline-block;border:1.5px solid}
+body{background:var(--bg);color:var(--tx);padding:1.2rem .8rem 3rem;max-width:760px;margin:0 auto;line-height:1.55}
+
+/* ===== الهيدر ===== */
+.hdr{text-align:center;margin-bottom:1rem;padding:1.3rem 1rem 1.1rem;background:var(--sf);border:1px solid var(--bd);border-radius:18px;box-shadow:var(--sh)}
+.bsm{font-size:15px;color:var(--mu);margin-bottom:2px}
+.hdr h1{font-size:28px;font-weight:700;color:var(--gold);line-height:1.3}
+.journey-quote{font-size:15px;color:var(--tx);line-height:1.9;margin:12px auto 0;padding-top:12px;border-top:1px solid var(--bd2);max-width:340px}
+.journey-quote span{display:inline-block;margin-top:6px;color:var(--primary);font-size:13px;background:var(--primary-light);padding:3px 14px;border-radius:999px}
+.hdr p{font-size:12px;color:var(--mu);margin-top:10px}
+
+/* ===== الصناديق القابلة للفتح ===== */
+.how-box{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);margin-bottom:12px;overflow:hidden;box-shadow:var(--sh)}
+.how-hdr{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--sf);color:var(--tx);cursor:pointer;font-size:15px;font-weight:700}
+.how-hdr span:last-child{font-size:11px;color:var(--mu)}
+#goalsBox .how-hdr{background:var(--gold-l);color:var(--gold)}
+#goalsBox .how-hdr span:last-child{color:var(--gold)}
+.how-body{display:none;padding:6px 16px 16px;font-size:13px;color:var(--tx);border-top:1px solid var(--bd2)}
+.how-body .sec-title{font-weight:700;color:var(--primary);margin:14px 0 6px;font-size:14px}
+.how-body .row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:7px 11px;border-radius:9px;background:var(--soft);margin-bottom:4px;line-height:1.5}
+.how-body .row[style]{background:var(--gold-l)!important;border:0!important}
+.how-body .row span:last-child{font-weight:700;color:var(--primary);white-space:nowrap}
+.how-body .row span[style]{color:var(--gold)!important}
+.how-body .row small{color:var(--mu);font-size:11.5px}
+.how-body .row.neg span:last-child{color:var(--miss-text)}
+.how-body>div[style*="font-size:9px"]{font-size:11.5px!important;margin:2px 11px 8px!important}
+
+/* ===== دليل الألوان ===== */
+.leg{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:4px 0 14px;font-size:12.5px;color:var(--mu)}
+.li{display:flex;align-items:center;gap:6px;background:var(--sf);border:1px solid var(--bd2);border-radius:999px;padding:4px 12px}
+.ld{width:14px;height:14px;border-radius:4px;display:inline-block;border:1px solid}
 .ld.e{background:var(--sf);border-color:var(--bd)}.ld.d{background:var(--done-bg);border-color:var(--done-border)}.ld.m{background:var(--miss-bg);border-color:var(--miss-border)}
-.nr{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:1.2rem}
-.nr label{font-size:13px;color:var(--mu);font-weight:500}
-.nr input{border:1.5px solid var(--bd);border-radius:8px;padding:6px 12px;font-family:inherit;font-size:13px;background:var(--sf);color:var(--tx);width:180px;text-align:right;outline:none}
-.nr input:focus{border-color:var(--primary)}
-.tw{overflow:hidden;border-radius:12px;box-shadow:var(--sh);border:1px solid var(--bd);background:var(--sf);margin-bottom:1rem}
-table{width:100%;border-collapse:collapse;table-layout:fixed;font-size:11px}
-thead th{background:var(--primary);color:#fff;font-weight:600;padding:8px 2px;text-align:center;border-bottom:2px solid var(--primary-dark);font-size:10.5px}
-thead th.tc{background:var(--primary-dark);width:18px}
+
+/* ===== الاسم والمظهر ===== */
+.nr{display:flex;align-items:center;gap:10px;margin-bottom:10px;background:var(--sf);border:1px solid var(--bd);border-radius:12px;padding:8px 12px;box-shadow:var(--sh)}
+.nr label{font-size:14px;color:var(--mu);font-weight:700;white-space:nowrap}
+.nr input{flex:1;min-width:0;border:0;border-radius:8px;padding:6px 4px;font-size:15px;background:transparent;color:var(--tx);text-align:right;outline:none}
+.nr input::placeholder{color:#b9ab95}
+.nr:focus-within{border-color:var(--gM)}
+.appearance-bar{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 14px}
+.appearance-btn,.theme-select{font-size:13px;font-weight:700;border:1px solid var(--bd);background:var(--sf);color:var(--tx);border-radius:10px;padding:9px 10px;cursor:pointer;box-shadow:var(--sh);height:42px;width:100%;text-align:center}
+.theme-select{outline:none;-webkit-appearance:none;appearance:none;text-align-last:center}
+
+/* ===== رسالة الحالة ===== */
+.status-bar{text-align:center;font-size:13px;padding:9px;border-radius:10px;margin-bottom:10px;display:none}
+.status-bar.ok{background:var(--done-bg);color:var(--done-text);border:1px solid var(--done-border)}
+
+/* ===== تبويبات الأيام ===== */
+.day-pages{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin:0 0 10px;background:var(--bd2);padding:4px;border-radius:12px;border:1px solid var(--bd)}
+.day-page-btn{font-size:13px;font-weight:700;padding:8px 4px;border-radius:9px;border:0;background:transparent;color:var(--mu);cursor:pointer;transition:background .15s}
+.day-page-btn.active{background:var(--sf);color:var(--primary);box-shadow:var(--sh)}
+
+/* ===== الجدول ===== */
+.tw{overflow:hidden;border-radius:var(--r);box-shadow:var(--sh);border:1px solid var(--bd);background:var(--sf);margin-bottom:14px}
+table{width:100%;border-collapse:collapse;table-layout:fixed;font-size:11.5px}
+thead th{background:var(--primary-light);color:var(--primary-dark);font-weight:700;padding:9px 2px;text-align:center;border-bottom:1px solid var(--bd);font-size:11.5px}
+thead th.tc{width:20px}
 thead th.ti{text-align:right;padding-right:8px;width:32%}
-thead th.tp{width:28px;font-size:10px;opacity:.85}
+thead th.tp{width:30px;font-size:11px}
 thead th.td{width:5.5%}
-td.cc{background:var(--primary-light);color:var(--gD);font-weight:700;text-align:center;padding:3px 1px;border:1px solid #c8e8d4;writing-mode:vertical-lr;text-orientation:mixed;font-size:9px;vertical-align:middle;max-width:18px;overflow:hidden}
-td.ic{font-size:10.5px;color:var(--tx);padding:4px 6px 4px 3px;border:1px solid #ede7db;background:var(--sf);overflow:hidden;white-space:normal;line-height:1.35}
-td.pc{text-align:center;color:var(--mu);font-size:11px;padding:4px 1px;border:1px solid #ede7db;background:#faf8f3;font-weight:600;position:relative;min-width:32px;cursor:default}
-td.cell{text-align:center;padding:0;border:1px solid #ede7db;cursor:pointer;user-select:none;background:var(--sf);transition:background .1s;height:40px;-webkit-tap-highlight-color:transparent;touch-action:manipulation;vertical-align:middle}
+td.cc{background:var(--primary-light);color:var(--primary-dark);font-weight:700;text-align:center;padding:3px 1px;border:1px solid var(--bd2);writing-mode:vertical-lr;text-orientation:mixed;font-size:10.5px;vertical-align:middle;max-width:20px;overflow:hidden}
+td.ic{font-size:11.5px;color:var(--tx);padding:6px 7px 6px 3px;border:1px solid var(--bd2);background:var(--sf);overflow:hidden;white-space:normal;line-height:1.4}
+td.ic div[style]{font-size:10px!important}
+td.pc{text-align:center;color:var(--mu);font-size:11.5px;padding:4px 1px;border:1px solid var(--bd2);background:var(--soft);font-weight:700;position:relative;min-width:32px;cursor:default}
+td.cell{text-align:center;padding:0;border:1px solid var(--bd2);cursor:pointer;user-select:none;background:var(--sf);transition:background .12s;height:40px;-webkit-tap-highlight-color:transparent;touch-action:manipulation;vertical-align:middle}
 td.cell.done{background:var(--done-bg)}
 td.cell.miss{background:var(--miss-bg)}
 .cell-inner{display:flex;flex-direction:column;align-items:center;justify-content:center;height:40px;gap:1px}
 .pts-row{display:flex;align-items:center;justify-content:center;gap:2px}
 .cell-arrow{font-size:8px;font-weight:700;line-height:1;font-family:Arial,sans-serif!important}
 .cell-arrow.up{color:var(--done-text)}
-.cell-arrow.down{color:#c0392b}
-.cell-pts{font-size:10px;font-weight:700;text-decoration:underline dotted;cursor:text;line-height:1}
+.cell-arrow.down{color:var(--miss-text)}
+.cell-pts{font-size:10.5px;font-weight:700;text-decoration:underline dotted;cursor:text;line-height:1}
 .cell-pts.up{color:var(--done-text)}
-.cell-pts.down{color:#c0392b}
+.cell-pts.down{color:var(--miss-text)}
 .cell-pts.eq{color:var(--done-text)}
 .cell-pts.fixed{text-decoration:none;cursor:default}
-.pts-inline-input{width:28px;font-size:11px;font-weight:700;text-align:center;border:1.5px solid var(--primary);border-radius:4px;background:#fff;color:var(--primary);outline:none;padding:1px 2px;font-family:'Amiri',serif!important}
-tr.tr-day td{background:var(--primary);color:#fff;font-weight:700;font-size:12px;padding:7px 3px;text-align:center;border-top:2px solid var(--primary-dark)}
-tr.tr-day td.lbl{text-align:right;padding-right:8px;background:var(--primary-dark);font-size:11px}
-tr.tr-day td.pts-total{background:var(--primary-dark);font-size:11px;font-weight:700;color:#a8e6c0;text-align:center}
+.pts-inline-input{width:28px;font-size:11px;font-weight:700;text-align:center;border:1px solid var(--primary);border-radius:5px;background:var(--sf);color:var(--primary);outline:none;padding:1px 2px}
+tr.tr-day td{background:var(--soft);color:var(--primary-dark);font-weight:700;font-size:12px;padding:8px 3px;text-align:center;border-top:1px solid var(--bd)}
+tr.tr-day td.lbl{text-align:right;padding-right:8px;font-size:11.5px;color:var(--tx)}
+tr.tr-day td.pts-total{font-size:11.5px;font-weight:700;color:var(--primary)}
 .qiyam-cell{display:flex;flex-direction:column;align-items:center;justify-content:center;height:40px;gap:1px;cursor:default}
-.qiyam-num{font-size:11px;font-weight:700;color:var(--primary);line-height:1}
-.qiyam-sub{font-size:8px;color:var(--mu);line-height:1}
+.qiyam-num{font-size:11.5px;font-weight:700;color:var(--primary);line-height:1}
+.qiyam-sub{font-size:8.5px;color:var(--mu);line-height:1}
 .qiyam-btns{display:flex;gap:2px;align-items:center}
-.qiyam-btn{width:14px;height:14px;border-radius:3px;border:1px solid var(--gM);background:var(--sf);color:var(--gD);font-size:10px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;padding:0}
-.pdf-btn{display:inline-flex;align-items:center;gap:3px;font-size:9px;color:var(--primary-dark);background:var(--primary-light);border:1px solid var(--gM);border-radius:4px;padding:2px 5px;cursor:pointer;margin-top:2px;text-decoration:none;font-family:'Amiri',serif!important;font-weight:700}
-.pdf-btn:hover{background:var(--gL)}
-.pdf-overlay{position:fixed;inset:0;z-index:9800;background:rgba(0,0,0,.6);display:none;flex-direction:column}
+.qiyam-btn{width:15px;height:15px;border-radius:4px;border:1px solid var(--gM);background:var(--sf);color:var(--gD);font-size:10px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;padding:0}
+.pdf-btn{display:inline-flex;align-items:center;gap:3px;font-size:10px;color:var(--primary-dark);background:var(--primary-light);border:1px solid var(--bd2);border-radius:999px;padding:2px 8px;cursor:pointer;margin-top:3px;text-decoration:none;font-weight:700}
+.pdf-btn:hover{border-color:var(--gM)}
+
+/* ===== عارض الملفات ===== */
+.pdf-overlay{position:fixed;inset:0;z-index:9800;background:rgba(30,24,14,.55);display:none;flex-direction:column}
 .pdf-overlay.show{display:flex}
-.pdf-header{background:var(--primary-dark);color:#fff;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
-.pdf-header span{font-size:14px;font-weight:700}
-.pdf-header button{background:#ef4444;color:#fff;border:none;border-radius:6px;padding:5px 14px;font-family:inherit;font-size:13px;cursor:pointer}
+.pdf-header{background:var(--sf);color:var(--tx);padding:10px 14px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;border-bottom:1px solid var(--bd)}
+.pdf-header span{font-size:15px;font-weight:700}
+.pdf-header button{background:var(--soft);color:var(--miss-text);border:1px solid var(--bd);border-radius:8px;padding:5px 14px;font-size:13px;font-weight:700;cursor:pointer}
 .pdf-frame{flex:1;width:100%;border:none;background:#fff}
-.counter-box{background:var(--sf);border:1.5px solid var(--gM);border-radius:12px;padding:12px 14px;margin-bottom:1rem;box-shadow:var(--sh)}
-.counter-title{font-size:13px;font-weight:700;color:var(--gD);margin-bottom:10px}
+
+/* ===== عداد التسميع ===== */
+.counter-box{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:14px 16px;margin-bottom:12px;box-shadow:var(--sh)}
+.counter-title{font-size:14px;font-weight:700;color:var(--tx);margin-bottom:10px}
 .counter-row{display:flex;align-items:center;gap:10px}
-.counter-name{flex:1;font-size:12px;color:var(--tx)}
-.counter-btns{display:flex;align-items:center;gap:6px}
-.counter-btn{width:32px;height:32px;border-radius:8px;border:1.5px solid var(--gM);background:var(--sf);color:var(--gD);font-size:18px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1}
-.counter-val{font-size:18px;font-weight:700;color:var(--gD);min-width:28px;text-align:center}
-.counter-pts{font-size:11px;color:var(--mu)}
-.gc{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:6px}
-.gc2{display:grid;grid-template-columns:1fr;gap:8px;margin-bottom:1rem}
-.sc{background:var(--sf);border-radius:10px;padding:10px;text-align:center;border:1px solid var(--bd);box-shadow:var(--sh)}
-.sc.pct-box{border-color:var(--done-border);background:linear-gradient(135deg,#f0fdf4,#dcfce7)}
-.sl{font-size:11px;color:var(--mu);margin-bottom:2px}
-.sv{font-size:22px;font-weight:800;color:var(--primary);line-height:1}
-.btns{display:flex;flex-direction:column;gap:8px;margin-bottom:8px}
-.btn{font-family:inherit;font-size:13px;font-weight:700;padding:11px;border-radius:10px;cursor:pointer;border:none;transition:all .15s;width:100%;text-align:center}
-.btn-send{background:linear-gradient(90deg,var(--primary),var(--primary-dark));color:#fff;box-shadow:0 2px 8px rgba(58,158,95,.25)}
-.btn-report{background:linear-gradient(90deg,#5a7a65,#3d5c47);color:#fff;box-shadow:0 2px 8px rgba(90,122,101,.25)}
-.btn-reset{background:#fff;color:#ef4444;border:1.5px solid #ef4444;font-size:12px;padding:9px}
-.note{text-align:center;font-size:11px;color:var(--mu);line-height:1.7}
-.status-bar{text-align:center;font-size:12px;padding:8px;border-radius:8px;margin-bottom:8px;display:none}
-.status-bar.ok{background:var(--done-bg);color:var(--done-text);border:1px solid var(--done-border)}
-.overlay{position:fixed;inset:0;z-index:9500;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center}
+.counter-name{flex:1;font-size:13px;color:var(--mu)}
+.counter-btns{display:flex;align-items:center;gap:8px;background:var(--soft);border:1px solid var(--bd2);border-radius:12px;padding:4px}
+.counter-btn{width:34px;height:34px;border-radius:9px;border:1px solid var(--bd);background:var(--sf);color:var(--primary);font-size:18px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1}
+.counter-val{font-size:19px;font-weight:700;color:var(--primary);min-width:28px;text-align:center}
+.counter-pts{font-size:12px;color:var(--mu);white-space:nowrap}
+
+/* ===== الإحصائيات ===== */
+.gc{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:8px}
+.gc2{display:grid;grid-template-columns:1fr;gap:8px;margin-bottom:14px}
+.sc{background:var(--sf);border-radius:12px;padding:12px 6px;text-align:center;border:1px solid var(--bd);box-shadow:var(--sh)}
+.sc.pct-box{border-color:var(--done-border);background:var(--primary-light)}
+.sc.pct-box div[style*="font-size:9px"]{font-size:11px!important}
+.sl{font-size:12px;color:var(--mu);margin-bottom:4px}
+.sv{font-size:23px;font-weight:700;color:var(--primary);line-height:1.1}
+
+/* ===== الأزرار ===== */
+.btns{display:flex;flex-direction:column;gap:8px;margin-bottom:10px}
+.btn{font-size:14px;font-weight:700;padding:12px;border-radius:12px;cursor:pointer;border:1px solid transparent;transition:background .15s,border-color .15s;width:100%;text-align:center}
+.btn-send{background:var(--primary);color:#fff;border-color:var(--primary)}
+.btn-send:hover{background:var(--primary-dark)}
+.btn-report{background:var(--sf);color:var(--primary);border-color:var(--bd);box-shadow:var(--sh)}
+.btn-report:hover{border-color:var(--gM)}
+.btn-reset{background:transparent;color:var(--miss-text);border:0;font-size:13px;padding:8px}
+.note{text-align:center;font-size:12px;color:var(--mu);line-height:1.8}
+
+/* ===== نافذة التأكيد ===== */
+.overlay{position:fixed;inset:0;z-index:9500;background:rgba(30,24,14,.45);display:none;align-items:center;justify-content:center}
 .overlay.show{display:flex}
-.modal-box{background:var(--sf);border-radius:14px;width:90%;max-width:340px;overflow:hidden;box-shadow:0 8px 32px rgba(58,158,95,.15)}
-.goal-row{display:flex;align-items:center;gap:8px;padding:9px 10px;border-radius:10px;background:#faf8f3;border:1px solid var(--bd);margin-bottom:8px}
-.goal-name{flex:1;font-size:12px;color:var(--tx);line-height:1.4}
-.goal-base{font-size:10px;color:var(--mu);margin-top:2px}
-.goal-ctrl{display:flex;flex-direction:column;align-items:flex-end;gap:4px;min-width:120px}
+.modal-box{background:var(--sf);border-radius:16px;width:90%;max-width:340px;overflow:hidden;box-shadow:0 10px 36px rgba(30,24,14,.18);border:1px solid var(--bd)}
+
+/* ===== حددي كميتك ===== */
+.goal-row{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:12px;background:var(--soft);border:1px solid var(--bd2);margin-bottom:8px}
+.goal-name{flex:1;font-size:13px;color:var(--tx);line-height:1.45;font-weight:700}
+.goal-base{font-size:11px;color:var(--mu);margin-top:2px;font-weight:400}
+.goal-ctrl{display:flex;flex-direction:column;align-items:flex-end;gap:5px;min-width:120px}
+.goal-ctrl div[style*="font-size:9px"]{font-size:10.5px!important}
 .goal-opts{display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end}
-.goal-opt{font-size:10px;padding:4px 8px;border-radius:6px;border:1.5px solid var(--bd);background:#fff;color:var(--mu);cursor:pointer;font-family:inherit;white-space:nowrap}
+.goal-opt{font-size:11px;padding:4px 10px;border-radius:999px;border:1px solid var(--bd);background:var(--sf);color:var(--mu);cursor:pointer;white-space:nowrap}
 .goal-opt.active{border-color:var(--primary);background:var(--primary-light);color:var(--primary);font-weight:700}
 .goal-custom-row{display:flex;align-items:center;gap:6px}
-.goal-custom-inp{width:56px;border:1.5px solid var(--bd);border-radius:6px;padding:3px 6px;font-size:12px;text-align:center;font-family:inherit;outline:none;background:var(--sf)}
+.goal-custom-inp{width:58px;border:1px solid var(--bd);border-radius:8px;padding:3px 6px;font-size:12.5px;text-align:center;outline:none;background:var(--sf);color:var(--tx)}
 .goal-custom-inp:focus{border-color:var(--gold)}
-.goal-unit{font-size:10px;color:var(--mu)}
-#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--primary-dark);color:#fff;font-size:13px;padding:9px 22px;border-radius:30px;opacity:0;transition:all .3s;pointer-events:none;z-index:9999;white-space:nowrap}
+.goal-unit{font-size:11px;color:var(--mu)}
+
+#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--tx);color:var(--bg);font-size:13px;padding:10px 22px;border-radius:12px;opacity:0;transition:all .3s;pointer-events:none;z-index:9999;white-space:nowrap}
 #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
-/* ===== Appearance + 30-day tabs ===== */
-.appearance-bar{display:flex;gap:8px;align-items:center;justify-content:center;flex-wrap:wrap;margin:-.35rem 0 1rem}
-.appearance-btn,.theme-select{font-family:inherit;font-size:12px;font-weight:700;border:1.5px solid var(--bd);background:var(--sf);color:var(--tx);border-radius:10px;padding:7px 11px;cursor:pointer;box-shadow:var(--sh)}
-.theme-select{outline:none}
-.day-pages{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:0 0 8px}
-.day-page-btn{font-family:inherit;font-size:12px;font-weight:700;padding:8px 6px;border-radius:9px;border:1.5px solid var(--bd);background:var(--sf);color:var(--mu);cursor:pointer}
-.day-page-btn.active{background:var(--primary);color:#fff;border-color:var(--primary)}
-/* متغيرات الثيم: كل لون يغيّر الأزرار والرؤوس والحالات والتفاصيل معًا */
+/* ===== الثيمات: كل لون يغيّر الأزرار والرؤوس والحالات معًا ===== */
 html[data-theme="green"]{--gL:#d4f4e2;--gM:#5cb87a;--gD:#1a6b3c;--gDD:#0f4a28;--primary:#1a6b3c;--primary-dark:#0f4a28;--primary-light:#e8f6ee;--done-bg:#d4f4e2;--done-border:#5cb87a;--done-text:#1a6b3c;--theme-tint:#f3faf6;--theme-dark-sf:#26312a;--theme-dark-soft:#303d34;--theme-dark-line:#46564b}
 html[data-theme="rose"]{--gL:#f7dfe6;--gM:#d8899e;--gD:#a44763;--gDD:#743247;--primary:#a44763;--primary-dark:#743247;--primary-light:#f8e8ed;--done-bg:#f7dfe6;--done-border:#d8899e;--done-text:#8f3f58;--theme-tint:#fff7f9;--theme-dark-sf:#35292e;--theme-dark-soft:#443239;--theme-dark-line:#61464f}
 html[data-theme="blue"]{--gL:#dcecf8;--gM:#79a9cc;--gD:#376f9b;--gDD:#244b69;--primary:#376f9b;--primary-dark:#244b69;--primary-light:#e8f2fa;--done-bg:#dcecf8;--done-border:#79a9cc;--done-text:#2f638b;--theme-tint:#f5faff;--theme-dark-sf:#27323a;--theme-dark-soft:#303e48;--theme-dark-line:#465b6a}
 html[data-theme="purple"]{--gL:#eadff7;--gM:#a98bd0;--gD:#7652a6;--gDD:#533875;--primary:#7652a6;--primary-dark:#533875;--primary-light:#f0eafa;--done-bg:#eadff7;--done-border:#a98bd0;--done-text:#694996;--theme-tint:#fbf8ff;--theme-dark-sf:#302a37;--theme-dark-soft:#3c3347;--theme-dark-line:#574966}
 html[data-theme="beige"]{--gL:#eee3d3;--gM:#b79b78;--gD:#80654a;--gDD:#5c4734;--primary:#80654a;--primary-dark:#5c4734;--primary-light:#f4eee6;--done-bg:#eee3d3;--done-border:#b79b78;--done-text:#70583f;--theme-tint:#fcfaf7;--theme-dark-sf:#332f2a;--theme-dark-soft:#403a33;--theme-dark-line:#5d5449}
 
-/* Dark mode أهدأ ومحايد أكثر لراحة العين */
-html[data-mode="dark"]{--bg:#2c3036;--sf:#343941;--bd:#4a525d;--tx:#f5f1e8;--mu:#c9c2b4;--sh:0 3px 14px rgba(0,0,0,.14);--primary-light:#404751;--done-bg:#3b4a40;--done-border:#6e9579;--done-text:#e2f4e6;--miss-bg:#4d3939;--miss-border:#a16c6c;--miss-text:#ffe0e0}
+@media(max-width:420px){
+  body{padding:.9rem .6rem 3rem}
+  .hdr h1{font-size:25px}
+  .sv{font-size:20px}
+}
+
+/* ===== الوضع الليلي ===== */
+html[data-mode="dark"]{--bg:#2c3036;--sf:#343941;--bd:#4a525d;--bd2:#3f454e;--soft:#3a4047;--tx:#f5f1e8;--mu:#c9c2b4;--sh:0 1px 3px rgba(0,0,0,.2);--primary-light:#3d444d;--primary-dark:#e8efe9;--done-bg:#3b4a40;--done-border:#6e9579;--done-text:#e2f4e6;--miss-bg:#4d3939;--miss-border:#a16c6c;--miss-text:#ffc9c2;--gold:#d8b45c;--gold-l:#3d3828;--gold-bd:#5a4c2a}
 html[data-mode="dark"],html[data-mode="dark"] body{background:var(--bg);color:var(--tx)}
-html[data-mode="dark"] .goal-row,html[data-mode="dark"] td.pc,html[data-mode="dark"] .how-body .row{background:#3c424b}
-html[data-mode="dark"] td.ic,html[data-mode="dark"] td.cell,html[data-mode="dark"] .goal-opt,html[data-mode="dark"] .pts-inline-input,html[data-mode="dark"] .theme-select,html[data-mode="dark"] .appearance-btn{background:var(--sf);color:var(--tx)}
-html[data-mode="dark"] .sc.pct-box{background:linear-gradient(135deg,#3d444d,var(--sf));border-color:var(--gM)}
-html[data-mode="dark"] .counter-box,html[data-mode="dark"] .how-box,html[data-mode="dark"] .tw,html[data-mode="dark"] .sc{background:var(--sf)}
-html[data-mode="dark"] .goal-custom-inp{background:#2f343b;color:var(--tx)}
-html[data-mode="dark"] .ld.e{background:var(--sf)}
-
-
-
+html[data-mode="dark"] .btn-send{color:#fff;background:var(--gD);border-color:var(--gD)}
+html[data-mode="dark"] .btn-report{color:var(--tx)}
+html[data-mode="dark"] .day-page-btn.active,html[data-mode="dark"] .counter-val,html[data-mode="dark"] .counter-btn,html[data-mode="dark"] .sv,html[data-mode="dark"] .qiyam-num,html[data-mode="dark"] .how-body .sec-title,html[data-mode="dark"] .how-body .row span:last-child{color:var(--done-text)}
+html[data-mode="dark"] .journey-quote span{color:var(--done-text)}
+html[data-mode="dark"] .nr input::placeholder{color:#8f887c}
+html[data-mode="dark"] #toast{background:#f5f1e8;color:#2c3036}
 </style>
 <link rel="manifest" href="manifest.json?v=2026.08.30.5">
 <meta name="mobile-web-app-capable" content="yes">
@@ -222,11 +266,11 @@ window.APP_VERSION = "2026.08.30.5";
   </select>
 </div>
 <div class="how-box" id="goalsBox">
-  <div class="how-hdr" onclick="toggleGoals()" style="background:var(--gold)"><span>🎯 حددي كميتك من هذه العبادات</span><span id="goalsArr">▼</span></div>
+  <div class="how-hdr" onclick="toggleGoals()"><span>🎯 حددي كميتك من هذه العبادات</span><span id="goalsArr">▼</span></div>
   <div class="how-body" id="goalsBody" style="padding:14px">
-    <div style="font-size:11px;color:var(--mu);margin-bottom:12px;background:#fff8e1;border-radius:8px;padding:8px 10px;border:1px solid #f0c040;line-height:1.7">حددي هدفك الشخصي لكل عبادة — الكمية الأساسية هي المعتمدة لحساب المعدل من 100، وأي زيادة تُحسب بونص إضافي ⭐</div>
+    <div style="font-size:12.5px;color:var(--mu);margin-bottom:12px;background:var(--gold-l);border-radius:10px;padding:10px 12px;border:1px solid var(--gold-bd);line-height:1.8">حددي هدفك الشخصي لكل عبادة — الكمية الأساسية هي المعتمدة لحساب المعدل من 100، وأي زيادة تُحسب بونص إضافي ⭐</div>
     <div id="goalsRows"></div>
-    <div style="font-size:10px;color:var(--mu);text-align:center;margin-top:8px;background:var(--primary-light);border-radius:6px;padding:6px">الهدف يُطبَّق على الأيام الثلاثين — ويمكنك تعديل يوم بعينه من داخل الجدول</div>
+    <div style="font-size:11.5px;color:var(--mu);text-align:center;margin-top:10px;background:var(--primary-light);border-radius:10px;padding:8px">الهدف يُطبَّق على الأيام الثلاثين — ويمكنك تعديل يوم بعينه من داخل الجدول</div>
   </div>
 </div>
 <div class="day-pages" id="dayPages">
@@ -257,21 +301,21 @@ window.APP_VERSION = "2026.08.30.5";
 </div>
 <div class="gc2"><div class="sc pct-box">
   <div class="sl" id="pctLabel">📊 معدل الأيام 1–10 من 100</div>
-  <div class="sv" style="color:#15803d;font-size:20px" id="pctDayVal">—</div>
+  <div class="sv" style="font-size:22px" id="pctDayVal">—</div>
   <div style="font-size:9px;color:var(--mu);margin-top:3px">متوسط أدائك في الأيام المسجلة من هذه الفترة</div>
 </div></div>
 <div id="resetModal" class="overlay"><div class="modal-box">
-  <div style="background:#ef4444;padding:12px 16px;display:flex;justify-content:space-between;align-items:center">
-    <span style="color:#fff;font-size:14px;font-weight:700">⚠️ إعادة تفريغ الجدول</span>
-    <button onclick="document.getElementById('resetModal').classList.remove('show')" style="background:none;border:none;color:#fff;font-size:20px;cursor:pointer">✕</button>
+  <div style="background:var(--miss-bg);padding:12px 16px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--bd2)">
+    <span style="color:var(--miss-text);font-size:15px;font-weight:700">⚠️ إعادة تفريغ الجدول</span>
+    <button onclick="document.getElementById('resetModal').classList.remove('show')" style="background:none;border:none;color:var(--miss-text);font-size:20px;cursor:pointer">✕</button>
   </div>
   <div style="padding:16px;text-align:center">
     <div style="font-size:32px;margin-bottom:8px">🗑️</div>
     <div style="font-size:14px;font-weight:700;color:var(--tx);margin-bottom:6px">هل أنتِ متأكدة؟</div>
     <div style="font-size:12px;color:var(--mu);margin-bottom:16px">سيتم مسح جميع البيانات المحفوظة نهائياً</div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-      <button onclick="document.getElementById('resetModal').classList.remove('show')" style="font-family:inherit;padding:10px;border-radius:8px;border:1.5px solid var(--bd);background:#fff;color:var(--tx);font-size:13px;font-weight:700;cursor:pointer">إلغاء</button>
-      <button onclick="confirmReset()" style="font-family:inherit;padding:10px;border-radius:8px;border:none;background:#ef4444;color:#fff;font-size:13px;font-weight:700;cursor:pointer">مسح الكل ✓</button>
+      <button onclick="document.getElementById('resetModal').classList.remove('show')" style="font-family:inherit;padding:10px;border-radius:8px;border:1px solid var(--bd);background:var(--sf);color:var(--tx);font-size:13px;font-weight:700;cursor:pointer;border-radius:10px">إلغاء</button>
+      <button onclick="confirmReset()" style="font-family:inherit;padding:10px;border-radius:10px;border:none;background:var(--miss-text);color:#fff;font-size:13px;font-weight:700;cursor:pointer">مسح الكل ✓</button>
     </div>
   </div>
 </div></div>
@@ -463,7 +507,7 @@ function buildGoalsSection(){
       optsDiv.appendChild(btn);
     });
     ctrl.appendChild(optsDiv);
-    if(g.note){const noteEl=document.createElement('div');noteEl.style.cssText='font-size:9px;color:var(--gold);margin-top:2px;text-align:right';noteEl.textContent='⚠ '+g.note;ctrl.appendChild(noteEl);}
+    if(g.note){const noteEl=document.createElement('div');noteEl.style.cssText='font-size:10.5px;color:var(--gold);margin-top:2px;text-align:right';noteEl.textContent='⚠ '+g.note;ctrl.appendChild(noteEl);}
     if(!g.noCustom){
       const customRow=document.createElement('div');customRow.className='goal-custom-row';
       const customLbl=document.createElement('span');customLbl.style.cssText='font-size:10px;color:var(--mu)';customLbl.textContent='أو:';
@@ -558,9 +602,9 @@ function toggle(ri,d,td){
 function buildDayPctRow(tb){
   const tr=document.createElement('tr');
   const lbl=document.createElement('td');lbl.className='lbl';lbl.colSpan=3;
-  lbl.style.cssText='background:var(--primary-light);color:var(--primary-dark);font-size:10px;font-weight:700;text-align:right;padding-right:8px;border-top:2px solid var(--primary)';
+  lbl.style.cssText='background:var(--sf);color:var(--tx);font-size:11.5px;font-weight:700;text-align:right;padding-right:8px;border-top:1px solid var(--bd)';
   lbl.textContent='معدل اليوم من 100';tr.appendChild(lbl);
-  for(const d of visibleDays()){const td=document.createElement('td');td.id='dpct'+d;td.style.cssText='text-align:center;font-size:10px;font-weight:700;color:var(--primary);background:var(--primary-light);border:1px solid var(--gM);border-top:2px solid var(--primary);padding:3px 1px';td.textContent='—';tr.appendChild(td);}
+  for(const d of visibleDays()){const td=document.createElement('td');td.id='dpct'+d;td.style.cssText='text-align:center;font-size:11px;font-weight:700;color:var(--primary);background:var(--sf);border:1px solid var(--bd2);border-top:1px solid var(--bd);padding:5px 1px';td.textContent='—';tr.appendChild(td);}
   tb.appendChild(tr);
 }
 
@@ -578,22 +622,22 @@ function build(){
     }
     const ti=document.createElement('td');ti.className='ic';
     const note=IBADA_NOTES[r.ibada];
-    const noteHtml=note?'<div style="color:#b8860b;font-size:9px;line-height:1.4;margin-top:2px">'+note+'</div>':'';
+    const noteHtml=note?'<div style="color:var(--gold);font-size:10px;line-height:1.4;margin-top:2px">'+note+'</div>':'';
     let badilHtml='';
     if(r.badilBook){
-      badilHtml='<div style="color:#b8860b;font-size:9px;line-height:1.4;margin-top:3px">🔄 بديل: القراءة من كتاب "لا يرد القدر إلا الدعاء"</div>'
+      badilHtml='<div style="color:var(--gold);font-size:10px;line-height:1.4;margin-top:3px">🔄 بديل: القراءة من كتاب "لا يرد القدر إلا الدعاء"</div>'
         +'<button class="pdf-btn" style="margin-top:3px" onclick="openPdf(\'book\',\'لا يرد القدر إلا الدعاء\')">📖 افتحي الكتاب</button>';
     }else if(r.badil){
-      badilHtml='<div style="color:#b8860b;font-size:9px;line-height:1.4;margin-top:2px">🔄 '+r.badil+'</div>';
+      badilHtml='<div style="color:var(--gold);font-size:10px;line-height:1.4;margin-top:2px">🔄 '+r.badil+'</div>';
     }
-    const bonusHtml=r.bonus?'<div style="color:#b8860b;font-size:9px;font-weight:700;margin-top:2px">⭐ بونص</div>':'';
+    const bonusHtml=r.bonus?'<div style="color:var(--gold);font-size:10px;font-weight:700;margin-top:2px">⭐ بونص</div>':'';
     const pdfHtml=r.pdfLink?'<button class="pdf-btn" onclick="openPdf(\''+r.pdfLink+'\',\''+r.pdfTitle+'\')">📄 افتحي الملف</button>':'';
-    if(r.negative){ti.innerHTML='<div style="color:#ef4444">'+r.ibada+'</div>'+noteHtml+badilHtml;}
+    if(r.negative){ti.innerHTML='<div style="color:var(--miss-text)">'+r.ibada+'</div>'+noteHtml+badilHtml;}
     else{ti.innerHTML='<div>'+r.ibada+'</div>'+noteHtml+badilHtml+bonusHtml+pdfHtml;}
     tr.appendChild(ti);
     const tp=document.createElement('td');tp.className='pc';
-    if(r.negative)tp.style.color='#ef4444';
-    else if(r.bonus)tp.style.color='#b8860b';
+    if(r.negative)tp.style.color='var(--miss-text)';
+    else if(r.bonus)tp.style.color='var(--gold)';
     tp.textContent=r.pts;
     tr.appendChild(tp);
     for(const d of days){
@@ -612,9 +656,9 @@ function build(){
   tb.appendChild(tf);
 
   const tb2=document.createElement('tr');
-  const blbl=document.createElement('td');blbl.colSpan=2;blbl.textContent='⭐ بونص اليوم';blbl.style.cssText='background:#fff3cd;color:#7a5c00;font-size:11px;font-weight:700;text-align:right;padding-right:8px;border-top:1px solid #f0c040';tb2.appendChild(blbl);
-  const bEmpty=document.createElement('td');bEmpty.style.cssText='background:#fff3cd;border:1px solid #f0c040;font-size:10px;color:#b8860b;text-align:center';bEmpty.textContent='⭐';tb2.appendChild(bEmpty);
-  for(const d of days){const td=document.createElement('td');td.id='dbonus'+d;td.style.cssText='background:#fffde7;color:#b8860b;font-weight:700;font-size:11px;text-align:center;border:1px solid #f0c040;padding:3px 1px';tb2.appendChild(td);}
+  const blbl=document.createElement('td');blbl.colSpan=2;blbl.textContent='⭐ بونص اليوم';blbl.style.cssText='background:var(--gold-l);color:var(--gold);font-size:11.5px;font-weight:700;text-align:right;padding-right:8px;border-top:1px solid var(--gold-bd)';tb2.appendChild(blbl);
+  const bEmpty=document.createElement('td');bEmpty.style.cssText='background:var(--gold-l);border:1px solid var(--gold-bd);font-size:10px;color:var(--gold);text-align:center';bEmpty.textContent='⭐';tb2.appendChild(bEmpty);
+  for(const d of days){const td=document.createElement('td');td.id='dbonus'+d;td.style.cssText='background:var(--gold-l);color:var(--gold);font-weight:700;font-size:11.5px;text-align:center;border:1px solid var(--gold-bd);padding:3px 1px';tb2.appendChild(td);}
   tb.appendChild(tb2);
   buildDayPctRow(tb);recalc();
 }
@@ -702,23 +746,23 @@ function openReport(){
   for(let d=1;d<=DAYS;d++){if(ROWS.some((_,ri)=>(state[sk(ri,d)]||0)!==0))baseGrandSumR+=getDayBase(d);}
   const pctDay=filled>0?Math.min(100,Math.round((baseGrandSumR/filled)/dayMax*100))+'%':'—';
   const maxVal=Math.max(...dt,1);
-  const bars=dt.map((v,i)=>{const h=maxVal>0?Math.round((v/maxVal)*110):0;const col=v===0?'#e2d9c8':v>=maxVal*0.8?'#0f4a28':v>=maxVal*0.5?'#1a6b3c':'#a8d8b8';return '<div style="display:flex;flex-direction:column;align-items:center;flex:1;gap:2px"><div style="font-size:9px;font-weight:700;color:#1a6b3c">'+(v>0?v:'')+'</div><div style="width:75%;background:'+col+';border-radius:4px 4px 0 0;height:'+h+'px;min-height:2px"></div><div style="font-size:9px;color:#7a6a52">'+(i+1)+'</div></div>';}).join('');
+  const bars=dt.map((v,i)=>{const h=maxVal>0?Math.round((v/maxVal)*110):0;const col=v===0?'var(--bd)':v>=maxVal*0.8?'var(--primary-dark)':v>=maxVal*0.5?'var(--primary)':'var(--gM)';return '<div style="display:flex;flex-direction:column;align-items:center;flex:1;gap:2px"><div style="font-size:10px;font-weight:700;color:var(--primary)">'+(v>0?v:'')+'</div><div style="width:75%;background:'+col+';border-radius:4px 4px 0 0;height:'+h+'px;min-height:2px"></div><div style="font-size:10px;color:var(--mu)">'+(i+1)+'</div></div>';}).join('');
   const cats={};
   ROWS.forEach((r,ri)=>{if(!cats[r.cat])cats[r.cat]={earned:0,max:0,rows:[]};cats[r.cat].max+=Math.max(0,r.pts)*DAYS;let rowEarned=0;for(let d=1;d<=DAYS;d++)if((state[sk(ri,d)]||0)===1)rowEarned+=getPts(ri,d);cats[r.cat].earned+=rowEarned;cats[r.cat].rows.push({ri,ibada:r.ibada,pts:r.pts,earned:rowEarned,negative:r.negative||false});});
   let catsHtml='';
-  Object.entries(cats).forEach(([cat,info])=>{const catPct=info.max>0?Math.round(info.earned/info.max*100):0;let rowsHtml='';info.rows.forEach(row=>{const dayDots=Array.from({length:DAYS},(_,di)=>{const v=state[sk(row.ri,di+1)]||0;const bg=v===1?'#d4f4e2':v===2?'#fcd5d5':'#f0f0f0';const color=v===1?'#1a6b3c':v===2?'#c0392b':'#ccc';const sym=v===1?'✓':v===2?'✗':'';return '<div style="width:16px;height:16px;background:'+bg+';border-radius:3px;font-size:8px;font-weight:700;color:'+color+';display:flex;align-items:center;justify-content:center">'+sym+'</div>';}).join('');rowsHtml+='<div style="display:flex;align-items:center;gap:6px;padding:5px 8px;border-radius:6px;background:#faf8f3;margin-bottom:3px"><div style="flex:1;font-size:11px;color:'+(row.negative?'#ef4444':'#2c2416')+'">'+row.ibada+'</div><div style="display:flex;gap:2px">'+dayDots+'</div><div style="width:28px;text-align:center;font-size:11px;font-weight:700;color:'+(row.negative?'#ef4444':'#1a6b3c')+'">'+row.earned+'</div></div>';});catsHtml+='<div style="margin-bottom:12px"><div style="background:#1a6b3c;color:#fff;font-size:11px;font-weight:700;padding:5px 12px;border-radius:6px;margin-bottom:6px;display:flex;justify-content:space-between"><span>'+cat+'</span><span>'+info.earned+' نقطة ('+catPct+'%)</span></div>'+rowsHtml+'</div>';});
-  const counterHtml=counterVal>0?'<div style="background:#fff;border-radius:12px;padding:14px;border:1px solid #e2d9c8;margin-bottom:1.2rem"><div style="font-size:13px;font-weight:700;color:#1a6b3c;margin-bottom:8px">📖 أخذ موعد تسميع قرآن</div><div style="font-size:13px;color:#2c2416">عدد المرات: <b>'+counterVal+'</b> = <b style="color:#1a6b3c">'+(counterVal*5)+'</b> نقطة</div></div>':'';
-  const rHtml='<div style="background:linear-gradient(135deg,#0f4a28,#1a6b3c);color:#fff;padding:1.4rem;border-radius:14px;text-align:center;margin-bottom:1.2rem"><div style="font-size:13px;color:#a8e6c0;margin-bottom:4px">بسم الله الرحمن الرحيم</div><div style="font-size:20px;font-weight:800">تقرير برنامج عبادة</div><div style="font-size:13px;opacity:.8;margin-top:3px">'+name+'</div></div>'
-  +'<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:6px"><div style="background:#fff;border-radius:10px;padding:12px;text-align:center;border:1px solid #e2d9c8"><div style="font-size:24px;font-weight:800;color:#1a6b3c">'+grand+'</div><div style="font-size:10px;color:#7a6a52">المجموع</div></div><div style="background:#fff;border-radius:10px;padding:12px;text-align:center;border:1px solid #e2d9c8"><div style="font-size:24px;font-weight:800;color:#1a6b3c">'+avg+'</div><div style="font-size:10px;color:#7a6a52">المعدل</div></div><div style="background:#fff;border-radius:10px;padding:12px;text-align:center;border:1px solid #e2d9c8"><div style="font-size:24px;font-weight:800;color:#1a6b3c">'+filled+'<span style="font-size:14px;color:#7a6a52">/'+DAYS+'</span></div><div style="font-size:10px;color:#7a6a52">الأيام</div></div></div>'
-  +'<div style="background:linear-gradient(135deg,#f0fdf4,#dcfce7);border-radius:10px;padding:12px;text-align:center;border:1px solid #1a6b3c;margin-bottom:1.2rem"><div style="font-size:22px;font-weight:800;color:#0f4a28">'+pctDay+'</div><div style="font-size:10px;color:#7a6a52">📊 معدل اليوم من 100</div></div>'
-  +'<div style="background:#fff;border-radius:12px;padding:14px;border:1px solid #e2d9c8;margin-bottom:1.2rem"><div style="font-size:13px;font-weight:700;color:#1a6b3c;margin-bottom:12px">📊 الأداء اليومي</div><div style="display:flex;gap:4px;align-items:flex-end;height:130px">'+bars+'</div></div>'
-  +'<div style="background:#fff;border-radius:12px;padding:14px;border:1px solid #e2d9c8;margin-bottom:1.2rem"><div style="font-size:13px;font-weight:700;color:#1a6b3c;margin-bottom:12px">📋 تفصيل العبادات</div>'+catsHtml+'</div>'
+  Object.entries(cats).forEach(([cat,info])=>{const catPct=info.max>0?Math.round(info.earned/info.max*100):0;let rowsHtml='';info.rows.forEach(row=>{const dayDots=Array.from({length:DAYS},(_,di)=>{const v=state[sk(row.ri,di+1)]||0;const bg=v===1?'var(--done-bg)':v===2?'var(--miss-bg)':'var(--bd2)';const color=v===1?'var(--primary)':v===2?'var(--miss-text)':'#ccc';const sym=v===1?'✓':v===2?'✗':'';return '<div style="width:16px;height:16px;background:'+bg+';border-radius:3px;font-size:8px;font-weight:700;color:'+color+';display:flex;align-items:center;justify-content:center">'+sym+'</div>';}).join('');rowsHtml+='<div style="display:flex;align-items:center;gap:6px;padding:5px 8px;border-radius:6px;background:var(--soft);margin-bottom:3px"><div style="flex:1;font-size:11px;color:'+(row.negative?'var(--miss-text)':'var(--tx)')+'">'+row.ibada+'</div><div style="display:flex;gap:2px">'+dayDots+'</div><div style="width:28px;text-align:center;font-size:11px;font-weight:700;color:'+(row.negative?'var(--miss-text)':'var(--primary)')+'">'+row.earned+'</div></div>';});catsHtml+='<div style="margin-bottom:12px"><div style="background:var(--primary);color:#fff;font-size:11px;font-weight:700;padding:5px 12px;border-radius:6px;margin-bottom:6px;display:flex;justify-content:space-between"><span>'+cat+'</span><span>'+info.earned+' نقطة ('+catPct+'%)</span></div>'+rowsHtml+'</div>';});
+  const counterHtml=counterVal>0?'<div style="background:var(--sf);border-radius:12px;padding:14px;border:1px solid var(--bd);margin-bottom:1.2rem"><div style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:8px">📖 أخذ موعد تسميع قرآن</div><div style="font-size:13px;color:var(--tx)">عدد المرات: <b>'+counterVal+'</b> = <b style="color:var(--primary)">'+(counterVal*5)+'</b> نقطة</div></div>':'';
+  const rHtml='<div style="background:var(--primary);color:#fff;padding:1.4rem;border-radius:14px;text-align:center;margin-bottom:1.2rem"><div style="font-size:13px;color:rgba(255,255,255,.8);margin-bottom:4px">بسم الله الرحمن الرحيم</div><div style="font-size:20px;font-weight:800">تقرير برنامج عبادة</div><div style="font-size:13px;opacity:.8;margin-top:3px">'+name+'</div></div>'
+  +'<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:6px"><div style="background:var(--sf);border-radius:10px;padding:12px;text-align:center;border:1px solid var(--bd)"><div style="font-size:24px;font-weight:800;color:var(--primary)">'+grand+'</div><div style="font-size:10px;color:var(--mu)">المجموع</div></div><div style="background:var(--sf);border-radius:10px;padding:12px;text-align:center;border:1px solid var(--bd)"><div style="font-size:24px;font-weight:800;color:var(--primary)">'+avg+'</div><div style="font-size:10px;color:var(--mu)">المعدل</div></div><div style="background:var(--sf);border-radius:10px;padding:12px;text-align:center;border:1px solid var(--bd)"><div style="font-size:24px;font-weight:800;color:var(--primary)">'+filled+'<span style="font-size:14px;color:var(--mu)">/'+DAYS+'</span></div><div style="font-size:10px;color:var(--mu)">الأيام</div></div></div>'
+  +'<div style="background:var(--primary-light);border-radius:10px;padding:12px;text-align:center;border:1px solid var(--primary);margin-bottom:1.2rem"><div style="font-size:22px;font-weight:800;color:var(--primary-dark)">'+pctDay+'</div><div style="font-size:10px;color:var(--mu)">📊 معدل اليوم من 100</div></div>'
+  +'<div style="background:var(--sf);border-radius:12px;padding:14px;border:1px solid var(--bd);margin-bottom:1.2rem"><div style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:12px">📊 الأداء اليومي</div><div style="display:flex;gap:4px;align-items:flex-end;height:130px">'+bars+'</div></div>'
+  +'<div style="background:var(--sf);border-radius:12px;padding:14px;border:1px solid var(--bd);margin-bottom:1.2rem"><div style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:12px">📋 تفصيل العبادات</div>'+catsHtml+'</div>'
   +counterHtml
-  +'<div style="text-align:center;padding-bottom:1rem"><button onclick="window.print()" style="font-family:inherit;font-size:13px;padding:10px 24px;background:#1a6b3c;color:#fff;border:none;border-radius:8px;cursor:pointer">🖨️ طباعة</button></div>';
+  +'<div style="text-align:center;padding-bottom:1rem"><button onclick="window.print()" style="font-family:inherit;font-size:13px;padding:10px 24px;background:var(--primary);color:#fff;border:none;border-radius:8px;cursor:pointer">🖨️ طباعة</button></div>';
   let ov=document.getElementById('rptOv');if(ov)ov.remove();
-  ov=document.createElement('div');ov.id='rptOv';ov.style.cssText="position:fixed;inset:0;z-index:9000;background:#fdfaf5;overflow-y:auto;-webkit-overflow-scrolling:touch;font-family:'Amiri',serif";
-  const cb=document.createElement('div');cb.style.cssText='position:sticky;top:0;z-index:9999;background:#0f4a28;padding:10px 14px;display:flex;justify-content:space-between;align-items:center';
-  cb.innerHTML='<span style="color:#fff;font-size:13px;font-weight:700">📊 تقريري</span><button onclick="document.getElementById(\'rptOv\').remove()" style="background:#ef4444;color:#fff;border:none;border-radius:6px;padding:5px 12px;font-family:inherit;font-size:12px;cursor:pointer">✕ إغلاق</button>';
+  ov=document.createElement('div');ov.id='rptOv';ov.style.cssText="position:fixed;inset:0;z-index:9000;background:var(--bg);overflow-y:auto;-webkit-overflow-scrolling:touch;font-family:'Amiri',serif";
+  const cb=document.createElement('div');cb.style.cssText='position:sticky;top:0;z-index:9999;background:var(--sf);border-bottom:1px solid var(--bd);padding:10px 14px;display:flex;justify-content:space-between;align-items:center';
+  cb.innerHTML='<span style="color:var(--tx);font-size:15px;font-weight:700">📊 تقريري</span><button onclick="document.getElementById(\'rptOv\').remove()" style="background:var(--soft);color:var(--miss-text)!important;border:1px solid var(--bd)!important;color:#fff;border:none;border-radius:6px;padding:5px 12px;font-family:inherit;font-size:12px;cursor:pointer">✕ إغلاق</button>';
   const ct=document.createElement('div');ct.style.cssText='padding:0 1rem';ct.innerHTML=rHtml;
   ov.appendChild(cb);ov.appendChild(ct);document.body.appendChild(ov);
 }
