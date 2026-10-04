@@ -523,7 +523,7 @@ function renderPeriodPage(period,sorted,maxG){
   const active=all.filter(x=>x.daysWithData>0);
   const avgPts=active.length?Math.round(active.reduce((s,x)=>s+x.points,0)/active.length):0;
   const avgPct=active.length?Math.round(active.reduce((s,x)=>s+(x.pct||0),0)/active.length):0;
-  let html='<div class="manager-period-hero"><h2>نتائج الأيام '+start+'–'+end+'</h2><p>كل النتائج والجروبات في هذه الصفحة تخص هذه العشرة أيام فقط.</p></div>';
+  let html='';
   html+='<div class="period-stats"><div class="period-stat"><strong>'+active.length+'</strong><span>بنات لديهن بيانات</span></div><div class="period-stat"><strong>'+avgPts+'</strong><span>متوسط النقاط</span></div><div class="period-stat"><strong>'+avgPct+'%</strong><span>متوسط المعدل</span></div></div>';
   html+=renderPeriodRank(start,end);
   html+='<button class="period-groups-btn" onclick="openPeriodGroups('+period+')">إدارة جروبات الأيام '+start+'–'+end+'</button>';
