@@ -1,8 +1,8 @@
 // رقم الإصدار: غيّريه مع كل تحديث للصفحة عشان الجوال يجيب النسخة الجديدة
 const CACHE_VERSION = "ibadah-2026.10.05.1";
+// الملفات الموجودة فعلاً بالموقع (ما في index.html، الصفحة اسمها girl.html)
 const APP_SHELL = [
-  "./",
-  "./index.html",
+  "./girl.html",
   "./manifest.json"
 ];
 
@@ -33,10 +33,10 @@ self.addEventListener("fetch", event => {
       fetch(req, {cache: "no-store"})
         .then(res => {
           const copy = res.clone();
-          caches.open(CACHE_VERSION).then(cache => cache.put("./index.html", copy));
+          caches.open(CACHE_VERSION).then(cache => cache.put("./girl.html", copy));
           return res;
         })
-        .catch(() => caches.match("./index.html"))
+        .catch(() => caches.match("./girl.html"))
     );
     return;
   }
