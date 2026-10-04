@@ -268,6 +268,9 @@ const managerDayPages={};
 const PAIRS_KEY='manager_pair_groups_v2';
 let selectedPairPeriod=0;
 let pairGroupsByPeriod=loadPairGroups();
+const sk=(r,d)=>r+'-'+d;
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function readJSON(v,fb){try{return v?JSON.parse(v):fb}catch(e){return fb}}
 function emptyPairGroups(){return {p0:[],p1:[],p2:[]};}
 function normalizeGroupList(list){return Array.isArray(list)?list.map(g=>[g?.[0]||'',g?.[1]||'',g?.[2]||'']):[];}
 function loadPairGroups(){
