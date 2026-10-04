@@ -187,6 +187,75 @@ td.ic .azkar-key{font-size:10px;color:var(--mu);margin-top:2px}
 #toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--tx);color:var(--bg);font-size:13px;padding:10px 22px;border-radius:12px;opacity:0;transition:all .3s;pointer-events:none;z-index:9999;white-space:nowrap}
 #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
+/* ===== تقريري ===== */
+#rptOv{position:fixed;inset:0;z-index:9000;background:var(--bg);overflow-y:auto;-webkit-overflow-scrolling:touch}
+.rp-bar-top{position:sticky;top:0;z-index:5;background:var(--sf);border-bottom:1px solid var(--bd);padding:10px 14px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.rp-bar-top>span{font-size:16px;font-weight:700;color:var(--tx)}
+.rp-actions{display:flex;gap:6px}
+.rp-btn{font-size:13px;font-weight:700;padding:6px 12px;border-radius:9px;border:1px solid var(--bd);background:var(--sf);color:var(--primary);cursor:pointer}
+.rp-btn.close{color:var(--miss-text);background:var(--soft)}
+.rp-body{padding:14px 12px 2rem;max-width:760px;margin:0 auto}
+.rp-hero{background:var(--primary);color:#fff;border-radius:16px;padding:1.2rem 1rem;text-align:center;margin-bottom:12px}
+.rp-bsm{font-size:13px;opacity:.85}
+.rp-title{font-size:22px;font-weight:700;line-height:1.4}
+.rp-name{display:inline-block;margin-top:6px;font-size:14px;background:rgba(255,255,255,.18);padding:2px 14px;border-radius:999px}
+.rp-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:12px}
+.rp-stat{background:var(--sf);border:1px solid var(--bd);border-radius:12px;padding:10px 4px;text-align:center;box-shadow:var(--sh)}
+.rp-stat b{display:block;font-size:19px;font-weight:700;color:var(--primary);line-height:1.2}
+.rp-stat b small{font-size:12px;color:var(--mu)}
+.rp-stat span{font-size:11px;color:var(--mu)}
+.rp-stat.acc{background:var(--primary-light);border-color:var(--done-border)}
+.rp-card{background:var(--sf);border:1px solid var(--bd);border-radius:14px;padding:14px;margin-bottom:12px;box-shadow:var(--sh)}
+.rp-card-t{font-size:15px;font-weight:700;color:var(--tx);margin-bottom:10px}
+.rp-bars-scroll{overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;touch-action:pan-x;padding-bottom:6px}
+.rp-bars{display:flex;gap:6px;align-items:flex-end;height:160px;min-width:max-content;padding:0 2px}
+.rp-bar{flex:0 0 26px;display:flex;flex-direction:column;align-items:center;gap:3px}
+.rp-bar-v{font-size:10px;font-weight:700;color:var(--primary);min-height:13px}
+.rp-bar-f{width:18px;border-radius:5px 5px 0 0;background:var(--gM)}
+.rp-bar-f.hi{background:var(--primary-dark)}.rp-bar-f.mid{background:var(--primary)}.rp-bar-f.empty{background:var(--bd2)}
+html[data-mode="dark"] .rp-bar-f.hi{background:var(--gD)}
+.rp-bar-d{font-size:10.5px;color:var(--mu)}
+.rp-hint{font-size:11px;color:var(--mu);text-align:center;margin-top:4px}
+.rp-legend{display:flex;gap:12px;font-size:11.5px;color:var(--mu);margin-bottom:10px}
+.rp-legend span{display:flex;align-items:center;gap:4px}
+.rp-legend i{width:12px;height:12px;border-radius:3px;background:var(--bd2);display:inline-block}
+.rp-legend i.d{background:var(--done-bg);border:1px solid var(--done-border)}.rp-legend i.m{background:var(--miss-bg);border:1px solid var(--miss-border)}
+.rp-cat{margin-bottom:14px}
+.rp-cat-head{display:flex;justify-content:space-between;gap:8px;background:var(--primary-light);color:var(--primary-dark);font-size:13px;font-weight:700;padding:7px 12px;border-radius:10px;margin-bottom:6px}
+.rp-item{border:1px solid var(--bd2);border-radius:12px;padding:10px 11px;margin-bottom:6px;background:var(--sf)}
+.rp-item-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.rp-item-name{font-size:14px;font-weight:700;color:var(--tx);line-height:1.4}
+.rp-item.neg .rp-item-name,.rp-item.neg .rp-item-pts{color:var(--miss-text)}
+.rp-tag{font-size:11px;color:var(--gold);font-weight:700;white-space:nowrap}
+.rp-item-pts{font-size:16px;font-weight:700;color:var(--primary);white-space:nowrap}
+.rp-item-pts small{font-size:11px;color:var(--mu);font-weight:400}
+.rp-prog{height:5px;background:var(--bd2);border-radius:9px;overflow:hidden;margin:7px 0 3px}
+.rp-prog-f{height:100%;background:var(--primary);border-radius:9px}
+.rp-item.neg .rp-prog-f{background:var(--miss-text)}
+.rp-item-meta{font-size:11.5px;color:var(--mu);margin-bottom:7px}
+.rp-days{display:grid;grid-template-columns:repeat(10,1fr);gap:3px}
+.rp-day{aspect-ratio:1;max-height:28px;border-radius:5px;background:var(--soft);border:1px solid var(--bd2);color:var(--mu);font-size:9.5px;display:flex;align-items:center;justify-content:center;font-weight:700}
+.rp-day.d{background:var(--done-bg);border-color:var(--done-border);color:var(--done-text)}
+.rp-day.m{background:var(--miss-bg);border-color:var(--miss-border);color:var(--miss-text)}
+.rp-counter{font-size:14px;color:var(--tx)}
+.rp-acc{color:var(--primary)}
+@media(max-width:360px){.rp-stats{grid-template-columns:repeat(2,1fr)}}
+
+/* ===== طباعة التقرير ===== */
+@media print{
+  @page{size:A4;margin:12mm}
+  body>*:not(#rptOv){display:none!important}
+  html,body{background:#fff!important;padding:0!important;max-width:none!important}
+  #rptOv{position:static;overflow:visible;background:#fff}
+  .rp-bar-top,.rp-hint{display:none!important}
+  .rp-body{padding:0;max-width:none}
+  .rp-card,.rp-stat{box-shadow:none}
+  .rp-bars-scroll{overflow:visible}
+  .rp-bars{min-width:0;gap:3px}.rp-bar{flex:1 1 0}.rp-bar-f{width:70%}
+  .rp-item{break-inside:avoid}.rp-cat-head{break-after:avoid}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+
 /* ===== الثيمات: كل لون يغيّر الأزرار والرؤوس والحالات معًا ===== */
 html[data-theme="green"]{--gL:#d4f4e2;--gM:#5cb87a;--gD:#1a6b3c;--gDD:#0f4a28;--primary:#1a6b3c;--primary-dark:#0f4a28;--primary-light:#e8f6ee;--done-bg:#d4f4e2;--done-border:#5cb87a;--done-text:#1a6b3c;--theme-tint:#f3faf6;--theme-dark-sf:#26312a;--theme-dark-soft:#303d34;--theme-dark-line:#46564b}
 html[data-theme="rose"]{--gL:#f7dfe6;--gM:#d8899e;--gD:#a44763;--gDD:#743247;--primary:#a44763;--primary-dark:#743247;--primary-light:#f8e8ed;--done-bg:#f7dfe6;--done-border:#d8899e;--done-text:#8f3f58;--theme-tint:#fff7f9;--theme-dark-sf:#35292e;--theme-dark-soft:#443239;--theme-dark-line:#61464f}
@@ -804,6 +873,7 @@ async function sendToManager(){
 }
 
 function openReport(){
+  // الحسابات نفسها بدون تغيير — التعديل على طريقة العرض فقط
   const name=document.getElementById('userName').value||'—';
   const dt=getDayTotals();let grand=0;dt.forEach(v=>grand+=v);grand+=counterVal*5;
   let filled=0;for(let d=1;d<=DAYS;d++)if(ROWS.some((_,ri)=>(state[sk(ri,d)]||0)!==0))filled++;
@@ -812,25 +882,52 @@ function openReport(){
   let baseGrandSumR=0;
   for(let d=1;d<=DAYS;d++){if(ROWS.some((_,ri)=>(state[sk(ri,d)]||0)!==0))baseGrandSumR+=getDayBase(d);}
   const pctDay=filled>0?Math.min(100,Math.round((baseGrandSumR/filled)/dayMax*100))+'%':'—';
+
+  // الرسم البياني: عمود ثابت العرض لكل يوم مع سحب أفقي
   const maxVal=Math.max(...dt,1);
-  const bars=dt.map((v,i)=>{const h=maxVal>0?Math.round((v/maxVal)*110):0;const col=v===0?'var(--bd)':v>=maxVal*0.8?'var(--primary-dark)':v>=maxVal*0.5?'var(--primary)':'var(--gM)';return '<div style="display:flex;flex-direction:column;align-items:center;flex:1;gap:2px"><div style="font-size:10px;font-weight:700;color:var(--primary)">'+(v>0?v:'')+'</div><div style="width:75%;background:'+col+';border-radius:4px 4px 0 0;height:'+h+'px;min-height:2px"></div><div style="font-size:10px;color:var(--mu)">'+(i+1)+'</div></div>';}).join('');
+  const bars=dt.map((v,i)=>{
+    const h=Math.round((v/maxVal)*120);
+    const cls=v===0?'empty':v>=maxVal*0.8?'hi':v>=maxVal*0.5?'mid':'lo';
+    return '<div class="rp-bar"><div class="rp-bar-v">'+(v>0?v:'')+'</div><div class="rp-bar-f '+cls+'" style="height:'+(v>0?h:3)+'px"></div><div class="rp-bar-d">'+(i+1)+'</div></div>';
+  }).join('');
+
+  // تفصيل العبادات: بطاقة لكل عبادة وشبكة 10×3 للأيام
   const cats={};
-  ROWS.forEach((r,ri)=>{if(!cats[r.cat])cats[r.cat]={earned:0,max:0,rows:[]};cats[r.cat].max+=Math.max(0,r.pts)*DAYS;let rowEarned=0;for(let d=1;d<=DAYS;d++)if((state[sk(ri,d)]||0)===1)rowEarned+=getPts(ri,d);cats[r.cat].earned+=rowEarned;cats[r.cat].rows.push({ri,ibada:r.ibada,pts:r.pts,earned:rowEarned,negative:r.negative||false});});
+  ROWS.forEach((r,ri)=>{if(!cats[r.cat])cats[r.cat]={earned:0,max:0,rows:[]};cats[r.cat].max+=Math.max(0,r.pts)*DAYS;let rowEarned=0,doneDays=0;for(let d=1;d<=DAYS;d++)if((state[sk(ri,d)]||0)===1){rowEarned+=getPts(ri,d);doneDays++;}cats[r.cat].earned+=rowEarned;cats[r.cat].rows.push({ri,ibada:r.ibada,pts:r.pts,earned:rowEarned,doneDays,negative:r.negative||false,bonus:r.bonus||false});});
   let catsHtml='';
-  Object.entries(cats).forEach(([cat,info])=>{const catPct=info.max>0?Math.round(info.earned/info.max*100):0;let rowsHtml='';info.rows.forEach(row=>{const dayDots=Array.from({length:DAYS},(_,di)=>{const v=state[sk(row.ri,di+1)]||0;const bg=v===1?'var(--done-bg)':v===2?'var(--miss-bg)':'var(--bd2)';const color=v===1?'var(--primary)':v===2?'var(--miss-text)':'#ccc';const sym=v===1?'✓':v===2?'✗':'';return '<div style="width:16px;height:16px;background:'+bg+';border-radius:3px;font-size:8px;font-weight:700;color:'+color+';display:flex;align-items:center;justify-content:center">'+sym+'</div>';}).join('');rowsHtml+='<div style="display:flex;align-items:center;gap:6px;padding:5px 8px;border-radius:6px;background:var(--soft);margin-bottom:3px"><div style="flex:1;font-size:11px;color:'+(row.negative?'var(--miss-text)':'var(--tx)')+'">'+row.ibada+'</div><div style="display:flex;gap:2px">'+dayDots+'</div><div style="width:28px;text-align:center;font-size:11px;font-weight:700;color:'+(row.negative?'var(--miss-text)':'var(--primary)')+'">'+row.earned+'</div></div>';});catsHtml+='<div style="margin-bottom:12px"><div style="background:var(--primary);color:#fff;font-size:11px;font-weight:700;padding:5px 12px;border-radius:6px;margin-bottom:6px;display:flex;justify-content:space-between"><span>'+cat+'</span><span>'+info.earned+' نقطة ('+catPct+'%)</span></div>'+rowsHtml+'</div>';});
-  const counterHtml=counterVal>0?'<div style="background:var(--sf);border-radius:12px;padding:14px;border:1px solid var(--bd);margin-bottom:1.2rem"><div style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:8px">📖 أخذ موعد تسميع قرآن</div><div style="font-size:13px;color:var(--tx)">عدد المرات: <b>'+counterVal+'</b> = <b style="color:var(--primary)">'+(counterVal*5)+'</b> نقطة</div></div>':'';
-  const rHtml='<div style="background:var(--primary);color:#fff;padding:1.4rem;border-radius:14px;text-align:center;margin-bottom:1.2rem"><div style="font-size:13px;color:rgba(255,255,255,.8);margin-bottom:4px">بسم الله الرحمن الرحيم</div><div style="font-size:20px;font-weight:800">تقرير برنامج عبادة</div><div style="font-size:13px;opacity:.8;margin-top:3px">'+name+'</div></div>'
-  +'<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:6px"><div style="background:var(--sf);border-radius:10px;padding:12px;text-align:center;border:1px solid var(--bd)"><div style="font-size:24px;font-weight:800;color:var(--primary)">'+grand+'</div><div style="font-size:10px;color:var(--mu)">المجموع</div></div><div style="background:var(--sf);border-radius:10px;padding:12px;text-align:center;border:1px solid var(--bd)"><div style="font-size:24px;font-weight:800;color:var(--primary)">'+avg+'</div><div style="font-size:10px;color:var(--mu)">المعدل</div></div><div style="background:var(--sf);border-radius:10px;padding:12px;text-align:center;border:1px solid var(--bd)"><div style="font-size:24px;font-weight:800;color:var(--primary)">'+filled+'<span style="font-size:14px;color:var(--mu)">/'+DAYS+'</span></div><div style="font-size:10px;color:var(--mu)">الأيام</div></div></div>'
-  +'<div style="background:var(--primary-light);border-radius:10px;padding:12px;text-align:center;border:1px solid var(--primary);margin-bottom:1.2rem"><div style="font-size:22px;font-weight:800;color:var(--primary-dark)">'+pctDay+'</div><div style="font-size:10px;color:var(--mu)">📊 معدل اليوم من 100</div></div>'
-  +'<div style="background:var(--sf);border-radius:12px;padding:14px;border:1px solid var(--bd);margin-bottom:1.2rem"><div style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:12px">📊 الأداء اليومي</div><div style="display:flex;gap:4px;align-items:flex-end;height:130px">'+bars+'</div></div>'
-  +'<div style="background:var(--sf);border-radius:12px;padding:14px;border:1px solid var(--bd);margin-bottom:1.2rem"><div style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:12px">📋 تفصيل العبادات</div>'+catsHtml+'</div>'
-  +counterHtml
-  +'<div style="text-align:center;padding-bottom:1rem"><button onclick="window.print()" style="font-family:inherit;font-size:13px;padding:10px 24px;background:var(--primary);color:#fff;border:none;border-radius:8px;cursor:pointer">🖨️ طباعة</button></div>';
+  Object.entries(cats).forEach(([cat,info])=>{
+    const catPct=info.max>0?Math.round(info.earned/info.max*100):0;
+    let rowsHtml='';
+    info.rows.forEach(row=>{
+      const cells=Array.from({length:DAYS},(_,di)=>{const v=state[sk(row.ri,di+1)]||0;return '<div class="rp-day'+(v===1?' d':v===2?' m':'')+'">'+(di+1)+'</div>';}).join('');
+      const pct=Math.round(row.doneDays/DAYS*100);
+      rowsHtml+='<div class="rp-item'+(row.negative?' neg':'')+'">'
+        +'<div class="rp-item-top"><div class="rp-item-name">'+row.ibada+(row.bonus?' <span class="rp-tag">⭐ بونص</span>':'')+'</div><div class="rp-item-pts">'+row.earned+'<small> نقطة</small></div></div>'
+        +'<div class="rp-prog"><div class="rp-prog-f" style="width:'+pct+'%"></div></div>'
+        +'<div class="rp-item-meta">'+(row.negative?'حصل ':'تم ')+row.doneDays+' من '+DAYS+' يوم</div>'
+        +'<div class="rp-days">'+cells+'</div></div>';
+    });
+    catsHtml+='<div class="rp-cat"><div class="rp-cat-head"><span>'+cat+'</span><span>'+info.earned+' نقطة · '+catPct+'%</span></div>'+rowsHtml+'</div>';
+  });
+
+  const counterHtml=counterVal>0?'<div class="rp-card"><div class="rp-card-t">📖 أخذ موعد تسميع قرآن</div><div class="rp-counter">عدد المرات: <b>'+counterVal+'</b> = <b class="rp-acc">'+(counterVal*5)+'</b> نقطة</div></div>':'';
+
+  const rHtml='<div class="rp-hero"><div class="rp-bsm">بسم الله الرحمن الرحيم</div><div class="rp-title">تقرير برنامج عبادة</div><div class="rp-name">'+name+'</div></div>'
+  +'<div class="rp-stats">'
+    +'<div class="rp-stat"><b>'+grand+'</b><span>المجموع</span></div>'
+    +'<div class="rp-stat"><b>'+avg+'</b><span>المعدل / يوم</span></div>'
+    +'<div class="rp-stat"><b>'+filled+'<small>/'+DAYS+'</small></b><span>الأيام</span></div>'
+    +'<div class="rp-stat acc"><b>'+pctDay+'</b><span>المعدل من 100</span></div>'
+  +'</div>'
+  +'<div class="rp-card"><div class="rp-card-t">📊 الأداء اليومي</div><div class="rp-bars-scroll"><div class="rp-bars">'+bars+'</div></div><div class="rp-hint">اسحبي يمين ويسار لتشوفي كل الأيام</div></div>'
+  +'<div class="rp-card"><div class="rp-card-t">📋 تفصيل العبادات</div><div class="rp-legend"><span><i class="d"></i>تم</span><span><i class="m"></i>لم يتم</span><span><i></i>فارغ</span></div>'+catsHtml+'</div>'
+  +counterHtml;
+
   let ov=document.getElementById('rptOv');if(ov)ov.remove();
-  ov=document.createElement('div');ov.id='rptOv';ov.style.cssText="position:fixed;inset:0;z-index:9000;background:var(--bg);overflow-y:auto;-webkit-overflow-scrolling:touch;font-family:'Amiri',serif";
-  const cb=document.createElement('div');cb.style.cssText='position:sticky;top:0;z-index:9999;background:var(--sf);border-bottom:1px solid var(--bd);padding:10px 14px;display:flex;justify-content:space-between;align-items:center';
-  cb.innerHTML='<span style="color:var(--tx);font-size:15px;font-weight:700">📊 تقريري</span><button onclick="document.getElementById(\'rptOv\').remove()" style="background:var(--soft);color:var(--miss-text)!important;border:1px solid var(--bd)!important;color:#fff;border:none;border-radius:6px;padding:5px 12px;font-family:inherit;font-size:12px;cursor:pointer">✕ إغلاق</button>';
-  const ct=document.createElement('div');ct.style.cssText='padding:0 1rem';ct.innerHTML=rHtml;
+  ov=document.createElement('div');ov.id='rptOv';
+  const cb=document.createElement('div');cb.className='rp-bar-top';
+  cb.innerHTML='<span>📊 تقريري</span><div class="rp-actions"><button type="button" class="rp-btn" onclick="window.print()">🖨️ طباعة</button><button type="button" class="rp-btn close" onclick="document.getElementById(\'rptOv\').remove()">✕ إغلاق</button></div>';
+  const ct=document.createElement('div');ct.className='rp-body';ct.innerHTML=rHtml;
   ov.appendChild(cb);ov.appendChild(ct);document.body.appendChild(ov);
 }
 
