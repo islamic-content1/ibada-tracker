@@ -400,6 +400,20 @@ function calcPeriodStats(g,start,end){
 }
 function periodOverviewHtml(g){return [[1,10],[11,20],[21,30]].map(([s,e])=>{const p=calcPeriodStats(g,s,e);return '<div class="period-overview-card"><div class="po-title">'+s+'–'+e+'</div><div class="po-points">'+p.points+' نقطة</div><div class="po-pct">'+(p.pct===null?'—':p.pct+'%')+' من 100</div></div>';}).join('');}
 
+function migrateManagerState(rawState){
+  const src=(rawState&&typeof rawState==='object')?rawState:{};
+  if(Number(src.__schemaVersion)===2)return src;
+  const migrated={};
+  Object.entries(src).forEach(([key,value])=>{
+    const mt=key.match(/^(\d+)-(\d+)$/);
+    if(!mt){if(key!=='__schemaVersion')migrated[key]=value;return;}
+    const oldRow=Number(mt[1]),day=mt[2];
+    migrated[(oldRow>=18?oldRow+1:oldRow)+'-'+day]=value;
+  });
+  migrated.__schemaVersion=2;
+  return migrated;
+}
+
 async function loadData(){
   const btn=document.getElementById('refreshBtn');btn.textContent='جاري التحميل...';btn.classList.add('loading');btn.disabled=true;
   try{
