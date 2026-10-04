@@ -103,7 +103,7 @@ td.cell.miss{background:var(--miss-bg)}
 .cell-pts.eq{color:var(--done-text)}
 .cell-pts.fixed{text-decoration:none;cursor:default}
 .pts-inline-input{width:28px;font-size:11px;font-weight:700;text-align:center;border:1px solid var(--primary);border-radius:5px;background:var(--sf);color:var(--primary);outline:none;padding:1px 2px}
-tr.tr-day td{background:var(--soft);color:var(--primary-dark);font-weight:700;font-size:12px;padding:8px 3px;text-align:center;border-top:1px solid var(--bd)}
+tr.tr-day td{background:var(--soft);color:var(--primary-dark);font-weight:700;font-size:12px;padding:8px 1px;text-align:center;border:1px solid var(--bd2);border-top:1px solid var(--bd)}
 tr.tr-day td.lbl{text-align:right;padding-right:8px;font-size:11.5px;color:var(--tx)}
 tr.tr-day td.pts-total{font-size:11.5px;font-weight:700;color:var(--primary)}
 .qiyam-cell{display:flex;flex-direction:column;align-items:center;justify-content:center;height:40px;gap:1px;cursor:default}
@@ -127,7 +127,6 @@ td.ic .azkar-key{font-size:10px;color:var(--mu);margin-top:2px}
 .bonus-head{display:flex;align-items:baseline;justify-content:space-between;gap:8px;padding:10px 12px;background:var(--gold-l);color:var(--gold);font-size:14px;font-weight:700;border-bottom:1px solid var(--gold-bd)}
 .bonus-head small{font-size:11px;font-weight:400;color:var(--mu)}
 .bonus-tw thead th{background:var(--sf);color:var(--gold)}
-.bonus-tw td.cell.done{background:var(--gold-l)}
 
 /* ===== عارض الملفات ===== */
 .pdf-overlay{position:fixed;inset:0;z-index:9800;background:rgba(30,24,14,.55);display:none;flex-direction:column}
@@ -211,7 +210,7 @@ html[data-mode="dark"] .journey-quote span{color:var(--done-text)}
 html[data-mode="dark"] .nr input::placeholder{color:#8f887c}
 html[data-mode="dark"] #toast{background:#f5f1e8;color:#2c3036}
 </style>
-<link rel="manifest" href="manifest.json?v=2026.08.30.5">
+<link rel="manifest" href="manifest.json?v=2026.10.05.1">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -227,7 +226,7 @@ html[data-mode="dark"] #toast{background:#f5f1e8;color:#2c3036}
 .update-toast button{background:#fff;color:#0f4a28;border:none;border-radius:9px;padding:7px 14px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Amiri',serif!important;white-space:nowrap}
 </style>
 <script>
-window.APP_VERSION = "2026.08.30.5";
+window.APP_VERSION = "2026.10.05.1";
 </script>
 </head>
 <body>
@@ -640,9 +639,9 @@ function toggle(ri,d,td){
 function buildDayPctRow(tb){
   const tr=document.createElement('tr');
   const lbl=document.createElement('td');lbl.className='lbl';lbl.colSpan=3;
-  lbl.style.cssText='background:var(--sf);color:var(--tx);font-size:11.5px;font-weight:700;text-align:right;padding-right:8px;border-top:1px solid var(--bd)';
+  lbl.style.cssText='background:var(--primary-light);color:var(--primary-dark);font-size:12.5px;font-weight:700;text-align:right;padding:9px 8px 9px 4px;border:1px solid var(--bd2);border-top:1px solid var(--bd)';
   lbl.textContent='معدل اليوم من 100';tr.appendChild(lbl);
-  for(const d of visibleDays()){const td=document.createElement('td');td.id='dpct'+d;td.style.cssText='text-align:center;font-size:11px;font-weight:700;color:var(--primary);background:var(--sf);border:1px solid var(--bd2);border-top:1px solid var(--bd);padding:5px 1px';td.textContent='—';tr.appendChild(td);}
+  for(const d of visibleDays()){const td=document.createElement('td');td.id='dpct'+d;td.style.cssText='text-align:center;font-size:11.5px;font-weight:800;color:var(--primary);background:var(--primary-light);border:1px solid var(--bd2);border-top:1px solid var(--bd);padding:9px 0;letter-spacing:-.3px';td.textContent='—';tr.appendChild(td);}
   tb.appendChild(tr);
 }
 
@@ -724,8 +723,8 @@ function build(){
       tr.appendChild(ptsCell(r,'+'+r.pts));dayCells(tr,ri);bb.appendChild(tr);
     });
     const tb2=document.createElement('tr');tb2.className='tr-day';
-    const blbl=document.createElement('td');blbl.className='lbl';blbl.colSpan=3;blbl.innerHTML='بونص اليوم<div style="font-size:10px;font-weight:400;color:var(--mu)">يشمل الزيادة فوق هدفك</div>';tb2.appendChild(blbl);
-    for(const d of days){const td=document.createElement('td');td.id='dbonus'+d;td.style.color='var(--gold)';tb2.appendChild(td);}
+    const blbl=document.createElement('td');blbl.className='lbl';blbl.colSpan=3;blbl.style.cssText='background:var(--gold-l);color:var(--gold);font-size:12.5px;border-color:var(--gold-bd)';blbl.innerHTML='⭐ مجموع البونص<div style="font-size:10.5px;font-weight:400;color:var(--mu)">يشمل الزيادة فوق هدفك</div>';tb2.appendChild(blbl);
+    for(const d of days){const td=document.createElement('td');td.id='dbonus'+d;td.style.cssText='color:var(--gold);background:var(--gold-l);border:1px solid var(--gold-bd);font-size:12px;font-weight:800';tb2.appendChild(td);}
     bb.appendChild(tb2);
   }
   recalc();
@@ -783,7 +782,7 @@ function recalc(){
   for(let d=startDay;d<=endDay;d++){
     const el=document.getElementById('dpct'+d);if(!el)continue;
     const hasData=ROWS.some((_,ri)=>(state[sk(ri,d)]||0)!==0);
-    if(hasData){const baseTotal=getDayBase(d);const pct=Math.min(100,Math.round(baseTotal/dayMax*100));el.textContent=pct+'%';el.style.color=pct>=80?'var(--done-text)':pct>=50?'var(--gold)':'var(--miss-text)';}
+    if(hasData){const baseTotal=getDayBase(d);const pct=Math.min(100,Math.round(baseTotal/dayMax*100));el.innerHTML=pct+'<div style="font-size:9px;font-weight:700;opacity:.75;line-height:1">%</div>';el.style.color=pct>=80?'var(--done-text)':pct>=50?'var(--gold)':'var(--miss-text)';}
     else{el.textContent='—';el.style.color='var(--mu)';}
   }
   document.getElementById('pctDayVal').textContent=ps.pct===null?'—':ps.pct+'%';
