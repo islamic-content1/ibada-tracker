@@ -22,7 +22,7 @@
   --edit-color:#b8860b;--sh:0 2px 12px rgba(0,0,0,.08);
 }
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Amiri',serif!important}
-html,body{overflow-x:hidden;width:100%}
+html,body{overflow-x:hidden;width:100%;background:var(--bg);min-height:100%}
 button,input,textarea,select,table,thead,tbody,tr,th,td,a,span,div,p,label{font-family:'Amiri',serif!important;}
 body{font-family:'Amiri',system-ui,Tahoma,sans-serif;background:var(--bg);color:var(--tx);padding:1.2rem 0.8rem 3rem}
 .hdr{text-align:center;margin-bottom:1.4rem;padding-bottom:1rem;border-bottom:1.5px solid var(--bd)}
@@ -139,14 +139,14 @@ html[data-theme="blue"]{--gL:#dcecf8;--gM:#79a9cc;--gD:#376f9b;--gDD:#244b69;--p
 html[data-theme="purple"]{--gL:#eadff7;--gM:#a98bd0;--gD:#7652a6;--gDD:#533875;--primary:#7652a6;--primary-dark:#533875;--primary-light:#f0eafa;--done-bg:#eadff7;--done-border:#a98bd0;--done-text:#694996;--theme-tint:#fbf8ff;--theme-dark-sf:#302a37;--theme-dark-soft:#3c3347;--theme-dark-line:#574966}
 html[data-theme="beige"]{--gL:#eee3d3;--gM:#b79b78;--gD:#80654a;--gDD:#5c4734;--primary:#80654a;--primary-dark:#5c4734;--primary-light:#f4eee6;--done-bg:#eee3d3;--done-border:#b79b78;--done-text:#70583f;--theme-tint:#fcfaf7;--theme-dark-sf:#332f2a;--theme-dark-soft:#403a33;--theme-dark-line:#5d5449}
 
-/* Dark mode دافئ وأخف من الأسود الصريح */
-html[data-mode="dark"]{--bg:#202521;--sf:var(--theme-dark-sf);--bd:var(--theme-dark-line);--tx:#f4f1e9;--mu:#c4beb3;--sh:0 3px 14px rgba(0,0,0,.20);--primary-light:var(--theme-dark-soft);--done-bg:var(--theme-dark-soft);--miss-bg:#4a3030;--miss-border:#9b5d5d;--miss-text:#ffd3d3}
-html[data-mode="dark"] body{background:var(--bg);color:var(--tx)}
-html[data-mode="dark"] .goal-row,html[data-mode="dark"] td.pc,html[data-mode="dark"] .how-body .row{background:var(--theme-dark-soft)}
+/* Dark mode أهدأ ومحايد أكثر لراحة العين */
+html[data-mode="dark"]{--bg:#2c3036;--sf:#343941;--bd:#4a525d;--tx:#f5f1e8;--mu:#c9c2b4;--sh:0 3px 14px rgba(0,0,0,.14);--primary-light:#404751;--done-bg:#3b4a40;--done-border:#6e9579;--done-text:#e2f4e6;--miss-bg:#4d3939;--miss-border:#a16c6c;--miss-text:#ffe0e0}
+html[data-mode="dark"],html[data-mode="dark"] body{background:var(--bg);color:var(--tx)}
+html[data-mode="dark"] .goal-row,html[data-mode="dark"] td.pc,html[data-mode="dark"] .how-body .row{background:#3c424b}
 html[data-mode="dark"] td.ic,html[data-mode="dark"] td.cell,html[data-mode="dark"] .goal-opt,html[data-mode="dark"] .pts-inline-input,html[data-mode="dark"] .theme-select,html[data-mode="dark"] .appearance-btn{background:var(--sf);color:var(--tx)}
-html[data-mode="dark"] .sc.pct-box{background:linear-gradient(135deg,var(--theme-dark-soft),var(--sf));border-color:var(--gM)}
+html[data-mode="dark"] .sc.pct-box{background:linear-gradient(135deg,#3d444d,var(--sf));border-color:var(--gM)}
 html[data-mode="dark"] .counter-box,html[data-mode="dark"] .how-box,html[data-mode="dark"] .tw,html[data-mode="dark"] .sc{background:var(--sf)}
-html[data-mode="dark"] .goal-custom-inp{background:var(--bg);color:var(--tx)}
+html[data-mode="dark"] .goal-custom-inp{background:#2f343b;color:var(--tx)}
 html[data-mode="dark"] .ld.e{background:var(--sf)}
 
 </style>
@@ -362,10 +362,20 @@ const sk=(r,d)=>r+'-'+d;
 
 function visibleDays(){const start=dayPage*10+1;return Array.from({length:10},(_,i)=>start+i);}
 function setDayPage(page){dayPage=Math.max(0,Math.min(2,Number(page)||0));document.querySelectorAll('#dayPages .day-page-btn').forEach((b,i)=>b.classList.toggle('active',i===dayPage));build();}
-function setTheme(theme){const allowed=['green','rose','blue','purple','beige'];theme=allowed.includes(theme)?theme:'green';document.documentElement.dataset.theme=theme;try{_ls.setItem('ibada_theme_v1',theme)}catch(e){}const sel=document.getElementById('themeSelect');if(sel)sel.value=theme;}
-function applyMode(mode){mode=mode==='dark'?'dark':'light';document.documentElement.dataset.mode=mode;try{_ls.setItem('ibada_mode_v1',mode)}catch(e){}const btn=document.getElementById('modeBtn');if(btn)btn.textContent=mode==='dark'?'☀️ الوضع النهاري':'🌙 الوضع الليلي';}
+function updateThemeColor(){
+  const mode=document.documentElement.dataset.mode==='dark'?'dark':'light';
+  const theme=document.documentElement.dataset.theme||'green';
+  const meta=document.querySelector('meta[name="theme-color"]');
+  const colors={green:'#1a6b3c',rose:'#a44763',blue:'#376f9b',purple:'#7652a6',beige:'#80654a'};
+  const color=mode==='dark'?'#2c3036':(colors[theme]||colors.green);
+  if(meta)meta.setAttribute('content',color);
+  document.documentElement.style.background=color=== '#2c3036' ? '#2c3036' : getComputedStyle(document.documentElement).getPropertyValue('--bg').trim();
+  document.body.style.background=getComputedStyle(document.documentElement).getPropertyValue('--bg').trim();
+}
+function setTheme(theme){const allowed=['green','rose','blue','purple','beige'];theme=allowed.includes(theme)?theme:'green';document.documentElement.dataset.theme=theme;try{_ls.setItem('ibada_theme_v1',theme)}catch(e){}const sel=document.getElementById('themeSelect');if(sel)sel.value=theme;updateThemeColor();}
+function applyMode(mode){mode=mode==='dark'?'dark':'light';document.documentElement.dataset.mode=mode;try{_ls.setItem('ibada_mode_v1',mode)}catch(e){}const btn=document.getElementById('modeBtn');if(btn)btn.textContent=mode==='dark'?'☀️ الوضع النهاري':'🌙 الوضع الليلي';updateThemeColor();}
 function toggleMode(){applyMode(document.documentElement.dataset.mode==='dark'?'light':'dark');}
-function loadAppearance(){let theme='green',mode='light';try{theme=_ls.getItem('ibada_theme_v1')||'green';mode=_ls.getItem('ibada_mode_v1')||'light'}catch(e){}setTheme(theme);applyMode(mode);}
+function loadAppearance(){let theme='green',mode='light';try{theme=_ls.getItem('ibada_theme_v1')||'green';mode=_ls.getItem('ibada_mode_v1')||'light'}catch(e){}setTheme(theme);applyMode(mode);updateThemeColor();}
 
 function calcPtsTotal(){
   return ROWS.reduce((sum,r,ri)=>{
