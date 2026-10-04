@@ -149,6 +149,9 @@ html[data-mode="dark"] .counter-box,html[data-mode="dark"] .how-box,html[data-mo
 html[data-mode="dark"] .goal-custom-inp{background:#2f343b;color:var(--tx)}
 html[data-mode="dark"] .ld.e{background:var(--sf)}
 
+
+.period-stats-wrap{margin:0 0 12px}.period-stats-title{font-size:12px;font-weight:800;color:var(--primary-dark);margin-bottom:6px}.period-stats-scroll{display:flex;gap:8px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;padding:1px 0 5px}.period-stat-card{min-width:82%;scroll-snap-align:center;background:var(--sf);border:1px solid var(--bd);border-radius:12px;padding:10px;box-shadow:var(--sh)}.period-stat-card.active{border-color:var(--primary);box-shadow:0 0 0 1px var(--primary),var(--sh)}.period-stat-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px}.period-stat-name{font-size:12px;font-weight:800;color:var(--primary)}.period-stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.period-mini{background:var(--primary-light);border-radius:8px;padding:7px 4px;text-align:center}.period-mini b{display:block;font-size:17px;color:var(--primary);line-height:1.1}.period-mini span{font-size:9px;color:var(--mu)}html[data-mode="dark"] .period-mini{background:#3d444d}.period-note{font-size:8.5px;color:var(--mu);margin-top:6px;text-align:center}
+
 </style>
 <link rel="manifest" href="manifest.json?v=2026.08.30.5">
 <meta name="mobile-web-app-capable" content="yes">
@@ -231,6 +234,14 @@ window.APP_VERSION = "2026.08.30.5";
   <button class="day-page-btn active" type="button" onclick="setDayPage(0)">الأيام 1–10</button>
   <button class="day-page-btn" type="button" onclick="setDayPage(1)">الأيام 11–20</button>
   <button class="day-page-btn" type="button" onclick="setDayPage(2)">الأيام 21–30</button>
+</div>
+<div class="period-stats-wrap">
+  <div class="period-stats-title">نتيجتك لكل 10 أيام</div>
+  <div class="period-stats-scroll" id="periodStatsScroll">
+    <div class="period-stat-card active" id="periodStat0"></div>
+    <div class="period-stat-card" id="periodStat1"></div>
+    <div class="period-stat-card" id="periodStat2"></div>
+  </div>
 </div>
 <div class="tw"><table>
   <thead><tr id="tableHead"></tr></thead>
@@ -362,7 +373,7 @@ const sk=(r,d)=>r+'-'+d;
 
 
 function visibleDays(){const start=dayPage*10+1;return Array.from({length:10},(_,i)=>start+i);}
-function setDayPage(page){dayPage=Math.max(0,Math.min(2,Number(page)||0));document.querySelectorAll('#dayPages .day-page-btn').forEach((b,i)=>b.classList.toggle('active',i===dayPage));build();}
+function setDayPage(page){dayPage=Math.max(0,Math.min(2,Number(page)||0));document.querySelectorAll('#dayPages .day-page-btn').forEach((b,i)=>b.classList.toggle('active',i===dayPage));document.querySelectorAll('.period-stat-card').forEach((c,i)=>c.classList.toggle('active',i===dayPage));build();const card=document.getElementById('periodStat'+dayPage);if(card&&card.scrollIntoView)card.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});}
 function updateThemeColor(){
   const mode=document.documentElement.dataset.mode==='dark'?'dark':'light';
   const theme=document.documentElement.dataset.theme||'green';
@@ -640,6 +651,22 @@ function getDayBase(d){let t=0;ROWS.forEach((r,ri)=>{if((state[sk(ri,d)]||0)===1
 function getDayBonus(d){let t=0;ROWS.forEach((r,ri)=>{if((state[sk(ri,d)]||0)===1)t+=getBonusPtsForCell(ri,d);});return t;}
 function getDayTotals(){return Array.from({length:DAYS},(_,i)=>getDayBase(i+1)+getDayBonus(i+1));}
 function calcDayMax(){return ROWS.reduce((s,r,ri)=>s+((r.pts>0&&!r.bonus&&!r.negative)?r.pts:0),0);}
+function periodStats(start,end){
+  let points=0,base=0,filled=0;const dayMax=calcDayMax();
+  for(let d=start;d<=end;d++){
+    points+=getDayBase(d)+getDayBonus(d);
+    const hasData=ROWS.some((_,ri)=>(state[sk(ri,d)]||0)!==0);
+    if(hasData){filled++;base+=getDayBase(d);}
+  }
+  const pct=filled&&dayMax?Math.min(100,Math.round((base/filled)/dayMax*100)):null;
+  return {points,pct,filled};
+}
+function renderPeriodStats(){
+  [[1,10],[11,20],[21,30]].forEach(([start,end],i)=>{
+    const s=periodStats(start,end),el=document.getElementById('periodStat'+i);if(!el)return;
+    el.innerHTML='<div class="period-stat-head"><div class="period-stat-name">الأيام '+start+'–'+end+'</div><div style="font-size:9px;color:var(--mu)">'+s.filled+'/10 أيام</div></div><div class="period-stat-grid"><div class="period-mini"><b>'+s.points+'</b><span>مجموع النقاط</span></div><div class="period-mini"><b>'+(s.pct===null?'—':s.pct+'%')+'</b><span>المعدل من 100</span></div><div class="period-mini"><b>'+s.filled+'</b><span>أيام مسجلة</span></div></div>'+(i===2?'<div class="period-note">عداد التسميع يبقى ضمن المجموع الكلي لأنه غير مرتبط بيوم محدد.</div>':'');
+  });
+}
 
 function recalc(){
   let grandBase=0,grandBonus=0;
@@ -661,6 +688,7 @@ function recalc(){
     else{el.textContent='—';el.style.color='var(--mu)';}
   }
   document.getElementById('pctDayVal').textContent=filled>0?Math.min(100,Math.round((baseGrandSum/filled)/dayMax*100))+'%':'—';
+  renderPeriodStats();
 }
 
 function toggleHow(){const body=document.getElementById('howBody');const arr=document.getElementById('howArr');const open=body.style.display==='block';body.style.display=open?'none':'block';arr.textContent=open?'▼':'▲';}
