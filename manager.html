@@ -257,7 +257,7 @@ button,select{font-family:inherit}
 .manager-main-tabs{position:sticky;top:8px;z-index:50;display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:4px;margin:0 0 6px;background:var(--bd2);border:1px solid var(--bd);border-radius:12px;box-shadow:0 4px 14px rgba(60,45,20,.06)}
 .manager-main-tab{border:0;background:transparent;color:var(--mu);border-radius:9px;padding:9px 4px;font-size:12.5px;font-weight:700;cursor:pointer;line-height:1.25}
 .manager-main-tab.active{background:var(--sf);color:var(--gD);box-shadow:var(--sh)}
-.manager-page-shell{overflow:hidden;touch-action:pan-y}
+.manager-page-shell{overflow:hidden}
 .manager-swipe-note{text-align:center;font-size:11px;color:var(--mu);margin:2px 0 12px}
 
 .manager-period-hero{background:var(--gD);color:#fff;border-radius:var(--r);padding:15px 14px;margin-bottom:12px}
@@ -369,7 +369,7 @@ html[data-mode="dark"] #toast{background:#e8ebe9;color:#17191b}
   <button class="manager-main-tab" onclick="setManagerMainTab(2)">21–30</button>
   <button class="manager-main-tab" onclick="setManagerMainTab(3)">ترتيب 30</button>
 </div>
-<div class="manager-swipe-note">يمكنك السحب يمينًا ويسارًا بين التبويبات</div>
+
 <div id="completionSummary" class="completion-card">
   <button type="button" class="completion-head" onclick="toggleCompletionSummary()"><span>📋 متابعة إنجاز العبادات</span><span id="completionArrow">▼</span></button>
   <div id="completionSummaryBody" class="completion-body" style="display:none"></div>
@@ -697,10 +697,10 @@ function render(){
     const start=managerMainTab*10+1;if(selectedSummaryDay<start||selectedSummaryDay>start+9)selectedSummaryDay=start;
     renderCompletionSummary();
     document.getElementById('completionSummary').style.display='block';
-    cont.innerHTML='<div class="manager-page-shell" ontouchstart="managerMainTouchStart(event)" ontouchend="managerMainTouchEnd(event)">'+renderPeriodPage(managerMainTab,sorted,maxG)+'</div>';
+    cont.innerHTML='<div class="manager-page-shell">'+renderPeriodPage(managerMainTab,sorted,maxG)+'</div>';
   }else{
     document.getElementById('completionSummary').style.display='none';
-    let html='<div class="manager-page-shell" ontouchstart="managerMainTouchStart(event)" ontouchend="managerMainTouchEnd(event)"><div class="rank30-hero"><h2>ترتيب الـ30 يوم</h2><p>النتيجة النهائية لجميع البنات حسب مجموع النقاط خلال الثلاثين يومًا.</p></div>';
+    let html='<div class="manager-page-shell"><div class="rank30-hero"><h2>ترتيب الـ30 يوم</h2><p>النتيجة النهائية لجميع البنات حسب مجموع النقاط خلال الثلاثين يومًا.</p></div>';
     html+='<div class="card"><div class="card-t">مقارنة المجموع الكلي</div><div class="bars-scroll"><div class="bars">';
     sorted.forEach(g=>{const h=Math.max(3,Math.round(g.grand/maxG*82));html+='<div class="bi"><div class="bv">'+g.grand+'</div><div class="bf" style="height:'+h+'px"></div><div class="bn">'+esc(g.name)+'</div></div>';});
     html+='</div></div><div class="scroll-hint">مرّري يمينًا ويسارًا لرؤية جميع البنات</div></div>';
@@ -869,8 +869,7 @@ function detailsTable(g,gi){
   const startDay=page*10+1;
   const days=Array.from({length:10},(_,i)=>startDay+i);
   let html='<div class="detail-day-pages">'+[0,1,2].map(p=>'<button type="button" class="detail-day-btn '+(p===page?'active':'')+'" onclick="setManagerDayPage('+gi+','+p+',event)">الأيام '+(p*10+1)+'–'+(p*10+10)+'</button>').join('')+'</div>';
-  html+='<div class="detail-swipe-hint">مرري يمينًا ويسارًا داخل الجدول للتنقل بين النتائج</div>';
-  html+='<div class="manager-table-wrap" ontouchstart="startDetailSwipe(event,'+gi+')" ontouchend="endDetailSwipe(event,'+gi+')"><table class="manager-detail-table"><thead><tr><th class="catH">الفئة</th><th class="ibH">العبادة</th><th class="ptsH">نقاط</th>';
+  html+='<div class="manager-table-wrap"><table class="manager-detail-table"><thead><tr><th class="catH">الفئة</th><th class="ibH">العبادة</th><th class="ptsH">نقاط</th>';
   days.forEach(d=>html+='<th class="dayH">'+d+'</th>');
   html+='</tr></thead><tbody>';
   let lastCat='',catRows={};ROWS.forEach(r=>catRows[r.cat]=(catRows[r.cat]||0)+1);
