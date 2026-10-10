@@ -728,7 +728,10 @@ function renderCompletionSummary(){
   const periodStart=managerMainTab<3?managerMainTab*10+1:1; const periodEnd=managerMainTab<3?periodStart+9:DAYS; const tabs=Array.from({length:periodEnd-periodStart+1},(_,i)=>{const d=periodStart+i;return '<button class="day-tab '+(selectedSummaryDay===d?'active':'')+'" onclick="setSummaryDay('+d+')">'+d+'</button>';}).join('');
   let html='<div class="completion-title">متابعة إنجاز العبادات — اليوم '+selectedSummaryDay+'</div><div class="completion-help">اختاري اليوم لتري في كل عبادة مَن أنجزتها ومَن لم تنجزها أو لم تحدد نتيجتها بعد.</div><div class="day-tabs">'+tabs+'</div>';
   if(!girlsData.length){box.innerHTML=html+'<div class="empty" style="padding:1.5rem">لا توجد بيانات لعرضها بعد</div>';return;}
+  // العبادات اللي بتظهر بمتابعة الإنجاز فقط: ثلث البقرة، جزء قرآن، ركعات القيام، ركعات ضحى، سنن الصلوات، الذكر
+  const COMPLETION_ROWS=[3,4,8,10,13,15,16,17];
   ROWS.forEach((r,ri)=>{
+    if(!COMPLETION_ROWS.includes(ri))return;
     const done=[],missed=[],pending=[];
     girlsData.forEach(g=>{
       const v=((g.state||{})[sk(ri,selectedSummaryDay)]||0);
