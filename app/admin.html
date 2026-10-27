@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>إعدادات برنامج عبادة</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<link rel="apple-touch-icon" href="icon.png">
+<style>
+/* ===== الألوان (نفس ألوان البرنامج) ===== */
+:root{
+  --gD:#1a6b3c;--gDD:#0f4a28;--gL:#e8f6ee;--gold:#a8822a;--gold-l:#fbf5e6;--gold-bd:#efe2bf;
+  --bg:#fdfaf5;--sf:#ffffff;--bd:#e2d9c8;--bd2:#efe8dc;--soft:#faf6ef;--tx:#2c2416;--mu:#7a6a52;
+  --red:#b4483c;--red-l:#fbe6e3;--sh:0 1px 3px rgba(60,45,20,.06),0 1px 2px rgba(60,45,20,.04);
+}
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Amiri',serif!important}
+html,body{background:var(--bg);color:var(--tx)}
+body{padding:1rem .8rem 4rem;max-width:860px;margin:0 auto;line-height:1.6}
+.hdr{text-align:center;margin-bottom:12px;padding:1rem;background:var(--sf);border:1px solid var(--bd);border-radius:18px;box-shadow:var(--sh)}
+.hdr h1{font-size:26px;color:var(--gold)}
+.hdr p{font-size:13px;color:var(--mu)}
+.hdr-links{display:flex;gap:8px;justify-content:center;margin-top:8px;flex-wrap:wrap}
+.tabs{display:flex;gap:6px;margin-bottom:12px;background:var(--sf);border:1px solid var(--bd);border-radius:14px;padding:5px}
+.tab{flex:1;padding:9px 6px;border:none;border-radius:10px;background:none;color:var(--mu);font-size:15px;font-weight:700;cursor:pointer}
+.tab.active{background:var(--gD);color:#fff}
+.panel{display:none}.panel.active{display:block}
+.card{background:var(--sf);border:1px solid var(--bd);border-radius:14px;padding:14px;margin-bottom:10px;box-shadow:var(--sh)}
+.card h3{font-size:17px;color:var(--gD);margin-bottom:6px}
+.muted{color:var(--mu);font-size:12.5px}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:6px 0}
+input[type=text],input[type=email],input[type=number],input[type=password],select,textarea{padding:8px 10px;border:1px solid var(--bd);border-radius:9px;font-size:14px;background:var(--soft);color:var(--tx)}
+textarea{width:100%;min-height:150px;direction:rtl;font-size:13px}
+.btn{padding:8px 13px;border-radius:9px;border:1px solid var(--bd);background:var(--soft);color:var(--tx);font-size:13.5px;font-weight:700;cursor:pointer;text-decoration:none;display:inline-block}
+.btn.primary{background:var(--gD);border-color:var(--gD);color:#fff}
+.btn.danger{background:var(--red-l);border-color:#e3a59d;color:var(--red)}
+.btn.small{padding:5px 9px;font-size:12px}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.code{direction:ltr;font-size:12px;background:var(--soft);border:1px solid var(--bd2);border-radius:7px;padding:2px 7px;color:var(--mu)}
+.pill{display:inline-block;font-size:11.5px;padding:2px 9px;border-radius:999px;background:var(--gL);color:var(--gD);margin-inline-start:4px}
+.pill.gold{background:var(--gold-l);color:var(--gold)}
+.warn{background:var(--gold-l);border:1px solid var(--gold-bd);color:#7a5b16;border-radius:10px;padding:9px 12px;font-size:13px;margin-bottom:10px}
+.checks{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:13.5px}
+.checks label{display:flex;gap:5px;align-items:center;cursor:pointer}
+/* محرر الخانات */
+.cat-head{font-size:15px;font-weight:700;color:var(--gold);margin:14px 2px 6px;display:flex;justify-content:space-between;align-items:center}
+.item{border:1px solid var(--bd2);border-radius:12px;padding:10px;margin-bottom:8px;background:var(--sf)}
+.item.hidden{opacity:.55;background:var(--soft)}
+.item-top{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.item-top .name{flex:1;min-width:160px}
+.item-top .pts{width:74px}
+.item-sum{font-size:12px;color:var(--mu);margin-top:4px}
+.item-more{display:none;margin-top:8px;border-top:1px dashed var(--bd);padding-top:8px}
+.item.open .item-more{display:block}
+.field{display:flex;flex-direction:column;gap:3px;margin-bottom:7px;font-size:12.5px;color:var(--mu)}
+.field input,.field select{width:100%}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.goal-box{background:var(--soft);border:1px solid var(--bd2);border-radius:10px;padding:8px;margin-top:6px}
+.save-bar{position:sticky;bottom:10px;display:flex;gap:8px;justify-content:center;background:var(--sf);border:1px solid var(--bd);border-radius:14px;padding:9px;box-shadow:0 4px 16px rgba(0,0,0,.08);margin-top:12px}
+/* الدخول */
+.auth-ov{position:fixed;inset:0;z-index:9999;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:20px}
+.auth-box{background:var(--sf);border:1px solid var(--bd);border-radius:18px;padding:22px 18px;width:100%;max-width:360px;text-align:center;box-shadow:var(--sh)}
+.auth-box h2{color:var(--gold);font-size:24px}
+.auth-box input{width:100%;margin-bottom:9px;direction:ltr;text-align:left}
+.auth-box .btn{width:100%;margin-bottom:7px}
+.auth-msg{font-size:13px;min-height:20px;margin:6px 0;color:var(--red)}
+.auth-msg.ok{color:var(--gD)}
+#toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--gDD);color:#fff;padding:9px 18px;border-radius:12px;font-size:14px;transition:transform .25s;z-index:99999}
+#toast.show{transform:translateX(-50%) translateY(0)}
+@media(max-width:520px){.grid2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<!-- شاشة الدخول -->
+<div id="authOv" class="auth-ov"><div class="auth-box">
+  <h2>⚙️ الإعدادات</h2>
+  <p class="muted">للأدمن فقط</p>
+  <div id="authMsg" class="auth-msg"></div>
+  <div id="authForm" style="display:none">
+    <input id="authEmail" type="email" placeholder="email@example.com" autocomplete="email">
+    <input id="authPass" type="password" placeholder="كلمة السر" autocomplete="current-password">
+    <button class="btn primary" type="button" onclick="authSubmit()">دخول</button>
+    <a class="btn" href="manager.html">أول مرة؟ أنشئي حسابك من صفحة النتائج</a>
+  </div>
+</div></div>
+
+<div class="hdr">
+  <h1>⚙️ إعدادات برنامج عبادة</h1>
+  <p id="whoami"></p>
+  <div class="hdr-links"><a class="btn small" href="manager.html">🌙 صفحة النتائج</a><button class="btn small" onclick="signOut()">خروج</button></div>
+</div>
+
+<div class="tabs">
+  <button class="tab active" onclick="showTab(0)">المجموعات</button>
+  <button class="tab" onclick="showTab(1)">الآنسات</button>
+  <button class="tab" onclick="showTab(2)">بناء البرنامج</button>
+</div>
+
+<!-- ===== المجموعات ===== -->
+<div class="panel active" id="p0">
+  <div id="groupsList"></div>
+  <div class="card">
+    <h3>➕ مجموعة جديدة</h3>
+    <div class="row">
+      <input type="text" id="newGroupName" placeholder="اسم المجموعة (مثلاً: آ. سارة)" style="flex:1;min-width:180px">
+      <select id="newGroupCopy"></select>
+      <button class="btn primary" onclick="createGroup()">إنشاء</button>
+    </div>
+    <div class="muted">البرنامج بينسخ من المجموعة اللي بتختاريها، وبتقدري تعدليه بعدين من "بناء البرنامج".</div>
+  </div>
+</div>
+
+<!-- ===== الآنسات ===== -->
+<div class="panel" id="p1">
+  <div class="warn">الآنسة بتنشئ حسابها بنفسها من صفحة النتائج بنفس الإيميل اللي بتحطيه هون، وبتشوف المجموعات اللي بتحدديها بس.</div>
+  <div id="staffList"></div>
+  <div class="card">
+    <h3>➕ إضافة آنسة</h3>
+    <div class="row"><input type="email" id="newStaffEmail" placeholder="email@example.com" style="flex:1;min-width:200px;direction:ltr;text-align:left"></div>
+    <div class="checks" id="newStaffGroups"></div>
+    <div class="row"><label class="checks"><label><input type="checkbox" id="newStaffAdmin"> أدمن (بتشوف كل إشي وبتعدّل الإعدادات)</label></label></div>
+    <button class="btn primary" onclick="addStaff()">إضافة</button>
+  </div>
+</div>
+
+<!-- ===== بناء البرنامج ===== -->
+<div class="panel" id="p2">
+  <div class="card">
+    <div class="row"><b>المجموعة:</b><select id="progGroup" onchange="loadProgram(this.value)" style="flex:1"></select></div>
+    <div id="progLock" class="warn" style="display:none"></div>
+  </div>
+  <div id="progEditor"></div>
+  <div class="card">
+    <h3>📖 نص "كيف تُحسب النقاط؟"</h3>
+    <div class="muted" style="margin-bottom:6px">هاد النص اللي بيطلع للبنات فوق الجدول. بتقدري تعدليه مباشرة أو تولّديه من الخانات.</div>
+    <textarea id="howHtml"></textarea>
+    <div class="row"><button class="btn small" onclick="generateHow()">توليد النص من الخانات</button><button class="btn small" onclick="previewHow()">معاينة</button></div>
+    <div id="howPreview" class="card" style="display:none;margin-top:8px"></div>
+  </div>
+  <div class="save-bar">
+    <button class="btn primary" id="saveProgBtn" onclick="saveProgram()">💾 حفظ البرنامج</button>
+    <button class="btn" onclick="loadProgram(document.getElementById('progGroup').value)">تراجع</button>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ===== الاتصال =====
+const SB_URL='https://kltwxjplwpuefhjnemnq.supabase.co';
+const SB_KEY='sb_publishable_c2srueTIBH9emOH5nODFAQ_4zCFGSWX';
+const sb=supabase.createClient(SB_URL,SB_KEY);
+let groups=[],counts={},invites=[],prog=null,progLocked=false,progGroupId=null;
+
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2600);}
+function showTab(i){document.querySelectorAll('.tab').forEach((b,j)=>b.classList.toggle('active',i===j));document.querySelectorAll('.panel').forEach((p,j)=>p.classList.toggle('active',i===j));}
+function girlLink(g){return new URL('girl.html?g='+encodeURIComponent(g.code),location.href).href;}
+function copyText(t){if(navigator.clipboard)navigator.clipboard.writeText(t).then(()=>toast('تم النسخ ✓'),()=>prompt('انسخي:',t));else prompt('انسخي:',t);}
+
+// ===== الدخول =====
+function authMsg(t,ok){const m=document.getElementById('authMsg');m.textContent=t||'';m.className='auth-msg'+(ok?' ok':'');}
+async function authSubmit(){
+  const email=document.getElementById('authEmail').value.trim(),password=document.getElementById('authPass').value;
+  if(!email||!password){authMsg('اكتبي الإيميل وكلمة السر');return;}
+  const {error}=await sb.auth.signInWithPassword({email,password});
+  if(error){authMsg(error.message.includes('Invalid login')?'الإيميل أو كلمة السر غلط':error.message);return;}
+  start();
+}
+async function signOut(){await sb.auth.signOut();location.reload();}
+async function start(){
+  const {data:{user}}=await sb.auth.getUser();
+  if(!user){document.getElementById('authForm').style.display='block';return;}
+  const {data:staff}=await sb.from('staff').select('is_admin').eq('user_id',user.id).maybeSingle();
+  if(!staff||!staff.is_admin){authMsg('هاي الصفحة للأدمن بس');document.getElementById('authForm').style.display='none';const b=document.createElement('a');b.className='btn';b.href='manager.html';b.textContent='روحي لصفحة النتائج';document.querySelector('.auth-box').appendChild(b);return;}
+  document.getElementById('authOv').style.display='none';
+  document.getElementById('whoami').textContent=user.email;
+  await loadAll();
+}
+
+// ===== المجموعات =====
+async function loadAll(){
+  const [g,s,i]=await Promise.all([
+    sb.from('groups').select('id,name,code,created_at').order('created_at'),
+    sb.from('submissions').select('group_id'),
+    sb.from('staff_invites').select('email,is_admin,group_ids').order('email')
+  ]);
+  groups=g.data||[];invites=i.data||[];counts={};(s.data||[]).forEach(r=>counts[r.group_id]=(counts[r.group_id]||0)+1);
+  renderGroups();renderStaff();
+  const sel=document.getElementById('progGroup');const keep=sel.value;
+  sel.innerHTML=groups.map(x=>'<option value="'+x.id+'">'+esc(x.name)+'</option>').join('');
+  document.getElementById('newGroupCopy').innerHTML='<option value="">برنامج فاضي</option>'+groups.map(x=>'<option value="'+x.id+'">نسخ برنامج '+esc(x.name)+'</option>').join('');
+  if(groups.length){sel.value=groups.some(x=>x.id===keep)?keep:groups[0].id;loadProgram(sel.value);}
+}
+function renderGroups(){
+  document.getElementById('groupsList').innerHTML=groups.map(g=>{
+    const teachers=invites.filter(v=>v.group_ids.includes(g.id)&&!v.is_admin).map(v=>v.email);
+    return '<div class="card"><div class="row" style="justify-content:space-between"><h3 style="margin:0">'+esc(g.name)+'<span class="pill">'+(counts[g.id]||0)+' بنت</span></h3><span class="code">'+esc(g.code)+'</span></div>'
+    +'<div class="muted">الآنسات: '+(teachers.length?teachers.map(esc).join('، '):'— (الأدمن بس)')+'</div>'
+    +'<div class="row"><span class="code" style="flex:1;word-break:break-all">'+esc(girlLink(g))+'</span></div>'
+    +'<div class="row"><button class="btn small primary" onclick="copyText(\''+girlLink(g)+'\')">🔗 نسخ رابط البنات</button>'
+    +'<button class="btn small" onclick="renameGroup(\''+g.id+'\')">✏️ تغيير الاسم</button>'
+    +'<button class="btn small" onclick="showTab(2);document.getElementById(\'progGroup\').value=\''+g.id+'\';loadProgram(\''+g.id+'\')">🧩 البرنامج</button>'
+    +'<button class="btn small danger" onclick="deleteGroup(\''+g.id+'\')">🗑 حذف</button></div></div>';
+  }).join('')||'<div class="card muted">ما في مجموعات</div>';
+}
+function newCode(){return 'g'+Math.random().toString(36).slice(2,8);}
+async function createGroup(){
+  const name=document.getElementById('newGroupName').value.trim();if(!name){toast('اكتبي اسم المجموعة');return;}
+  const copyId=document.getElementById('newGroupCopy').value;
+  let config={ROWS:[],IBADA_NOTES:{},GOAL_ITEMS:[],VARIABLE_BONUS_ROWS:[],EDITABLE_BASIC_ROWS:[],DHIKR_ROWS:[],howHtml:'',qiyamRow:-1,days:30,pdfs:{},goalNormalizeRows:[]};
+  if(copyId){const {data}=await sb.from('programs').select('config').eq('group_id',copyId).single();if(data)config=JSON.parse(JSON.stringify(data.config));}
+  const {data:g,error}=await sb.from('groups').insert({name,code:newCode()}).select().single();
+  if(error){toast('تعذر الإنشاء: '+error.message);return;}
+  const r=await sb.from('programs').insert({group_id:g.id,config});
+  if(r.error){toast('انعملت المجموعة بس البرنامج ما انحفظ');}
+  document.getElementById('newGroupName').value='';toast('تم إنشاء المجموعة ✓');loadAll();
+}
+async function renameGroup(id){
+  const g=groups.find(x=>x.id===id);const name=prompt('الاسم الجديد:',g.name);if(!name||name===g.name)return;
+  const {error}=await sb.from('groups').update({name:name.trim()}).eq('id',id);
+  if(error)toast('تعذر التغيير');else{toast('تم ✓');loadAll();}
+}
+async function deleteGroup(id){
+  const g=groups.find(x=>x.id===id);
+  const typed=prompt('حذف المجموعة بيحذف كل نتائج بناتها ('+(counts[id]||0)+' بنت) نهائياً.\nللتأكيد اكتبي اسم المجموعة: '+g.name);
+  if(typed===null)return;if(typed.trim()!==g.name){toast('الاسم مش مطابق — ما انحذف إشي');return;}
+  const {error}=await sb.from('groups').delete().eq('id',id);
+  if(error)toast('تعذر الحذف');else{toast('تم الحذف');loadAll();}
+}
+
+// ===== الآنسات =====
+function groupChecks(prefix,selected){return groups.map(g=>'<label><input type="checkbox" data-g="'+g.id+'" class="'+prefix+'"'+(selected.includes(g.id)?' checked':'')+'> '+esc(g.name)+'</label>').join('');}
+function renderStaff(){
+  document.getElementById('newStaffGroups').innerHTML=groupChecks('ng',[]);
+  document.getElementById('staffList').innerHTML=invites.map((v,i)=>'<div class="card"><div class="row" style="justify-content:space-between"><span class="code" style="font-size:14px">'+esc(v.email)+'</span>'+(v.is_admin?'<span class="pill gold">أدمن</span>':'<span class="pill">آنسة</span>')+'</div>'
+    +(v.is_admin?'<div class="muted">الأدمن بتشوف كل المجموعات</div>':'<div class="checks" id="sg_'+i+'">'+groupChecks('sg',v.group_ids)+'</div>')
+    +'<div class="row">'+(v.is_admin?'':'<button class="btn small primary" onclick="saveStaff('+i+')">حفظ المجموعات</button>')+'<button class="btn small danger" onclick="removeStaff('+i+')">إزالة</button></div></div>').join('');
+}
+async function addStaff(){
+  const email=document.getElementById('newStaffEmail').value.trim().toLowerCase();if(!email||!email.includes('@')){toast('اكتبي إيميل صحيح');return;}
+  const isAdmin=document.getElementById('newStaffAdmin').checked;
+  const ids=isAdmin?groups.map(g=>g.id):[...document.querySelectorAll('#newStaffGroups .ng:checked')].map(c=>c.dataset.g);
+  if(!isAdmin&&!ids.length){toast('اختاري مجموعة وحدة على الأقل');return;}
+  const {error}=await sb.from('staff_invites').upsert({email,is_admin:isAdmin,group_ids:ids});
+  if(error){toast('تعذر الإضافة: '+error.message);return;}
+  document.getElementById('newStaffEmail').value='';document.getElementById('newStaffAdmin').checked=false;toast('تمت الإضافة ✓');loadAll();
+}
+async function saveStaff(i){
+  const ids=[...document.querySelectorAll('#sg_'+i+' .sg:checked')].map(c=>c.dataset.g);
+  const {error}=await sb.from('staff_invites').update({group_ids:ids}).eq('email',invites[i].email);
+  if(error)toast('تعذر الحفظ');else{toast('تم الحفظ ✓');loadAll();}
+}
+async function removeStaff(i){
+  const v=invites[i];
+  const {data:{user}}=await sb.auth.getUser();
+  if(user&&user.email.toLowerCase()===v.email.toLowerCase()){toast('ما بتقدري تزيلي حسابك إنتِ');return;}
+  if(!confirm('إزالة '+v.email+'؟ ما رح تقدر تشوف النتائج بعدها.'))return;
+  const {error}=await sb.from('staff_invites').delete().eq('email',v.email);
+  if(error)toast('تعذر الإزالة');else{toast('تمت الإزالة');loadAll();}
+}
+
+// ===== بناء البرنامج =====
+// كل خانة بتنحفظ بترتيبها (رقمها) لأن بيانات البنات مربوطة بالرقم،
+// فإذا المجموعة فيها بيانات: ممنوع الحذف والتحريك والإضافة بالنص، والبديل "إخفاء".
+const AZKAR_NOTE='أول 3 خانات (الأذكار) بتنعرض كخانة وحدة بالجدول: ص / م / ن';
+async function loadProgram(gid){
+  progGroupId=gid;
+  const {data,error}=await sb.from('programs').select('config').eq('group_id',gid).single();
+  if(error||!data){document.getElementById('progEditor').innerHTML='<div class="card">تعذر تحميل البرنامج</div>';return;}
+  prog=JSON.parse(JSON.stringify(data.config||{}));
+  prog.ROWS=prog.ROWS||[];prog.GOAL_ITEMS=prog.GOAL_ITEMS||[];prog.IBADA_NOTES=prog.IBADA_NOTES||{};
+  ['VARIABLE_BONUS_ROWS','EDITABLE_BASIC_ROWS','DHIKR_ROWS','goalNormalizeRows'].forEach(k=>prog[k]=prog[k]||[]);
+  if(prog.qiyamRow===undefined)prog.qiyamRow=-1;
+  progLocked=(counts[gid]||0)>0;
+  const lock=document.getElementById('progLock');
+  lock.style.display=progLocked?'block':'none';
+  lock.innerHTML='🔒 هاي المجموعة فيها بيانات بنات ('+(counts[gid]||0)+' بنت)، فما بتقدري تحذفي أو تحركي خانات أو تضيفي بالنص — لأنها بتخرّب جداول البنات. بتقدري تعدّلي الأسماء والنقاط والملاحظات، وتخفي خانة، وتضيفي خانات جديدة بآخر البرنامج.';
+  document.getElementById('howHtml').value=prog.howHtml||'';
+  document.getElementById('howPreview').style.display='none';
+  renderProgram();
+}
+function rowType(r){return r.negative?'neg':r.bonus?'bonus':'base';}
+function goalOf(ri){return prog.GOAL_ITEMS.find(g=>g.ri===ri);}
+function itemSummary(r,ri){
+  const tags=[];
+  if(r.hidden)tags.push('مخفية');
+  if(r.bonus)tags.push('⭐ بونص');if(r.negative)tags.push('سالبة');
+  if(prog.VARIABLE_BONUS_ROWS.includes(ri))tags.push('نقاط متغيرة');
+  if(prog.EDITABLE_BASIC_ROWS.includes(ri))tags.push('قابلة للتعديل لحد النقاط');
+  if(prog.DHIKR_ROWS.includes(ri))tags.push('ذكر (حد 30)');
+  if(prog.qiyamRow===ri)tags.push('ركعات قيام');
+  if(goalOf(ri))tags.push('🎯 هدف شخصي');
+  if(r.badil||r.badilBook)tags.push('🔄 بديل');if(r.pdfLink)tags.push('📄 ملف');
+  return tags.join(' · ');
+}
+function renderProgram(){
+  const box=document.getElementById('progEditor');
+  const rows=prog.ROWS;let html='';let lastCat=null;
+  rows.forEach((r,ri)=>{
+    if(r.cat!==lastCat){if(lastCat!==null)html+='</div>';html+='<div class="card"><div class="cat-head"><span>'+esc(r.cat)+'</span><button class="btn small" onclick="renameCat(\''+esc(r.cat).replace(/'/g,"\\'")+'\')">✏️ اسم الفئة</button></div>';lastCat=r.cat;}
+    const g=goalOf(ri);
+    html+='<div class="item'+(r.hidden?' hidden':'')+'" id="it_'+ri+'">'
+      +'<div class="item-top"><span class="muted">#'+ri+'</span>'
+      +'<input class="name" type="text" value="'+esc(r.ibada)+'" onchange="setRow('+ri+',\'ibada\',this.value)">'
+      +'<input class="pts" type="number" value="'+r.pts+'" onchange="setRow('+ri+',\'pts\',Number(this.value))" title="النقاط">'
+      +'<button class="btn small" onclick="document.getElementById(\'it_'+ri+'\').classList.toggle(\'open\')">تفاصيل</button>'
+      +(progLocked?'':'<button class="btn small" onclick="moveRow('+ri+',-1)" title="لفوق">▲</button><button class="btn small" onclick="moveRow('+ri+',1)" title="لتحت">▼</button>')
+      +'</div><div class="item-sum">'+esc([itemSummary(r,ri),ri<3?AZKAR_NOTE:''].filter(Boolean).join(' · '))+'</div>'
+      +'<div class="item-more"><div class="grid2">'
+      +'<div class="field">الفئة<input type="text" value="'+esc(r.cat)+'" onchange="setRow('+ri+',\'cat\',this.value)"'+(progLocked?' disabled':'')+'></div>'
+      +'<div class="field">النوع<select onchange="setType('+ri+',this.value)"><option value="base"'+(rowType(r)==='base'?' selected':'')+'>أساسية (بتنحسب بالمعدل)</option><option value="bonus"'+(rowType(r)==='bonus'?' selected':'')+'>⭐ بونص (ملحق البونص)</option><option value="neg"'+(rowType(r)==='neg'?' selected':'')+'>سالبة (بتنقص)</option></select></div>'
+      +'<div class="field">ملاحظة تحت الاسم<input type="text" value="'+esc(prog.IBADA_NOTES[r.ibada]||'')+'" onchange="setNote('+ri+',this.value)"></div>'
+      +'<div class="field">بديل (لمن ما بتقدر)<input type="text" value="'+esc(r.badil||'')+'" onchange="setRow('+ri+',\'badil\',this.value)"></div>'
+      +'</div><div class="checks">'
+      +'<label><input type="checkbox"'+(prog.VARIABLE_BONUS_ROWS.includes(ri)?' checked':'')+' onchange="toggleSet(\'VARIABLE_BONUS_ROWS\','+ri+',this.checked)"> نقاط متغيرة (الزيادة بونص)</label>'
+      +'<label><input type="checkbox"'+(prog.EDITABLE_BASIC_ROWS.includes(ri)?' checked':'')+' onchange="toggleSet(\'EDITABLE_BASIC_ROWS\','+ri+',this.checked)"> البنت بتعدّل النقاط لحد الأقصى</label>'
+      +'<label><input type="checkbox"'+(prog.DHIKR_ROWS.includes(ri)?' checked':'')+' onchange="toggleSet(\'DHIKR_ROWS\','+ri+',this.checked)"> ذكر (أقصى 30 نقطة)</label>'
+      +'<label><input type="radio" name="qiyam"'+(prog.qiyamRow===ri?' checked':'')+' onchange="prog.qiyamRow='+ri+';renderProgram()"> ركعات القيام (كل ركعتين نقطتين)</label>'
+      +'<label><input type="checkbox"'+(r.badilBook?' checked':'')+' onchange="setRow('+ri+',\'badilBook\',this.checked)"> بديل: كتاب "لا يرد القدر إلا الدعاء"</label>'
+      +'<label><input type="checkbox"'+(r.hidden?' checked':'')+' onchange="setRow('+ri+',\'hidden\',this.checked)"> مخفية</label>'
+      +'<label><input type="checkbox"'+(g?' checked':'')+' onchange="toggleGoal('+ri+',this.checked)"> 🎯 هدف شخصي (حددي كميتك)</label>'
+      +'</div>'
+      +(g?goalEditor(g,ri):'')
+      +(progLocked?'':'<div class="row"><button class="btn small danger" onclick="deleteRow('+ri+')">🗑 حذف الخانة</button></div>')
+      +'</div></div>';
+  });
+  if(lastCat!==null)html+='</div>';
+  html+='<div class="card"><h3>➕ خانة جديدة</h3><div class="row"><input type="text" id="newRowCat" placeholder="الفئة" list="catList" style="width:130px"><datalist id="catList">'+[...new Set(rows.map(r=>r.cat))].map(c=>'<option value="'+esc(c)+'">').join('')+'</datalist>'
+    +'<input type="text" id="newRowName" placeholder="اسم العبادة" style="flex:1;min-width:150px"><input type="number" id="newRowPts" placeholder="نقاط" style="width:80px"><button class="btn primary" onclick="addRow()">إضافة</button></div>'
+    +'<div class="muted">'+(progLocked?'الخانة الجديدة بتنضاف بآخر البرنامج (بفئة جديدة أو بآخر فئة).':'الخانة بتنضاف بآخر فئتها.')+'</div></div>';
+  box.innerHTML=html;
+}
+function goalEditor(g,ri){
+  const f=(k,v,type)=>'<input type="'+(type||'text')+'" value="'+esc(v==null?'':v)+'" onchange="setGoal('+ri+',\''+k+'\',this.value)">';
+  return '<div class="goal-box"><b style="font-size:13px;color:var(--gD)">🎯 إعدادات الهدف</b><div class="grid2">'
+    +'<div class="field">الاسم بقسم "حددي كميتك"'+f('name',g.name)+'</div>'
+    +'<div class="field">الوحدة (ركعة، جزء...)'+f('unit',g.unit)+'</div>'
+    +'<div class="field">الكمية الأساسية (رقم)'+f('base',g.base,'number')+'</div>'
+    +'<div class="field">نص الأساسي'+f('baseLabel',g.baseLabel)+'</div>'
+    +'<div class="field">الخيارات (افصلي بفاصلة)'+f('opts',(g.opts||[]).join('، '))+'</div>'
+    +'<div class="field">قيم الخيارات (أرقام بفاصلة)'+f('optVals',(g.optVals||[]).join(', '))+'</div>'
+    +'<div class="field">نقاط ثابتة لكل خيار (اختياري)'+f('fixedPts',(g.fixedPts||[]).join(', '))+'</div>'
+    +'<div class="field">الحد الأقصى (اختياري)'+f('max',g.max,'number')+'</div>'
+    +'<div class="field">ملاحظة'+f('note',g.note)+'</div>'
+    +'<div class="field"><label style="display:flex;gap:5px;align-items:center;margin-top:18px"><input type="checkbox"'+(g.noCustom?' checked':'')+' onchange="setGoal('+ri+',\'noCustom\',this.checked)"> بدون "رقم مخصص"</label></div>'
+    +'</div></div>';
+}
+function setRow(ri,k,v){const r=prog.ROWS[ri];const oldName=r.ibada;if(v===''||v===false){delete r[k];}else r[k]=v;
+  // الملاحظة مربوطة باسم العبادة، فلما يتغير الاسم بننقلها معه
+  if(k==='ibada'&&prog.IBADA_NOTES[oldName]!==undefined&&v){prog.IBADA_NOTES[v]=prog.IBADA_NOTES[oldName];delete prog.IBADA_NOTES[oldName];}
+  renderProgram();document.getElementById('it_'+ri)?.classList.add('open');}
+function setType(ri,t){const r=prog.ROWS[ri];delete r.bonus;delete r.negative;if(t==='bonus')r.bonus=true;if(t==='neg')r.negative=true;renderProgram();document.getElementById('it_'+ri)?.classList.add('open');}
+function setNote(ri,v){const name=prog.ROWS[ri].ibada;if(v.trim())prog.IBADA_NOTES[name]=v.trim();else delete prog.IBADA_NOTES[name];}
+function toggleSet(k,ri,on){const s=new Set(prog[k]);on?s.add(ri):s.delete(ri);prog[k]=[...s].sort((a,b)=>a-b);renderProgram();document.getElementById('it_'+ri)?.classList.add('open');}
+function toggleGoal(ri,on){
+  if(on){prog.GOAL_ITEMS.push({ri,name:prog.ROWS[ri].ibada,unit:'',base:1,baseLabel:'',opts:[],optVals:[]});prog.GOAL_ITEMS.sort((a,b)=>a.ri-b.ri);if(!prog.VARIABLE_BONUS_ROWS.includes(ri))toggleSet('VARIABLE_BONUS_ROWS',ri,true);}
+  else prog.GOAL_ITEMS=prog.GOAL_ITEMS.filter(g=>g.ri!==ri);
+  renderProgram();document.getElementById('it_'+ri)?.classList.add('open');
+}
+function setGoal(ri,k,v){
+  const g=goalOf(ri);if(!g)return;
+  const nums=t=>String(t).split(/[,،]/).map(x=>x.trim()).filter(Boolean).map(Number);
+  if(k==='opts')g.opts=String(v).split(/[,،]/).map(x=>x.trim()).filter(Boolean);
+  else if(k==='optVals')g.optVals=nums(v);
+  else if(k==='fixedPts'){const a=nums(v);if(a.length)g.fixedPts=a;else delete g.fixedPts;}
+  else if(k==='base')g.base=Number(v)||1;
+  else if(k==='max'){if(v==='')delete g.max;else g.max=Number(v);}
+  else if(k==='noCustom'){if(v)g.noCustom=true;else delete g.noCustom;}
+  else{if(v==='')delete g[k];else g[k]=v;}
+}
+function renameCat(cat){const n=prompt('اسم الفئة الجديد:',cat);if(!n||n===cat)return;prog.ROWS.forEach(r=>{if(r.cat===cat)r.cat=n.trim();});renderProgram();}
+// تحريك/حذف الخانات بيغيّر أرقامها، فلازم نحدّث كل الأرقام المرتبطة
+function remap(map){
+  const m=ri=>map[ri];
+  ['VARIABLE_BONUS_ROWS','EDITABLE_BASIC_ROWS','DHIKR_ROWS','goalNormalizeRows'].forEach(k=>prog[k]=prog[k].map(m).filter(x=>x!==undefined).sort((a,b)=>a-b));
+  prog.GOAL_ITEMS=prog.GOAL_ITEMS.filter(g=>m(g.ri)!==undefined).map(g=>({...g,ri:m(g.ri)})).sort((a,b)=>a.ri-b.ri);
+  prog.qiyamRow=prog.qiyamRow>=0&&m(prog.qiyamRow)!==undefined?m(prog.qiyamRow):-1;
+}
+function moveRow(ri,dir){
+  if(progLocked)return;const j=ri+dir;if(j<0||j>=prog.ROWS.length)return;
+  [prog.ROWS[ri],prog.ROWS[j]]=[prog.ROWS[j],prog.ROWS[ri]];
+  const map={};prog.ROWS.forEach((_,i)=>map[i]=i);map[ri]=j;map[j]=ri;remap(map);renderProgram();
+}
+function deleteRow(ri){
+  if(progLocked)return;if(!confirm('حذف "'+prog.ROWS[ri].ibada+'"؟'))return;
+  prog.ROWS.splice(ri,1);const map={};for(let i=0;i<=prog.ROWS.length;i++){if(i<ri)map[i]=i;else if(i>ri)map[i]=i-1;}remap(map);renderProgram();
+}
+function addRow(){
+  const cat=document.getElementById('newRowCat').value.trim(),name=document.getElementById('newRowName').value.trim(),pts=Number(document.getElementById('newRowPts').value);
+  if(!cat||!name||isNaN(pts)){toast('اكتبي الفئة والاسم والنقاط');return;}
+  const row={cat,ibada:name,pts};
+  let idx=prog.ROWS.length;
+  if(!progLocked){let last=-1;prog.ROWS.forEach((r,i)=>{if(r.cat===cat)last=i;});if(last>=0)idx=last+1;}
+  else{const lastCat=prog.ROWS.length?prog.ROWS[prog.ROWS.length-1].cat:null;if(prog.ROWS.some(r=>r.cat===cat)&&cat!==lastCat){toast('بمجموعة فيها بيانات: الخانة الجديدة لازم تكون بآخر فئة ('+lastCat+') أو بفئة جديدة');return;}}
+  prog.ROWS.splice(idx,0,row);
+  const map={};for(let i=0;i<prog.ROWS.length-1;i++)map[i]=i<idx?i:i+1;remap(map);
+  ['newRowName','newRowPts'].forEach(id=>document.getElementById(id).value='');renderProgram();toast('انضافت ✓ — لا تنسي الحفظ');
+}
+function generateHow(){
+  // يولّد النص من الخانات بنفس شكل النص الحالي
+  let html='',lastCat=null;
+  prog.ROWS.forEach((r,ri)=>{
+    if(r.hidden||ri===1||ri===2)return;
+    if(r.cat!==lastCat){html+='<div class="sec-title">'+esc(r.cat)+'</div>\n';lastCat=r.cat;}
+    let name=r.ibada,pts=r.pts;
+    if(ri===0&&prog.ROWS.length>2){name='أذكار الصباح / المساء / النوم<br><small>خانة وحدة بالجدول، كل ذكر '+r.pts+' نقاط</small>';pts=prog.ROWS[0].pts+prog.ROWS[1].pts+prog.ROWS[2].pts;}
+    const note=prog.IBADA_NOTES[r.ibada];if(ri!==0&&note)name+='<br><small>'+esc(note)+'</small>';
+    if(r.bonus)html+='<div class="row" style="background:#fff8e1;border:1px solid #f0c040"><span>⭐ '+name+' (بونص)</span><span style="color:#b8860b">+'+pts+' نقاط</span></div>\n';
+    else if(r.negative)html+='<div class="row neg"><span>'+name+'</span><span>−'+Math.abs(pts)+' نقطة</span></div>\n';
+    else html+='<div class="row"><span>'+name+'</span><span>'+pts+(prog.VARIABLE_BONUS_ROWS.includes(ri)?'+':'')+' نقاط</span></div>\n';
+  });
+  html+='<div class="sec-title">عداد</div><div class="row"><span>أخذ موعد تسميع قرآن</span><span>5 نقاط/مرة</span></div>';
+  if(document.getElementById('howHtml').value.trim()&&!confirm('بدك تستبدلي النص الحالي بالنص المولّد؟'))return;
+  document.getElementById('howHtml').value=html;previewHow();
+}
+function previewHow(){const p=document.getElementById('howPreview');p.style.display='block';p.innerHTML='<style>#howPreview .sec-title{font-weight:700;color:var(--gold);margin:8px 0 4px}#howPreview .row{display:flex;justify-content:space-between;gap:8px;padding:5px 8px;border:1px solid var(--bd2);border-radius:8px;margin:3px 0;font-size:13px}#howPreview small{color:var(--mu)}</style>'+document.getElementById('howHtml').value;}
+function validate(){
+  const errs=[];
+  prog.ROWS.forEach((r,ri)=>{if(!r.cat||!r.ibada)errs.push('خانة #'+ri+' ناقصها اسم أو فئة');if(isNaN(Number(r.pts)))errs.push('نقاط خانة #'+ri+' مش رقم');});
+  // الفئات لازم تكون متتالية حتى يطلع الجدول صح
+  const seen=new Set();let last=null;prog.ROWS.forEach(r=>{if(r.cat!==last){if(seen.has(r.cat))errs.push('فئة "'+r.cat+'" مقسومة بمكانين — خلّي خاناتها ورا بعض');seen.add(r.cat);last=r.cat;}});
+  prog.GOAL_ITEMS.forEach(g=>{if(!g.opts.length||g.opts.length!==g.optVals.length)errs.push('هدف "'+g.name+'": عدد الخيارات لازم يساوي عدد القيم');if(g.fixedPts&&g.fixedPts.length!==g.optVals.length)errs.push('هدف "'+g.name+'": النقاط الثابتة لازم بعدد الخيارات');});
+  return errs;
+}
+async function saveProgram(){
+  const errs=validate();if(errs.length){alert('صلّحي هدول قبل الحفظ:\n\n'+errs.join('\n'));return;}
+  prog.howHtml=document.getElementById('howHtml').value;
+  const btn=document.getElementById('saveProgBtn');btn.disabled=true;
+  const {error}=await sb.from('programs').update({config:prog,updated_at:new Date().toISOString()}).eq('group_id',progGroupId);
+  btn.disabled=false;
+  if(error)toast('تعذر الحفظ: '+error.message);else toast('تم حفظ البرنامج ✓ — بيوصل للبنات لما يفتحوا الصفحة');
+}
+
+(async()=>{const {data:{session}}=await sb.auth.getSession();if(session)start();else document.getElementById('authForm').style.display='block';})();
+</script>
+</body>
+</html>

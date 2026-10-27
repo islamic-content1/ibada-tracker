@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>نتائج برنامج عبادة</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<style>
+
+/* ===== الألوان الأساسية ===== */
+:root{
+  --gD:#2f6f4e;--gDD:#245a3e;--gL:#e9f2ed;--gM:#8bb39c;
+  --rL:#fbecea;--rD:#b4483c;--gold:#a8822a;--goldL:#fbf5e6;
+  --bg:#fdfaf5;--sf:#ffffff;--bd:#e2d9c8;--bd2:#efe8dc;--tx:#2c2416;--mu:#7a6a52;
+  --done-bg:#e9f2ed;--done-border:#bfd6c8;--done-text:#2f6f4e;
+  --sh:0 1px 3px rgba(60,45,20,.06),0 1px 2px rgba(60,45,20,.04);
+  --r:12px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{overflow-x:hidden;width:100%;background:var(--bg);min-height:100%}
+body{font-family:'Amiri',system-ui,Tahoma,sans-serif;background:var(--bg);color:var(--tx);padding:1rem .75rem 4rem;font-size:14px;line-height:1.5;max-width:900px;margin:0 auto}
+button,select{font-family:inherit}
+
+/* ===== الهيدر ===== */
+.hdr{text-align:center;padding:1.3rem 1rem 1.1rem;background:var(--gD);border-radius:16px;color:#fff;margin-bottom:1rem}
+.bsm{font-family:'Amiri',serif;font-size:15px;color:#dfeee5;margin-bottom:4px}
+.hdr h1{font-family:'Amiri',serif;font-size:26px;font-weight:700;color:#fff}
+.hdr p{font-size:12.5px;opacity:.8;margin-top:2px}
+
+/* ===== الإحصائيات ===== */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:1rem}
+.sc{background:var(--sf);border-radius:var(--r);padding:12px 6px;text-align:center;border:1px solid var(--bd);box-shadow:var(--sh)}
+.sv{font-size:22px;font-weight:800;color:var(--tx);line-height:1.1}
+.sl{font-size:11.5px;color:var(--mu);margin-top:4px}
+
+/* ===== الأزرار ===== */
+.btns{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:.6rem}
+.btn{font-size:13px;font-weight:700;padding:11px 10px;border-radius:10px;cursor:pointer;text-align:center;border:1px solid var(--bd);background:var(--sf);color:var(--tx);transition:background .15s,border-color .15s}
+.btn:hover{border-color:var(--gM)}
+.btn-r{background:var(--gD);color:#fff;border-color:var(--gD)}
+.btn-r:hover{background:var(--gDD)}
+.btn-r.loading{opacity:.75}
+.btn-x,.btn-admin,.btn-pairs{background:var(--sf);color:var(--tx)}
+.last-up{text-align:center;font-size:11.5px;color:var(--mu);margin-bottom:.8rem}
+
+.appearance-bar{display:flex;justify-content:center;margin:0 0 .9rem}
+.appearance-btn{font-size:12px;font-weight:600;border:1px solid var(--bd);background:var(--sf);color:var(--mu);border-radius:999px;padding:6px 14px;cursor:pointer}
+
+/* ===== البطاقات ===== */
+.card,.girl-card{background:var(--sf);border-radius:var(--r);border:1px solid var(--bd);margin-bottom:12px;box-shadow:var(--sh);overflow:hidden}
+.card{padding:14px}
+.card-t{font-size:14px;font-weight:700;color:var(--tx);margin-bottom:12px}
+
+/* ===== الرسم البياني ===== */
+.bars-scroll{overflow-x:auto;overflow-y:hidden;padding:4px 0 8px;touch-action:pan-x;-webkit-overflow-scrolling:touch;scrollbar-color:var(--bd) transparent}
+.bars-scroll::-webkit-scrollbar{height:5px}.bars-scroll::-webkit-scrollbar-thumb{background:var(--bd);border-radius:10px}
+.bars{display:flex;gap:10px;align-items:flex-end;height:150px;min-width:max-content;padding:22px 2px 0}
+.bi{display:flex;flex-direction:column;align-items:center;flex:0 0 52px;gap:4px}
+.bf{width:70%;border-radius:6px 6px 0 0;min-height:3px;background:var(--gM)}
+.bi:first-child .bf{background:var(--gD)}
+.bv{font-size:11px;font-weight:700;color:var(--tx)}
+.bn{font-size:11px;color:var(--mu);text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;width:100%}
+.scroll-hint{text-align:center;color:var(--mu);font-size:11px;margin-top:4px}
+
+/* ===== صفوف الترتيب ===== */
+.rank-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;margin-bottom:6px;border:1px solid var(--bd2);background:var(--sf)}
+.rank-item.t1{border-color:#ead9a8;background:var(--goldL)}
+.rank-item.t2,.rank-item.t3{border-color:var(--bd)}
+.rnum{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--mu);flex-shrink:0;background:var(--bd2)}
+.r1,.r2,.r3{background:transparent;font-size:18px}
+.rinfo{flex:1;min-width:0}
+.rname{font-size:14px;font-weight:700}
+.rmeta{font-size:11.5px;color:var(--mu)}
+.rtrack{background:var(--bd2);border-radius:10px;height:4px;overflow:hidden;margin-top:6px}
+.rfill{height:100%;background:var(--gD);border-radius:10px}
+.rpts{font-size:15px;font-weight:800;color:var(--gD)}
+
+/* ===== لوحات الإدارة والثنائيات ===== */
+.admin-panel{display:none;background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:14px;margin-bottom:1rem;box-shadow:var(--sh)}
+.admin-panel.open{display:block}
+.admin-panel-title{font-size:14px;font-weight:700;color:var(--tx);margin-bottom:10px}
+#pairsPanel .admin-panel-title{font-size:15px!important;color:var(--tx)!important}
+.admin-panel select{font-size:13px;border:1px solid var(--bd);border-radius:9px;padding:9px 10px;background:var(--sf);color:var(--tx);outline:none;width:100%}
+.admin-panel select:focus{border-color:var(--gM)}
+.admin-btn{font-size:13px;font-weight:700;border-radius:9px;padding:10px;border:1px solid var(--bd);background:var(--sf);color:var(--tx);cursor:pointer;width:100%;margin-top:8px}
+.admin-del{color:var(--rD);border-color:#efc9c4;background:var(--rL)}
+.admin-panel-note{font-size:11.5px;color:var(--mu);line-height:1.7;margin-top:8px;text-align:center}
+.pairs-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+.pair-card{background:var(--sf);border:1px solid var(--bd);border-radius:10px;padding:12px}
+.pair-title{font-size:13px;font-weight:700;color:var(--tx);margin-bottom:8px}
+.pair-card select{margin-bottom:6px}
+.pair-summary{display:flex;flex-wrap:wrap;gap:5px;margin-top:4px;min-height:24px}
+.pair-chip{background:var(--gL);color:var(--gD);border-radius:999px;padding:3px 10px;font-size:11.5px;font-weight:600}
+.pair-total{margin-top:8px;padding:9px;border-radius:9px;background:var(--gL);color:var(--gDD);text-align:center;font-size:12px}
+.pair-total b{display:block;font-size:20px;line-height:1.3;color:var(--gD)}
+.pair-total small{display:block;font-size:11px;color:var(--mu);margin-top:2px}
+.pairs-save{background:var(--gD);color:#fff;border-color:var(--gD)}
+.pairs-empty{color:var(--mu);font-size:12px;padding:3px 0}
+.pairs-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.pairs-add{background:var(--gD);color:#fff;border-color:var(--gD)}
+.pairs-clear{background:var(--sf);color:var(--rD);border-color:#efc9c4}
+.pair-delete{width:100%;margin-top:8px;border:1px solid var(--bd);background:var(--sf);color:var(--rD);border-radius:8px;padding:7px;font-size:12px;font-weight:600;cursor:pointer}
+.pair-period-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-bottom:10px;background:var(--bd2);padding:4px;border-radius:10px}
+.pair-period-btn{border:0;background:transparent;color:var(--mu);border-radius:7px;padding:7px 4px;font-size:12px;font-weight:700;cursor:pointer}
+.pair-period-btn.active{background:var(--sf);color:var(--gD);box-shadow:var(--sh)}
+.pair-period-caption{font-size:11.5px;color:var(--mu);text-align:center;margin:0 0 10px}
+
+/* ===== أزرار القوائم المنسدلة ===== */
+.cat-rank-btn,.toggle-btn{width:100%;padding:10px 12px;background:var(--sf);color:var(--tx);border:1px solid var(--bd);border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;margin:5px 0;text-align:right;display:flex;justify-content:space-between;align-items:center}
+.cat-rank-btn span:last-child,.toggle-btn span:last-child{color:var(--mu);font-size:11px}
+.cat-rank-body{display:none;background:var(--sf);border:1px solid var(--bd2);border-radius:9px;padding:10px;margin-bottom:8px}
+
+/* ===== كيف تحسب النقاط ===== */
+.how-box{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);margin-bottom:1rem;overflow:hidden;box-shadow:var(--sh)}
+.how-hdr{width:100%;display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:var(--sf);color:var(--tx);border:none;cursor:pointer;font-size:14px;font-weight:700;text-align:right}
+.how-hdr span:last-child{color:var(--mu);font-size:11px}
+.how-body{display:none;padding:4px 14px 14px;font-size:12.5px;color:var(--tx);border-top:1px solid var(--bd2)}
+.how-body .sec-title{font-weight:700;color:var(--gD);margin:12px 0 5px;font-size:13px}
+.how-body .row{display:flex;justify-content:space-between;gap:8px;padding:6px 10px;border-radius:7px;background:var(--bg);margin-bottom:3px}
+.how-body .row[style]{background:var(--goldL)!important;border:0!important}
+.how-body .row span:last-child{font-weight:700;color:var(--gD);white-space:nowrap}
+.how-body .row small{color:var(--mu);font-size:11px}
+.how-body .row.neg span:last-child{color:var(--rD)}
+
+/* ===== ترتيب العبادات ===== */
+.ibada-rank{margin-bottom:10px}
+.ibada-rank-title{font-size:12px;color:var(--tx);font-weight:700;margin-bottom:5px}
+.rank-chip{display:inline-flex;align-items:center;gap:4px;background:var(--bg);border:1px solid var(--bd2);border-radius:999px;padding:3px 9px;font-size:11.5px;margin:2px}
+.rank-chip.first{background:var(--goldL);border-color:#ead9a8}
+
+/* ===== بطاقة البنت ===== */
+.gc-hdr{padding:12px 14px;background:var(--sf);display:flex;justify-content:space-between;align-items:center;cursor:pointer;gap:8px}
+.gc-name{font-size:15px;font-weight:700;color:var(--tx)}
+.gc-pts{color:var(--gD);font-size:13px;font-weight:700}
+.gc-hdr [id^="garr_"]{color:var(--mu)!important}
+.gc-hdr span[style*="e8f6ee"]{background:var(--bg)!important;border-color:var(--bd)!important;font-size:11.5px!important}
+.gc-body{padding:12px 14px 14px;border-top:1px solid var(--bd2)}
+.gc-body>div[style*="e8f6ee"]{background:var(--bg)!important;border-color:var(--bd)!important}
+.prog-row{display:flex;justify-content:space-between;font-size:11.5px;color:var(--mu);margin-bottom:4px}
+.prog-t{background:var(--bd2);border-radius:10px;height:5px;overflow:hidden;margin-bottom:10px}
+.prog-f{height:100%;background:var(--gD);border-radius:10px}
+.days-row{display:flex;gap:4px;margin-bottom:10px;flex-wrap:wrap}
+.dd{width:30px;height:30px;border-radius:7px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:10px;font-weight:700;border:1px solid var(--bd2)}
+.dd.f{background:var(--done-bg);border-color:var(--done-border);color:var(--done-text)}
+.dd.e{background:var(--bg);color:#c4b8a4}
+.dd .dn{font-size:8.5px;color:inherit;opacity:.7}
+.details{display:none;margin-top:8px}
+.details.open{display:block}
+.custom-box,.bonus-box{margin-bottom:10px;background:var(--goldL);border:1px solid #efe2bf;border-radius:10px;padding:9px 11px}
+.custom-title,.bonus-title{font-size:12px;font-weight:700;color:var(--gold);margin-bottom:6px}
+.bonus-box div[style]{color:var(--mu)!important;font-size:11.5px!important}
+.chips{display:flex;flex-wrap:wrap;gap:5px}
+.chip{background:var(--sf);border:1px solid #efe2bf;color:#7a6224;font-size:11.5px;padding:3px 10px;border-radius:999px}
+
+/* ===== جدول التفاصيل القديم ===== */
+.detail-table{width:100%;border-collapse:collapse;table-layout:fixed;font-size:10px;border:1px solid var(--bd);border-radius:10px;overflow:hidden}
+.detail-table th{background:var(--bg);color:var(--tx);padding:6px 1px;border:1px solid var(--bd)}
+.detail-table td{padding:3px 1px;border:1px solid var(--bd2);text-align:center;vertical-align:middle}
+.id{width:17px;height:17px;border-radius:4px;font-size:9px;font-weight:700;display:inline-flex;align-items:center;justify-content:center}
+.id.d{background:var(--done-bg);color:var(--done-text)}.id.m{background:var(--rL);color:var(--rD)}.id.e{background:var(--bg);color:#ccc}
+
+.empty{text-align:center;padding:3rem 1rem;color:var(--mu);font-size:14px;line-height:2}
+#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--tx);color:#fff;font-size:13px;padding:10px 20px;border-radius:10px;opacity:0;transition:all .25s;pointer-events:none;z-index:9999;white-space:nowrap}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ===== متابعة الإنجاز ===== */
+.completion-card{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);margin-bottom:1rem;box-shadow:var(--sh);overflow:hidden}
+.completion-head{width:100%;border:0;background:var(--sf);color:var(--tx);padding:12px 14px;display:flex;align-items:center;justify-content:space-between;font-size:14px;font-weight:700;cursor:pointer}
+.completion-head span:last-child{color:var(--mu);font-size:11px}
+.completion-body{padding:12px 14px;border-top:1px solid var(--bd2)}
+.completion-title{font-size:14px;font-weight:700;color:var(--tx);margin-bottom:4px}
+.completion-help{font-size:12px;color:var(--mu);line-height:1.7;margin-bottom:10px}
+.day-tabs{display:flex;gap:5px;overflow-x:auto;padding-bottom:6px;margin-bottom:8px}
+.day-tab{min-width:36px;border:1px solid var(--bd);background:var(--sf);color:var(--tx);border-radius:8px;padding:6px 8px;font-size:12px;font-weight:700;cursor:pointer}
+.day-tab.active{background:var(--gD);color:#fff;border-color:var(--gD)}
+.worship-status{border:1px solid var(--bd2);border-radius:10px;padding:11px;margin-top:8px;background:var(--sf)}
+.worship-status-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
+.worship-status-name{font-size:13px;font-weight:700;color:var(--tx)}
+.done-count{background:var(--gL);color:var(--gD);border-radius:999px;padding:3px 10px;font-size:11.5px;font-weight:700;white-space:nowrap}
+.status-line{font-size:12px;line-height:1.8;padding:6px 9px;border-radius:7px;margin-top:4px}
+.status-line.done{background:var(--done-bg);color:var(--gDD)}
+.status-line.missed{background:var(--rL);color:var(--rD)}
+.status-line.pending{background:var(--bg);color:var(--mu)}
+.status-label{font-weight:700}
+
+/* ===== صفحات أيام الجدول ===== */
+.detail-day-pages{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin:0 0 8px;background:var(--bd2);padding:4px;border-radius:10px}
+.detail-day-btn{font-size:11.5px;font-weight:700;border:0;background:transparent;color:var(--mu);border-radius:7px;padding:7px 3px;cursor:pointer}
+.detail-day-btn.active{background:var(--sf);color:var(--gD);box-shadow:var(--sh)}
+.detail-swipe-hint{font-size:11px;color:var(--mu);text-align:center;margin-bottom:6px}
+
+/* ===== جدول المسؤولة ===== */
+.manager-table-wrap{overflow:hidden;border-radius:10px;border:1px solid var(--bd);background:var(--sf);margin-top:8px}
+.manager-detail-table{width:100%;border-collapse:collapse;table-layout:fixed;font-size:11.5px}
+.manager-detail-table thead th{background:var(--bg);color:var(--tx);font-weight:700;padding:8px 2px;text-align:center;border-bottom:1px solid var(--bd);font-size:11px}
+.manager-detail-table thead th.catH{width:20px}
+.manager-detail-table thead th.ibH{text-align:right;padding-right:8px;width:32%}
+.manager-detail-table thead th.ptsH{width:30px}
+.manager-detail-table thead th.dayH{width:5.5%}
+.manager-detail-table td.cat{background:var(--gL);color:var(--gD);font-weight:700;text-align:center;padding:3px 1px;border:1px solid var(--bd2);writing-mode:vertical-lr;text-orientation:mixed;font-size:10px;vertical-align:middle;max-width:20px;overflow:hidden}
+.manager-detail-table td.ibada{font-size:11.5px;color:var(--tx);padding:6px 8px 6px 4px;border:1px solid var(--bd2);background:var(--sf);white-space:normal;line-height:1.4;text-align:right}
+.manager-detail-table td.ibada div{font-size:9.5px!important;color:var(--mu)!important;margin-top:2px}
+.manager-detail-table td.pts{text-align:center;color:var(--mu);font-size:11.5px;padding:4px 1px;border:1px solid var(--bd2);background:var(--sf);font-weight:600}
+.manager-detail-table td.day-cell{text-align:center;padding:0;border:1px solid var(--bd2);background:var(--sf);height:40px;vertical-align:middle}
+.manager-detail-table td.day-cell.done{background:var(--done-bg)}
+.manager-detail-table td.day-cell.miss{background:var(--rL)}
+.manager-detail-table .manager-check{font-size:13px;font-weight:800;color:var(--done-text)}
+.manager-detail-table .manager-x{font-size:13px;font-weight:800;color:var(--rD)}
+.manager-detail-table .mgr-day-total td{background:var(--bg);color:var(--tx);font-weight:700;font-size:11px;padding:7px 2px;text-align:center;border-top:1px solid var(--bd)}
+.manager-detail-table .mgr-day-total td:first-child{text-align:right;padding-right:8px}
+.manager-detail-table .mgr-day-pct td{background:var(--sf);color:var(--gD);font-weight:700;font-size:11px;padding:6px 2px;text-align:center;border-top:1px solid var(--bd2)}
+.manager-detail-table .mgr-day-pct td:first-child{text-align:right;padding-right:8px;color:var(--tx)}
+
+/* ===== أوائل 10 أيام ===== */
+.ten-rank-title{font-size:14px;font-weight:700;color:var(--tx);margin-bottom:6px}
+.ten-rank-sub{font-size:11.5px;color:var(--mu);margin-bottom:8px}
+.ten-rank-period{margin-bottom:12px}.ten-rank-period:last-child{margin-bottom:0}
+.ten-rank-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}
+.ten-rank-help{font-size:11.5px;color:var(--mu)}
+.ten-rank-carousel{overflow:hidden;position:relative;touch-action:pan-y}
+.ten-rank-track{display:flex;transition:transform .25s ease}
+.ten-rank-slide{min-width:100%;padding:2px 0}
+.ten-rank-controls{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:8px}
+.ten-rank-nav-btn{font-size:12px;font-weight:700;padding:6px 12px;border-radius:8px;border:1px solid var(--bd);background:var(--sf);color:var(--tx);cursor:pointer}
+.ten-rank-dots{display:flex;gap:6px;justify-content:center;align-items:center;flex:1}
+.ten-rank-dot{width:8px;height:8px;border-radius:50%;border:none;background:var(--bd);cursor:pointer}
+.ten-rank-dot.active{background:var(--gD)}
+.swipe-hint{font-size:11px;color:var(--mu);text-align:center;margin-top:6px}
+
+/* ===== نظرة على الفترات ===== */
+.period-overview{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:8px 0 10px}
+.period-overview-card{border:1px solid var(--bd2);border-radius:10px;padding:9px 5px;background:var(--bg);text-align:center}
+.period-overview-card .po-title{font-size:11px;color:var(--mu);margin-bottom:3px}
+.period-overview-card .po-points{font-size:15px;font-weight:800;color:var(--tx);line-height:1.2}
+.period-overview-card .po-pct{font-size:11.5px;font-weight:700;color:var(--gD);margin-top:2px}
+
+/* ===== ترتيب الثلاثين يوم ===== */
+.full-rank-card{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:14px;margin-bottom:12px;box-shadow:var(--sh)}
+.full-rank-title{font-size:15px;font-weight:700;color:var(--tx);margin-bottom:2px}
+.full-rank-sub{font-size:11.5px;color:var(--mu);margin-bottom:12px}
+.full-rank-list{display:flex;flex-direction:column;gap:6px}
+.full-rank-row{display:grid;grid-template-columns:32px 1fr auto;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--bd2);border-radius:10px;background:var(--sf)}
+.full-rank-row.top1{background:var(--goldL);border-color:#ead9a8}
+.full-rank-row.top2,.full-rank-row.top3{border-color:var(--bd)}
+.full-rank-num{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--bd2);color:var(--mu);font-size:12px;font-weight:700}
+.full-rank-row.top1 .full-rank-num{background:#e9c46a;color:#5a4410}
+.full-rank-row.top2 .full-rank-num{background:#cfd4d8;color:#3c4247}
+.full-rank-row.top3 .full-rank-num{background:#dcb08a;color:#5a3418}
+.full-rank-main{min-width:0}
+.full-rank-name{font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.full-rank-meta{font-size:11.5px;color:var(--mu)}
+.full-rank-points{font-size:15px;font-weight:800;color:var(--gD);white-space:nowrap}
+
+/* ===== التبويبات الرئيسية ===== */
+.manager-main-tabs{position:sticky;top:8px;z-index:50;display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:4px;margin:0 0 6px;background:var(--bd2);border:1px solid var(--bd);border-radius:12px;box-shadow:0 4px 14px rgba(60,45,20,.06)}
+.manager-main-tab{border:0;background:transparent;color:var(--mu);border-radius:9px;padding:9px 4px;font-size:12.5px;font-weight:700;cursor:pointer;line-height:1.25}
+.manager-main-tab.active{background:var(--sf);color:var(--gD);box-shadow:var(--sh)}
+.manager-page-shell{overflow:hidden}
+.manager-swipe-note{text-align:center;font-size:11px;color:var(--mu);margin:2px 0 12px}
+
+.manager-period-hero{background:var(--gD);color:#fff;border-radius:var(--r);padding:15px 14px;margin-bottom:12px}
+.manager-period-hero h2{font-size:19px;margin:0 0 3px}.manager-period-hero p{font-size:12px;opacity:.82}
+.period-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.period-stat{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:12px 6px;text-align:center;box-shadow:var(--sh)}
+.period-stat strong{display:block;font-size:20px;font-weight:800;color:var(--tx);line-height:1.2}
+.period-stat span{font-size:11.5px;color:var(--mu)}
+.period-rank-card{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:14px;margin-bottom:12px;box-shadow:var(--sh)}
+.period-rank-title{font-size:14px;font-weight:700;color:var(--tx);margin-bottom:2px}
+.period-rank-sub{font-size:11.5px;color:var(--mu);margin-bottom:10px}
+.period-groups-btn{width:100%;border:1px solid var(--bd);border-radius:10px;padding:12px;background:var(--sf);color:var(--gD);font-size:13px;font-weight:700;cursor:pointer;margin-bottom:12px;box-shadow:var(--sh)}
+.period-girl-title{font-size:14px;font-weight:700;color:var(--tx);margin:16px 2px 10px}
+.rank30-hero{background:var(--sf);border:1px solid var(--bd);border-right:4px solid var(--gold);border-radius:var(--r);padding:14px;margin-bottom:12px;box-shadow:var(--sh)}
+.rank30-hero h2{font-size:18px;color:var(--tx);margin-bottom:3px}
+.rank30-hero p{font-size:12px;color:var(--mu)}
+.period-chart-card{margin-bottom:12px}
+
+@media(max-width:420px){
+  body{padding:.75rem .6rem 4rem}
+  .manager-main-tab{font-size:11.5px;padding:8px 2px}
+  .sv{font-size:19px}
+}
+
+/* ===== الوضع الليلي ===== */
+html[data-mode="dark"]{
+  --gD:#7cc19a;--gDD:#9fd4b5;--gL:#26362d;--gM:#4f7a62;
+  --rL:#3a2624;--rD:#e59a90;--gold:#d8b45c;--goldL:#2f2a1d;
+  --bg:#17191b;--sf:#202326;--bd:#33383c;--bd2:#2a2e32;--tx:#e8ebe9;--mu:#9aa29d;
+  --done-bg:#24352b;--done-border:#3e5c4a;--done-text:#9fd4b5;
+  --sh:0 1px 3px rgba(0,0,0,.3);
+}
+html[data-mode="dark"],html[data-mode="dark"] body{background:var(--bg);color:var(--tx)}
+html[data-mode="dark"] .hdr{background:#24352b}
+html[data-mode="dark"] .btn-r,html[data-mode="dark"] .pairs-add,html[data-mode="dark"] .pairs-save,html[data-mode="dark"] .day-tab.active{color:#10241a}
+html[data-mode="dark"] .rank-item.t1,html[data-mode="dark"] .full-rank-row.top1,html[data-mode="dark"] .rank-chip.first{border-color:#5a4c2a}
+html[data-mode="dark"] .custom-box,html[data-mode="dark"] .bonus-box,html[data-mode="dark"] .chip{border-color:#4a3f24}
+html[data-mode="dark"] .chip{color:#d8b45c}
+html[data-mode="dark"] .admin-del,html[data-mode="dark"] .pairs-clear{border-color:#5a3532}
+html[data-mode="dark"] #toast{background:#e8ebe9;color:#17191b}
+</style>
+<link rel="manifest" href="manager-manifest.json">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="النتائج">
+<meta name="theme-color" content="#2f6f4e">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>✓</text></svg>">
+<link rel="apple-touch-icon" href="icon.png">
+<style>
+.auth-ov{position:fixed;inset:0;z-index:9999;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:20px}
+.auth-box{background:var(--sf);border:1px solid var(--bd);border-radius:18px;padding:22px 18px;width:100%;max-width:360px;box-shadow:var(--sh);text-align:center}
+.auth-box h2{color:var(--gold);font-size:24px;margin-bottom:4px}
+.auth-box p{color:var(--mu);font-size:13px;margin-bottom:14px}
+.auth-box input{width:100%;padding:11px 12px;border:1px solid var(--bd);border-radius:10px;font-size:15px;margin-bottom:9px;background:var(--soft);color:var(--tx);direction:ltr;text-align:left}
+.auth-box button{width:100%;padding:11px;border-radius:10px;border:none;background:#1a6b3c;color:#fff;font-size:15px;font-weight:700;cursor:pointer;margin-bottom:8px}
+.auth-box .link{background:none;color:var(--mu);font-size:13px;font-weight:400;padding:4px;margin:0}
+.auth-msg{font-size:13px;min-height:20px;margin-bottom:6px;color:#c0392b}
+.auth-msg.ok{color:#1a6b3c}
+.group-bar{display:flex;gap:8px;align-items:center;justify-content:space-between;background:var(--sf);border:1px solid var(--bd);border-radius:12px;padding:8px 10px;margin-bottom:10px;flex-wrap:wrap}
+.group-bar select{flex:1;min-width:140px;padding:7px 9px;border:1px solid var(--bd);border-radius:9px;font-size:14px;background:var(--soft);color:var(--tx)}
+.group-bar .gb-btn{padding:7px 11px;border-radius:9px;border:1px solid var(--bd);background:var(--soft);color:var(--tx);font-size:12.5px;cursor:pointer;text-decoration:none}
+.group-bar .gb-link{font-size:12px;color:var(--mu);direction:ltr;word-break:break-all;width:100%;text-align:center;padding-top:4px}
+</style>
+</head>
+<body>
+<div id="authOv" class="auth-ov"><div class="auth-box">
+  <h2>🌙 دخول الآنسات</h2>
+  <p id="authSub">سجّلي الدخول بإيميلك</p>
+  <div id="authMsg" class="auth-msg"></div>
+  <div id="authForm" style="display:none">
+    <input id="authEmail" type="email" placeholder="email@example.com" autocomplete="email">
+    <input id="authPass" type="password" placeholder="كلمة السر" autocomplete="current-password">
+    <button id="authMain" type="button" onclick="authSubmit()">دخول</button>
+    <button class="link" type="button" id="authSwitch" onclick="authToggleMode()">أول مرة؟ أنشئي حساب</button>
+    <button class="link" type="button" onclick="authForgot()">نسيت كلمة السر</button>
+  </div>
+</div></div>
+<div class="hdr"><div class="bsm">بسم الله الرحمن الرحيم</div><h1>🌙 النتائج</h1><p>أداء البنات في برنامج العبادة</p></div>
+<div class="how-box">
+  <button class="how-hdr" onclick="togglePanel('managerHowBody',this)"><span>كيف تُحسب النقاط؟</span><span>▼</span></button>
+  <div class="how-body" id="managerHowBody"></div>
+</div>
+<div class="group-bar" id="groupBar" style="display:none">
+  <select id="groupSelect" onchange="switchGroup(this.value)"></select>
+  <button class="gb-btn" type="button" onclick="copyGirlLink()">🔗 رابط البنات</button>
+  <a class="gb-btn" id="adminLink" href="admin.html" style="display:none">⚙️ الإعدادات</a>
+  <button class="gb-btn" type="button" onclick="signOut()">خروج</button>
+</div>
+<div class="stats">
+  <div class="sc"><div class="sv" id="stTotal">0</div><div class="sl">عدد البنات</div></div>
+  <div class="sc"><div class="sv" id="stTop">—</div><div class="sl">أعلى مجموع</div></div>
+  <div class="sc"><div class="sv" id="stAvg">—</div><div class="sl">متوسط المجموعة</div></div>
+</div>
+<div class="btns"><button class="btn btn-r" id="refreshBtn" onclick="loadData()">↻ تحديث النتائج</button><button class="btn btn-pairs" onclick="togglePairsPanel()">👭 مجموع الثنائيات</button><button class="btn btn-admin" onclick="toggleAdminPanel()">⚙️ إدارة</button><button class="btn btn-x" onclick="exportExcel()">⬇ Excel</button></div>
+<div class="last-up" id="lastUp"></div>
+<div class="appearance-bar"><button class="appearance-btn" id="modeBtn" type="button" onclick="toggleMode()">🌙 الوضع الليلي</button></div>
+<div class="admin-panel" id="adminPanel">
+  <div class="admin-panel-title">⚙️ إدارة البنات</div>
+  <select id="adminGirlSelect"><option value="">اختاري اسم البنت...</option></select>
+  <button class="admin-btn admin-del" onclick="deleteSelectedGirl()">حذف البنت نهائياً من السجل</button>
+  <div class="admin-panel-note">تحذير: سيتم إزالة البنت وجميع بياناتها نهائياً.</div>
+</div>
+<div class="admin-panel" id="pairsPanel">
+  <div class="admin-panel-title" style="font-size:15px;color:var(--gD)">👭 مجموع الثنائيات والثلاثيات</div>
+  <div class="admin-panel-note" style="margin:0 0 9px">اختاري بنتين لكل مجموعة، ويمكن إضافة بنت ثالثة. لا يمكن تكرار البنت في مجموعتين.</div>
+  <div class="pair-period-tabs" id="pairPeriodTabs"><button class="pair-period-btn active" onclick="setPairPeriod(0)">1–10</button><button class="pair-period-btn" onclick="setPairPeriod(1)">11–20</button><button class="pair-period-btn" onclick="setPairPeriod(2)">21–30</button></div>
+  <div class="pair-period-caption" id="pairPeriodCaption">جروبات الأيام 1–10 — مستقلة عن باقي الفترات</div>
+  <div class="pairs-actions"><button class="admin-btn pairs-add" onclick="addPairGroup()">＋ إضافة مجموعة</button><button class="admin-btn pairs-clear" onclick="clearAllPairGroups()">🗑 حذف كل المجموعات</button></div>
+  <div class="pairs-grid" id="pairsGrid"></div>
+  <button class="admin-btn pairs-save" onclick="savePairGroups()">حفظ المجموعات</button>
+</div>
+<div class="manager-main-tabs" id="managerMainTabs">
+  <button class="manager-main-tab active" onclick="setManagerMainTab(0)">1–10</button>
+  <button class="manager-main-tab" onclick="setManagerMainTab(1)">11–20</button>
+  <button class="manager-main-tab" onclick="setManagerMainTab(2)">21–30</button>
+  <button class="manager-main-tab" onclick="setManagerMainTab(3)">ترتيب 30</button>
+</div>
+
+<div id="completionSummary" class="completion-card">
+  <button type="button" class="completion-head" onclick="toggleCompletionSummary()"><span>📋 متابعة إنجاز العبادات</span><span id="completionArrow">▼</span></button>
+  <div id="completionSummaryBody" class="completion-body" style="display:none"></div>
+</div>
+<div id="main"><div class="empty">🌿<br>اضغطي "تحديث" لتحميل نتائج البنات</div></div>
+<div id="toast"></div>
+
+<script>
+// ===== الاتصال بالداتابيس =====
+const SB_URL='https://kltwxjplwpuefhjnemnq.supabase.co';
+const SB_KEY='sb_publishable_c2srueTIBH9emOH5nODFAQ_4zCFGSWX';
+const sb=supabase.createClient(SB_URL,SB_KEY);
+let currentGroup=null,myGroups=[],isAdmin=false;
+const DAYS=30;
+
+// ===== ROWS محدّثة تطابق girl.html الجديدة =====
+let ROWS=[];
+
+let GOAL_LABELS={};
+let GOAL_UNITS={},GOAL_ITEMS=[],QIYAM_ROW=-1;
+let VARIABLE_BONUS_ROWS=new Set();
+let EDITABLE_BASIC_ROWS=new Set();
+let DHIKR_ROWS=new Set();
+let CAT_ORDER=[];
+let girlsData=[];
+let selectedSummaryDay=1;
+let managerMainTab=0;
+let managerMainSwipeX=null;
+const managerDayPages={};
+let PAIRS_KEY='manager_pair_groups_v2';
+let selectedPairPeriod=0;
+let pairGroupsByPeriod=emptyPairGroups();
+const sk=(r,d)=>r+'-'+d;
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function readJSON(v,fb){try{return v?JSON.parse(v):fb}catch(e){return fb}}
+function emptyPairGroups(){return {p0:[],p1:[],p2:[]};}
+function normalizeGroupList(list){return Array.isArray(list)?list.map(g=>[g?.[0]||'',g?.[1]||'',g?.[2]||'']):[];}
+function loadPairGroups(){
+  try{
+    const saved=JSON.parse(localStorage.getItem(PAIRS_KEY)||'null');
+    if(saved&&typeof saved==='object'&&!Array.isArray(saved))return {p0:normalizeGroupList(saved.p0),p1:normalizeGroupList(saved.p1),p2:normalizeGroupList(saved.p2)};
+    const old=JSON.parse(localStorage.getItem('manager_pair_groups_v1')||'null');
+    if(Array.isArray(old))return {p0:normalizeGroupList(old),p1:[],p2:[]};
+  }catch(e){}
+  return emptyPairGroups();
+}
+function currentPairGroups(){return pairGroupsByPeriod['p'+selectedPairPeriod];}
+function persistPairGroups(){try{localStorage.setItem(PAIRS_KEY,JSON.stringify(pairGroupsByPeriod));}catch(e){}}
+function setPairPeriod(period){selectedPairPeriod=Math.max(0,Math.min(2,Number(period)||0));document.querySelectorAll('#pairPeriodTabs .pair-period-btn').forEach((b,i)=>b.classList.toggle('active',i===selectedPairPeriod));const s=selectedPairPeriod*10+1,e=s+9,cap=document.getElementById('pairPeriodCaption');if(cap)cap.textContent='جروبات الأيام '+s+'–'+e+' — مستقلة عن باقي الفترات';buildPairGroups();}
+function addPairGroup(){currentPairGroups().push(['','','']);persistPairGroups();buildPairGroups();showToast('تمت إضافة مجموعة لهذه الفترة');}
+function deletePairGroup(index){currentPairGroups().splice(index,1);persistPairGroups();buildPairGroups();showToast('تم حذف المجموعة من هذه الفترة');}
+function clearAllPairGroups(){const groups=currentPairGroups();if(!groups.length){showToast('لا توجد مجموعات للحذف في هذه الفترة');return;}if(!confirm('حذف كل مجموعات هذه الفترة؟'))return;pairGroupsByPeriod['p'+selectedPairPeriod]=[];persistPairGroups();buildPairGroups();showToast('تم حذف مجموعات هذه الفترة');}
+
+function updateManagerThemeColor(){const meta=document.querySelector('meta[name="theme-color"]');const color=document.documentElement.dataset.mode==='dark'?'#2c3036':'#1a6b3c';if(meta)meta.setAttribute('content',color);document.documentElement.style.background=getComputedStyle(document.documentElement).getPropertyValue('--bg').trim();document.body.style.background=getComputedStyle(document.documentElement).getPropertyValue('--bg').trim();}
+function applyMode(mode){mode=mode==='dark'?'dark':'light';document.documentElement.dataset.mode=mode;try{localStorage.setItem('manager_mode_v1',mode)}catch(e){}const btn=document.getElementById('modeBtn');if(btn)btn.textContent=mode==='dark'?'☀️ الوضع النهاري':'🌙 الوضع الليلي';updateManagerThemeColor();}
+function toggleMode(){applyMode(document.documentElement.dataset.mode==='dark'?'light':'dark');}
+function loadAppearance(){let mode='light';try{mode=localStorage.getItem('manager_mode_v1')||'light'}catch(e){}applyMode(mode);updateManagerThemeColor();}
+
+function getPts(g,ri,d){
+  const key=ri+'_'+d;
+  const ep=g.editedPts||{};
+  if(EDITABLE_BASIC_ROWS.has(ri))return ep[key]!==undefined?Math.max(0,Math.min(Number(ep[key])||0,ROWS[ri].pts)):ROWS[ri].pts;
+  if(ROWS[ri].fixed||ROWS[ri].bonus||!VARIABLE_BONUS_ROWS.has(ri))return ROWS[ri].pts;
+  if(ep[key]!==undefined)return DHIKR_ROWS.has(ri)?Math.max(0,Math.min(30,Number(ep[key])||0)):(Number(ep[key])||0);
+  // هدف شخصي لركعات القيام (ri=8)
+  const goals=g.personalGoals||{};
+  if(ri===QIYAM_ROW&&goals[QIYAM_ROW]!==undefined)return Math.floor(Number(goals[QIYAM_ROW])/2)*2;
+  // باقي العبادات ذات الأهداف
+  if(goals[ri]!==undefined)return calcGoalPts(ri,goals[ri]);
+  return ROWS[ri].pts;
+}
+
+function getBasePts(g,ri,d){
+  if(ROWS[ri].bonus)return 0;
+  if(ri===QIYAM_ROW){
+    // أساسي ركعتين = 2 نقطة
+    return ((g.state||{})[sk(ri,d)]||0)===1 ? 2 : 0;
+  }
+  const key=ri+'_'+d;
+  const ep=g.editedPts||{};
+  const orig=ROWS[ri].pts;
+  if(EDITABLE_BASIC_ROWS.has(ri))return ep[key]!==undefined?Math.max(0,Math.min(Number(ep[key])||0,orig)):orig;
+  if(!VARIABLE_BONUS_ROWS.has(ri))return orig;
+  if(ep[key]!==undefined)return Math.min(Number(ep[key])||0,orig);
+  return orig;
+}
+
+function getBonusPts(g,ri,d){
+  if(ROWS[ri].bonus)return ROWS[ri].pts; // ركعتين تسابيح وطلب علم
+  if(!VARIABLE_BONUS_ROWS.has(ri))return 0;
+  if(ri===QIYAM_ROW){
+    if(((g.state||{})[sk(ri,d)]||0)!==1)return 0;
+    return Math.max(0,getPts(g,ri,d)-2);
+  }
+  const key=ri+'_'+d;
+  const ep=g.editedPts||{};
+  const orig=ROWS[ri].pts;
+  if(ep[key]!==undefined)return Math.max(0,getPts(g,ri,d)-orig);
+  const goals=g.personalGoals||{};
+  if(goals[ri]!==undefined)return Math.max(0,calcGoalPts(ri,goals[ri])-orig);
+  return 0;
+}
+
+function calcGoalPts(ri,goalVal){
+  if(DHIKR_ROWS.has(ri))goalVal=Math.max(200,Math.min(600,Number(goalVal)||200));
+  const gi=GOAL_ITEMS.find(x=>x.ri===ri);
+  if(gi&&gi.fixedPts){const idx=gi.optVals.indexOf(Number(goalVal));return idx>=0?gi.fixedPts[idx]:ROWS[ri].pts;}
+  if(ri===QIYAM_ROW)return Math.floor(Number(goalVal)/2)*2;
+  const orig=ROWS[ri].pts;
+  const base=(gi&&gi.base)||1;
+  return Math.round((Number(goalVal)/base)*orig);
+}
+
+function calcDayMax(){
+  // الأساسي = كل العبادات بدون bonus وبدون negative، ركعات القيام أساسها 2
+  return ROWS.reduce((s,r,ri)=>{
+    if(r.hidden||r.bonus||r.negative)return s;
+    if(ri===QIYAM_ROW)return s+2;
+    return s+(r.pts>0?r.pts:0);
+  },0);
+}
+
+function rowEarned(g,ri){let t=0;for(let d=1;d<=DAYS;d++)if(((g.state||{})[sk(ri,d)]||0)===1)t+=getPts(g,ri,d);return t;}
+function counterPoints(g){return (Number(g.counter)||0)*5;}
+function calculatedGrand(g){return ROWS.reduce((sum,r,ri)=>sum+(r.hidden?0:rowEarned(g,ri)),0)+counterPoints(g);}
+function calculatedDayTotal(g,d){let t=0;ROWS.forEach((r,ri)=>{if(!r.hidden&&((g.state||{})[sk(ri,d)]||0)===1)t+=getPts(g,ri,d);});return t;}
+function rankMedal(rank){return rank===1?'🥇':rank===2?'🥈':rank===3?'🥉':'#'+rank;}
+function rankItemClass(rank){return rank===1?'t1':rank===2?'t2':rank===3?'t3':'';}
+function rankNumClass(rank){return rank===1?'r1':rank===2?'r2':rank===3?'r3':'';}
+
+function calcGirlDayPct(g){
+  const dayMax=calcDayMax();if(!dayMax)return null;
+  let count=0,baseSum=0;
+  for(let d=1;d<=DAYS;d++){
+    const hasData=ROWS.some((r,ri)=>!r.hidden&&((g.state||{})[sk(ri,d)]||0)!==0);
+    if(!hasData)continue;
+    count++;
+    // نحسب الأساسي يدوياً (موحّد مع girl.html)
+    let base=0;
+    ROWS.forEach((r,ri)=>{if(!r.hidden&&((g.state||{})[sk(ri,d)]||0)===1)base+=getBasePts(g,ri,d);});
+    baseSum+=base;
+  }
+  if(!count)return null;
+  return Math.min(100,Math.round((baseSum/count)/dayMax*100));
+}
+
+function calcGirlDayBase(g,d){
+  let t=0;ROWS.forEach((r,ri)=>{if(!r.hidden&&((g.state||{})[sk(ri,d)]||0)===1)t+=getBasePts(g,ri,d);});return t;
+}
+function calcGirlDayBonus(g,d){
+  let t=0;ROWS.forEach((r,ri)=>{if(!r.hidden&&((g.state||{})[sk(ri,d)]||0)===1)t+=getBonusPts(g,ri,d);});return t;
+}
+function calcPeriodStats(g,start,end){
+  const dayMax=calcDayMax();let points=0,base=0,filled=0;
+  for(let d=start;d<=end;d++){
+    points+=calculatedDayTotal(g,d);
+    const hasData=ROWS.some((r,ri)=>!r.hidden&&((g.state||{})[sk(ri,d)]||0)!==0);
+    if(hasData){filled++;base+=calcGirlDayBase(g,d);}
+  }
+  return {points,filled,pct:filled&&dayMax?Math.min(100,Math.round((base/filled)/dayMax*100)):null};
+}
+function periodOverviewHtml(g){return [[1,10],[11,20],[21,30]].map(([s,e])=>{const p=calcPeriodStats(g,s,e);return '<div class="period-overview-card"><div class="po-title">'+s+'–'+e+'</div><div class="po-points">'+p.points+' نقطة</div><div class="po-pct">'+(p.pct===null?'—':p.pct+'%')+' من 100</div></div>';}).join('');}
+
+function migrateManagerState(rawState){
+  const src=(rawState&&typeof rawState==='object')?rawState:{};
+  if(Number(src.__schemaVersion)===2)return src;
+  const migrated={};
+  Object.entries(src).forEach(([key,value])=>{
+    const mt=key.match(/^(\d+)-(\d+)$/);
+    if(!mt){if(key!=='__schemaVersion')migrated[key]=value;return;}
+    const oldRow=Number(mt[1]),day=mt[2];
+    migrated[(oldRow>=18?oldRow+1:oldRow)+'-'+day]=value;
+  });
+  migrated.__schemaVersion=2;
+  return migrated;
+}
+
+async function loadData(){
+  const btn=document.getElementById('refreshBtn');
+  btn.textContent='جاري التحميل...';
+  btn.classList.add('loading');
+  btn.disabled=true;
+  try{
+    const {data,error}=await sb.from('submissions').select('girl_name,grand,avg,filled,day_totals,payload,updated_at').eq('group_id',currentGroup.id);
+    if(error)throw error;
+    girlsData=(data||[]).map(r=>{
+      const p=r.payload||{};
+      const girl={
+        name:r.girl_name,
+        grand:Number(r.grand)||0,
+        avg:r.avg||'—',
+        filled:Number(r.filled)||0,
+        dayTotals:r.day_totals||[],
+        state:migrateManagerState(p.state||{}),
+        editedPts:p.editedPts||{},
+        counter:Number(p.counter||0),
+        personalGoals:p.personalGoals||{},
+        lastUpdate:r.updated_at?new Date(r.updated_at).toLocaleString('ar'):'',
+      };
+      // نحسب من state لضمان توافق النقاط
+      girl.grand=calculatedGrand(girl);
+      girl.dayTotals=Array.from({length:DAYS},(_,i)=>calculatedDayTotal(girl,i+1));
+      return girl;
+    });
+
+    document.getElementById('lastUp').textContent='آخر تحديث: '+new Date().toLocaleTimeString('ar');
+    render();
+    populateAdminSelect();
+    buildPairGroups();
+    showToast('تم التحديث ✓ — '+girlsData.length+' بنت');
+  }catch(e){
+    console.error(e);
+    showToast('خطأ في التحميل');
+  }finally{
+    btn.textContent='↻ تحديث النتائج';
+    btn.classList.remove('loading');
+    btn.disabled=false;
+  }
+}
+
+function fullThirtyDayRanking(sorted){
+  let html='<div class="full-rank-card"><div class="full-rank-title">ترتيب الـ30 يوم حسب مجموع النقاط</div><div class="full-rank-sub">جميع البنات مرتبات من الأعلى للأقل حسب مجموع نقاط الأيام الثلاثين.</div><div class="full-rank-list">';
+  sorted.forEach((g,i)=>{const r=i+1,pct=calcGirlDayPct(g);html+='<div class="full-rank-row '+(r===1?'top1':r===2?'top2':r===3?'top3':'')+'"><div class="full-rank-num">'+r+'</div><div class="full-rank-main"><div class="full-rank-name">'+esc(g.name)+'</div><div class="full-rank-meta">المعدل: '+(pct===null?'—':pct+'%')+' • أيام مسجلة: '+g.filled+'/'+DAYS+'</div></div><div class="full-rank-points">'+g.grand+' نقطة</div></div>';});
+  return html+'</div></div>';
+}
+
+function periodMetrics(g,start,end){
+  let points=0,base=0,daysWithData=0;
+  for(let d=start;d<=end;d++){
+    points+=calculatedDayTotal(g,d);
+    const hasData=ROWS.some((r,ri)=>!r.hidden&&((g.state||{})[sk(ri,d)]||0)!==0);
+    if(hasData){base+=calcGirlDayBase(g,d);daysWithData++;}
+  }
+  const pct=daysWithData?Math.min(100,Math.round((base/daysWithData)/calcDayMax()*100)):null;
+  return {points,pct,daysWithData};
+}
+
+function setManagerMainTab(tab){
+  const keepY=window.scrollY;
+  managerMainTab=Math.max(0,Math.min(3,Number(tab)||0));
+  document.querySelectorAll('.manager-main-tab').forEach((b,i)=>b.classList.toggle('active',i===managerMainTab));
+  if(managerMainTab<3){selectedPairPeriod=managerMainTab; const start=managerMainTab*10+1; if(selectedSummaryDay<start||selectedSummaryDay>start+9)selectedSummaryDay=start;}
+  render();
+  requestAnimationFrame(()=>window.scrollTo({top:keepY,left:0,behavior:'auto'}));
+}
+function managerMainTouchStart(e){const t=e.touches&&e.touches[0];if(t)managerMainSwipeX=t.clientX;}
+function managerMainTouchEnd(e){const t=e.changedTouches&&e.changedTouches[0];if(!t||managerMainSwipeX===null)return;const dx=t.clientX-managerMainSwipeX;managerMainSwipeX=null;if(Math.abs(dx)<55)return;setManagerMainTab(managerMainTab+(dx<0?1:-1));}
+
+function renderPeriodRank(start,end){
+  const ranked=girlsData.map(g=>({g,...periodMetrics(g,start,end)})).filter(x=>x.daysWithData>0).sort((a,b)=>b.points-a.points||(b.pct||0)-(a.pct||0));
+  let html='<div class="period-rank-card"><div class="period-rank-title">ترتيب الأيام '+start+'–'+end+'</div><div class="period-rank-sub">حسب نقاط هذه الفترة فقط، مع معدلها من 100.</div>';
+  if(!ranked.length)return html+'<div class="empty" style="padding:1rem">لا توجد بيانات لهذه الفترة بعد</div></div>';
+  ranked.forEach((x,i)=>{const rank=i+1;html+='<div class="rank-item '+rankItemClass(rank)+'"><div class="rnum '+rankNumClass(rank)+'">'+rankMedal(rank)+'</div><div class="rinfo"><div class="rname">'+esc(x.g.name)+'</div><div class="rmeta">'+x.points+' نقطة • '+(x.pct===null?'—':x.pct+'%')+' • '+x.daysWithData+'/10 أيام</div><div class="rtrack"><div class="rfill" style="width:'+(x.pct||0)+'%"></div></div></div><div class="rpts">'+x.points+'</div></div>';});
+  return html+'</div>';
+}
+
+function openPeriodGroups(period){selectedPairPeriod=period;togglePairsPanel();setPairPeriod(period);}
+
+function renderPeriodChart(start,end){
+  const rows=girlsData.map(g=>({g,...periodMetrics(g,start,end)})).filter(x=>x.daysWithData>0).sort((a,b)=>b.points-a.points||(b.pct||0)-(a.pct||0));
+  let html='<div class="card period-chart-card"><div class="card-t">مقارنة نقاط الأيام '+start+'–'+end+'</div>';
+  if(!rows.length)return html+'<div class="empty" style="padding:1rem">لا توجد بيانات لهذه الفترة بعد</div></div>';
+  const max=Math.max(...rows.map(x=>x.points),1);
+  html+='<div class="bars-scroll"><div class="bars">';
+  rows.forEach(x=>{const h=Math.max(3,Math.round(x.points/max*82));html+='<div class="bi"><div class="bv">'+x.points+'</div><div class="bf" style="height:'+h+'px"></div><div class="bn">'+esc(x.g.name)+'</div></div>';});
+  html+='</div></div><div class="scroll-hint">مرّري يمينًا ويسارًا لرؤية جميع البنات — الرسم لهذه العشرة أيام فقط</div></div>';
+  return html;
+}
+
+function renderPeriodPage(period,sorted,maxG){
+  const start=period*10+1,end=start+9;
+  const all=girlsData.map(g=>periodMetrics(g,start,end));
+  const active=all.filter(x=>x.daysWithData>0);
+  const avgPts=active.length?Math.round(active.reduce((s,x)=>s+x.points,0)/active.length):0;
+  const avgPct=active.length?Math.round(active.reduce((s,x)=>s+(x.pct||0),0)/active.length):0;
+  let html='';
+  html+='<div class="period-stats"><div class="period-stat"><strong>'+active.length+'</strong><span>بنات لديهن بيانات</span></div><div class="period-stat"><strong>'+avgPts+'</strong><span>متوسط النقاط</span></div><div class="period-stat"><strong>'+avgPct+'%</strong><span>متوسط المعدل</span></div></div>';
+  html+=renderPeriodChart(start,end);
+  html+=renderPeriodRank(start,end);
+  html+='<button class="period-groups-btn" onclick="openPeriodGroups('+period+')">إدارة جروبات الأيام '+start+'–'+end+'</button>';
+  html+='<div class="period-girl-title">تفاصيل البنات — الأيام '+start+'–'+end+'</div>';
+  girlsData.forEach((g,gi)=>{managerDayPages[gi]=period;html+=girlCard(g,gi,sorted,maxG);});
+  return html;
+}
+
+function render(){
+  const cont=document.getElementById('main');
+  document.querySelectorAll('.manager-main-tab').forEach((b,i)=>b.classList.toggle('active',i===managerMainTab));
+  if(!girlsData.length){cont.innerHTML='<div class="empty">🌿<br>لا يوجد بيانات بعد</div>';['stTotal','stTop','stAvg'].forEach(id=>document.getElementById(id).textContent='—');return;}
+  const sorted=[...girlsData].sort((a,b)=>b.grand-a.grand);
+  const maxG=Math.max(...girlsData.map(g=>g.grand),1);
+  const avgAll=Math.round(girlsData.reduce((s,g)=>s+Number(g.grand),0)/girlsData.length);
+  document.getElementById('stTotal').textContent=girlsData.length;
+  document.getElementById('stTop').textContent=sorted[0].grand;
+  document.getElementById('stAvg').textContent=avgAll;
+  if(managerMainTab<3){
+    selectedPairPeriod=managerMainTab;
+    const start=managerMainTab*10+1;if(selectedSummaryDay<start||selectedSummaryDay>start+9)selectedSummaryDay=start;
+    renderCompletionSummary();
+    document.getElementById('completionSummary').style.display='block';
+    cont.innerHTML='<div class="manager-page-shell">'+renderPeriodPage(managerMainTab,sorted,maxG)+'</div>';
+  }else{
+    document.getElementById('completionSummary').style.display='none';
+    let html='<div class="manager-page-shell"><div class="rank30-hero"><h2>ترتيب الـ30 يوم</h2><p>النتيجة النهائية لجميع البنات حسب مجموع النقاط خلال الثلاثين يومًا.</p></div>';
+    html+='<div class="card"><div class="card-t">مقارنة المجموع الكلي</div><div class="bars-scroll"><div class="bars">';
+    sorted.forEach(g=>{const h=Math.max(3,Math.round(g.grand/maxG*82));html+='<div class="bi"><div class="bv">'+g.grand+'</div><div class="bf" style="height:'+h+'px"></div><div class="bn">'+esc(g.name)+'</div></div>';});
+    html+='</div></div><div class="scroll-hint">مرّري يمينًا ويسارًا لرؤية جميع البنات</div></div>';
+    html+=fullThirtyDayRanking(sorted)+topRankings(sorted,maxG)+perIbadaRanking()+'</div>';
+    cont.innerHTML=html;
+  }
+}
+
+
+function setSummaryDay(day){
+  selectedSummaryDay=Math.max(1,Math.min(DAYS,Number(day)||1));
+  renderCompletionSummary();
+}
+
+function toggleCompletionSummary(){
+  const body=document.getElementById('completionSummaryBody'),arrow=document.getElementById('completionArrow');
+  if(!body)return;
+  const open=body.style.display!=='block';
+  body.style.display=open?'block':'none';
+  if(arrow)arrow.textContent=open?'▲':'▼';
+}
+
+function renderCompletionSummary(){
+  const box=document.getElementById('completionSummaryBody');if(!box)return;
+  const periodStart=managerMainTab<3?managerMainTab*10+1:1; const periodEnd=managerMainTab<3?periodStart+9:DAYS; const tabs=Array.from({length:periodEnd-periodStart+1},(_,i)=>{const d=periodStart+i;return '<button class="day-tab '+(selectedSummaryDay===d?'active':'')+'" onclick="setSummaryDay('+d+')">'+d+'</button>';}).join('');
+  let html='<div class="completion-title">متابعة إنجاز العبادات — اليوم '+selectedSummaryDay+'</div><div class="completion-help">اختاري اليوم لتري في كل عبادة مَن أنجزتها ومَن لم تنجزها أو لم تحدد نتيجتها بعد.</div><div class="day-tabs">'+tabs+'</div>';
+  if(!girlsData.length){box.innerHTML=html+'<div class="empty" style="padding:1.5rem">لا توجد بيانات لعرضها بعد</div>';return;}
+  // العبادات اللي بتظهر بمتابعة الإنجاز فقط: ثلث البقرة، جزء قرآن، ركعات القيام، ركعات ضحى، سنن الصلوات، الذكر
+  const COMPLETION_ROWS=[3,4,8,10,13,15,16,17];
+  ROWS.forEach((r,ri)=>{
+    if(!COMPLETION_ROWS.includes(ri))return;
+    const done=[],missed=[],pending=[];
+    girlsData.forEach(g=>{
+      const v=((g.state||{})[sk(ri,selectedSummaryDay)]||0);
+      if(v===1)done.push(g.name);else if(v===2)missed.push(g.name);else pending.push(g.name);
+    });
+    const notDone=[...missed,...pending];
+    html+='<div class="worship-status"><div class="worship-status-head"><div class="worship-status-name">'+esc(r.ibada)+'</div><div class="done-count">'+done.length+' / '+girlsData.length+' أنجزنها</div></div>'
+      +'<div class="status-line done"><span class="status-label">✓ عملنها ('+done.length+'): </span>'+(done.length?done.map(esc).join('، '):'لا أحد')+'</div>'
+      +'<div class="status-line missed"><span class="status-label">✗ لم يعملنها ('+notDone.length+'): </span>'+(notDone.length?notDone.map(esc).join('، '):'لا أحد')+'</div>'
+      +(pending.length?'<div class="status-line pending"><span class="status-label">لم يحددن بعد ('+pending.length+'): </span>'+pending.map(esc).join('، ')+'</div>':'')
+      +'</div>';
+  });
+  box.innerHTML=html;
+}
+
+function topRankings(sorted,maxG){
+  let html='<div class="card"><button class="cat-rank-btn" onclick="togglePanel(\'totalRankingsBody\',this)"><span>🏅 الأوائل حسب المجموع الكلي</span><span>▼</span></button><div class="cat-rank-body" id="totalRankingsBody">';
+  sorted.forEach((g,i)=>{
+    const rnk=1+sorted.filter((s,si)=>si<i&&Number(s.grand)>Number(g.grand)).length;
+    const cls=rankItemClass(rnk),ncls=rankNumClass(rnk),pct=Math.round(g.grand/maxG*100);
+    const dayPct=calcGirlDayPct(g);
+    html+='<div class="rank-item '+cls+'"><div class="rnum '+ncls+'">'+rankMedal(rnk)+'</div><div class="rinfo"><div class="rname">'+esc(g.name)+'</div><div class="rmeta">المجموع: '+g.grand+' | من 100: '+(dayPct!==null?dayPct+'%':'—')+' | الأيام: '+g.filled+'/'+DAYS+'</div><div class="rtrack"><div class="rfill" style="width:'+pct+'%"></div></div></div><div class="rpts">'+g.grand+'</div></div>';
+  });
+  html+='</div></div>';
+  html+='<div class="card"><button class="cat-rank-btn" onclick="togglePanel(\'hundredRankingsBody\',this)"><span>📊 الأوائل حسب المعدل من 100</span><span>▼</span></button><div class="cat-rank-body" id="hundredRankingsBody">';
+  const byHundred=girlsData.map(g=>({g,score:calcGirlDayPct(g)})).filter(x=>x.score!==null).sort((a,b)=>b.score-a.score||Number(b.g.grand)-Number(a.g.grand));
+  if(!byHundred.length)html+='<div style="font-size:11px;color:var(--mu);text-align:center;padding:8px">لا يوجد أداء محسوب بعد</div>';
+  byHundred.forEach((item,i)=>{
+    const g=item.g,score=item.score;
+    const rnk=1+byHundred.filter((x,xi)=>xi<i&&x.score>score).length;
+    const cls=rankItemClass(rnk),ncls=rankNumClass(rnk);
+    html+='<div class="rank-item '+cls+'"><div class="rnum '+ncls+'">'+rankMedal(rnk)+'</div><div class="rinfo"><div class="rname">'+esc(g.name)+'</div><div class="rmeta">المعدل الأساسي: '+score+'% | المجموع: '+g.grand+' | الأيام: '+g.filled+'/'+DAYS+'</div><div class="rtrack"><div class="rfill" style="width:'+score+'%"></div></div></div><div class="rpts">'+score+'%</div></div>';
+  });
+  return html+'</div></div>';
+}
+
+let tenRankingPage=0;let swipeState=null;
+function startSwipe(event,kind,index){const t=(event.changedTouches&&event.changedTouches[0])||(event.touches&&event.touches[0]);if(!t)return;swipeState={x:t.clientX,kind,index};}
+function endSwipe(event,kind,index){const t=event.changedTouches&&event.changedTouches[0];if(!t||!swipeState)return;const dx=t.clientX-swipeState.x;swipeState=null;if(Math.abs(dx)<40)return;const step=dx<0?1:-1;if(kind==='rank')setTenRankingPage(tenRankingPage+step);if(kind==='detail')setManagerDayPage(index,(managerDayPages[index]||0)+step);}
+function startRankSwipe(event){startSwipe(event,'rank');}
+function endRankSwipe(event){endSwipe(event,'rank');}
+function startDetailSwipe(event,index){startSwipe(event,'detail',index);}
+function endDetailSwipe(event,index){endSwipe(event,'detail',index);}
+function setTenRankingPage(page){tenRankingPage=Math.max(0,Math.min(2,Number(page)||0));const track=document.getElementById('tenRankTrack');if(track)track.style.transform='translateX(-'+(tenRankingPage*100)+'%)';const dots=document.querySelectorAll('.ten-rank-dot');dots.forEach((dot,i)=>dot.classList.toggle('active',i===tenRankingPage));}
+
+function tenDayRankings(){
+  const periods=[[1,10],[11,20],[21,30]];
+  let html='<div class="card"><div class="ten-rank-head"><div><div class="ten-rank-title">أوائل كل 10 أيام</div><div class="ten-rank-help">مرري يمينًا ويسارًا أو استخدمي الأزرار للتنقل بين الفترات</div></div></div><div class="ten-rank-carousel" id="tenRankingsCarousel" ontouchstart="startRankSwipe(event)" ontouchend="endRankSwipe(event)"><div class="ten-rank-track" id="tenRankTrack">';
+  periods.forEach(([start,end])=>{
+    const ranked=girlsData.map(g=>{
+      let total=0,base=0,daysWithData=0;
+      for(let d=start;d<=end;d++){
+        total+=calculatedDayTotal(g,d);
+        const hasData=ROWS.some((r,ri)=>!r.hidden&&((g.state||{})[sk(ri,d)]||0)!==0);
+        if(hasData){base+=calcGirlDayBase(g,d);daysWithData++;}
+      }
+      const avgPct=daysWithData?Math.min(100,Math.round((base/daysWithData)/calcDayMax()*100)):null;
+      return {g,total,avgPct,daysWithData};
+    }).filter(x=>x.daysWithData>0).sort((a,b)=>b.total-a.total || (b.avgPct||0)-(a.avgPct||0));
+    html+='<div class="ten-rank-slide"><div class="ten-rank-period"><div class="ten-rank-title">الأيام '+start+'–'+end+'</div><div class="ten-rank-sub">الترتيب حسب مجموع نقاط هذه الأيام فقط.</div>';
+    if(!ranked.length){html+='<div style="font-size:11px;color:var(--mu);text-align:center;padding:8px">لا توجد بيانات لهذه الفترة بعد</div>';}else{
+      ranked.slice(0,3).forEach((item,i)=>{
+        const rank=i+1,pct=item.avgPct===null?'—':item.avgPct+'%';
+        html+='<div class="rank-item '+rankItemClass(rank)+'"><div class="rnum '+rankNumClass(rank)+'">'+rankMedal(rank)+'</div><div class="rinfo"><div class="rname">'+esc(item.g.name)+'</div><div class="rmeta">مجموع الفترة: '+item.total+' | المعدل: '+pct+' | أيام مسجلة: '+item.daysWithData+'/10</div></div><div class="rpts">'+item.total+'</div></div>';
+      });
+    }
+    html+='</div></div>';
+  });
+  html+='</div></div><div class="ten-rank-controls"><button type="button" class="ten-rank-nav-btn" onclick="setTenRankingPage(tenRankingPage-1)">السابق</button><div class="ten-rank-dots">'+periods.map((_,i)=>'<button type="button" class="ten-rank-dot '+(i===tenRankingPage?'active':'')+'" onclick="setTenRankingPage('+i+')" aria-label="الفترة '+(i+1)+'"></button>').join('')+'</div><button type="button" class="ten-rank-nav-btn" onclick="setTenRankingPage(tenRankingPage+1)">التالي</button></div><div class="swipe-hint">الفترات: 1–10، 11–20، 21–30</div></div>';
+  return html;
+}
+
+function perIbadaRanking(){
+  let html='<div class="card"><button class="cat-rank-btn" onclick="togglePanel(\'allIbadaRankings\',this)"><span>🏆 الأولى بكل عبادة</span><span>▼</span></button><div class="cat-rank-body" id="allIbadaRankings">';
+  CAT_ORDER.forEach((cat,ci)=>{
+    const cid='catRank_'+ci;
+    html+='<button class="cat-rank-btn" onclick="togglePanel(\''+cid+'\',this)"><span>📌 '+cat+'</span><span>▼</span></button><div class="cat-rank-body" id="'+cid+'">';
+    ROWS.forEach((r,ri)=>{
+      if(r.hidden||r.cat!==cat||r.negative)return;
+      const ranked=girlsData.map(g=>({name:g.name,total:rowEarned(g,ri)})).filter(x=>x.total>0).sort((a,b)=>b.total-a.total);
+      html+='<div class="ibada-rank"><div class="ibada-rank-title">'+esc(r.ibada)+(r.bonus?' ⭐':'')+'</div>';
+      if(!ranked.length)html+='<span style="font-size:10px;color:#aaa">لا يوجد إنجاز بعد</span>';
+      ranked.forEach((x,i)=>{const rnk=1+ranked.filter((_,j)=>j<i&&ranked[j].total>x.total).length;html+='<span class="rank-chip '+(rnk===1?'first':'')+'">'+(rnk<=3?rankMedal(rnk):rnk+'.')+' <b>'+esc(x.name)+'</b> <span style="color:var(--gD);font-weight:700">'+x.total+'</span></span>';});
+      html+='</div>';
+    });
+    html+='</div>';
+  });
+  return html+'</div></div>';
+}
+
+function girlCard(g,gi,sorted,maxG){
+  const pct=maxG>0?Math.round(g.grand/maxG*100):0;
+  const rank=1+sorted.filter(s=>Number(s.grand)>Number(g.grand)).length;
+  const medal=rankMedal(rank);
+  const dt=g.dayTotals||Array(DAYS).fill(0);
+  const dayPct=calcGirlDayPct(g);
+  let totalBase=0,totalBonus=0;
+  for(let d=1;d<=DAYS;d++){totalBase+=calcGirlDayBase(g,d);totalBonus+=calcGirlDayBonus(g,d);}
+  totalBase+=counterPoints(g);
+  const dots=dt.map((v,i)=>'<div class="dd '+(v>0?'f':'e')+'"><div class="dn">'+(i+1)+'</div>'+(v>0?v:'')+'</div>').join('');
+  const goals=g.personalGoals||{};
+  const visibleGoals=Object.entries(goals).filter(([ri])=>GOAL_LABELS[ri]);
+  const goalsHtml=visibleGoals.length>0?
+    '<div class="custom-box"><div class="custom-title">🎯 الأهداف الشخصية</div><div class="chips">'+
+    visibleGoals.map(([ri,val])=>{
+      const label=GOAL_LABELS[ri]||ROWS[ri]?.ibada||'';
+      let shownVal=val;
+      const gi=GOAL_ITEMS.find(x=>String(x.ri)===String(ri));
+      if(DHIKR_ROWS.has(Number(ri))){shownVal=(Number(val)/2)+' صباحاً + '+(Number(val)/2)+' مساءً';}
+      else if(gi&&gi.unit==='ركعة'){shownVal=val+' ركعة';}
+      else if(gi&&gi.optVals.indexOf(Number(val))>=0){shownVal=gi.opts[gi.optVals.indexOf(Number(val))];}
+      else if(gi&&gi.unit){shownVal=val+' '+gi.unit;}
+      return '<span class="chip">'+esc(label)+': '+esc(shownVal)+'</span>';
+    }).join('')+'</div></div>':'';
+  const bonusHtml=totalBonus>0?
+    '<div class="bonus-box"><div class="bonus-title">⭐ البونص الكلي: '+totalBonus+' نقطة</div>'+
+    '<div style="font-size:10px;color:#7a6a52">المجموع الأساسي: '+totalBase+' | البونص: +'+totalBonus+'</div></div>':'';
+  const pctColor=dayPct!==null?(dayPct>=80?'#1a6b3c':dayPct>=50?'#b8860b':'#c0392b'):'#aaa';
+  const pctBadge=dayPct!==null?'<div style="text-align:center;background:#e8f6ee;border:1px solid var(--bd);border-radius:10px;padding:6px 10px;margin-bottom:8px"><div style="font-size:18px;font-weight:700;color:'+pctColor+'">'+dayPct+'%</div><div style="font-size:9px;color:var(--mu)">معدل اليوم من 100 (أساسي فقط)</div></div>':'';
+  const pctLabel=dayPct!==null?'<span style="background:#e8f6ee;border:1px solid var(--bd);border-radius:8px;padding:2px 8px;font-size:11px;font-weight:700;color:'+pctColor+'">📊 '+dayPct+'%</span>':'';
+  const body=detailsTable(g,gi)+'<div style="font-size:10px;color:var(--mu);margin-top:8px;text-align:left">آخر إرسال: '+esc(g.lastUpdate||'—')+'</div>';
+  return '<div class="girl-card">'
+    +'<div class="gc-hdr" onclick="toggleGirlCard('+gi+')">'
+    +'<div class="gc-name">'+medal+' '+esc(g.name)+'</div>'
+    +'<div style="display:flex;align-items:center;gap:6px">'+pctLabel+'<div class="gc-pts">'+g.grand+' نقطة</div><span id="garr_'+gi+'" style="color:#a8e6c0;font-size:12px">▼</span></div>'
+    +'</div>'
+    +'<div class="gc-body" id="gbody_'+gi+'" style="display:none">'
+    +pctBadge+'<div class="period-overview">'+periodOverviewHtml(g)+'</div>'+goalsHtml+bonusHtml
+    +'<div class="prog-row"><span>التقدم الكلي</span><span>'+pct+'%</span></div><div class="prog-t"><div class="prog-f" style="width:'+pct+'%"></div></div>'
+    +'<div class="days-row">'+dots+'</div>'
+    +'<button class="toggle-btn" onclick="toggleDetails('+gi+',this)"><span>عرض تفاصيل العبادات</span><span>▼</span></button>'
+    +'<div class="details" id="details_'+gi+'">'+body+'</div>'
+    +'</div></div>';
+}
+
+function detailsTable(g,gi){
+  const dayMax=calcDayMax();
+  const page=managerDayPages[gi]||0;
+  const startDay=page*10+1;
+  const days=Array.from({length:10},(_,i)=>startDay+i);
+  let html='<div class="detail-day-pages">'+[0,1,2].map(p=>'<button type="button" class="detail-day-btn '+(p===page?'active':'')+'" onclick="setManagerDayPage('+gi+','+p+',event)">الأيام '+(p*10+1)+'–'+(p*10+10)+'</button>').join('')+'</div>';
+  html+='<div class="manager-table-wrap"><table class="manager-detail-table"><thead><tr><th class="catH">الفئة</th><th class="ibH">العبادة</th><th class="ptsH">نقاط</th>';
+  days.forEach(d=>html+='<th class="dayH">'+d+'</th>');
+  html+='</tr></thead><tbody>';
+  let lastCat='',catRows={};ROWS.forEach(r=>{if(!r.hidden)catRows[r.cat]=(catRows[r.cat]||0)+1;});
+  ROWS.forEach((r,ri)=>{
+    if(r.hidden)return;
+    html+='<tr>';
+    if(r.cat!==lastCat){html+='<td class="cat" rowspan="'+catRows[r.cat]+'">'+esc(r.cat)+'</td>';lastCat=r.cat;}
+    const meta=[r.note,r.bonus?'بونص':''].filter(Boolean).join(' | ');
+    html+='<td class="ibada" style="'+(r.negative?'color:#ef4444;':'')+(r.bonus?'color:#b8860b;':'')+'">'+esc(r.ibada)+(meta?'<div style="font-size:8px;color:#b8860b;font-weight:400">'+esc(meta)+'</div>':'')+'</td>';
+    html+='<td class="pts" style="'+(r.negative?'color:#ef4444;':'')+(r.bonus?'color:#b8860b;':'')+'">'+r.pts+'</td>';
+    days.forEach(d=>{
+      const v=(g.state&&g.state[sk(ri,d)])||0,dpts=getPts(g,ri,d),bonus=getBonusPts(g,ri,d);
+      const cls=v===1?'done':v===2?'miss':'';
+      const mark=v===1?'<span class="manager-check">✓</span>':v===2?'<span class="manager-x">✕</span>':'';
+      const extra=v===1?'<div style="font-size:8px;font-weight:700;color:'+(bonus>0?'#b8860b':'var(--done-text)')+'">'+dpts+(bonus>0?' ↑':'')+'</div>':'';
+      html+='<td class="day-cell '+cls+'">'+mark+extra+'</td>';
+    });
+    html+='</tr>';
+  });
+  html+='<tr class="mgr-day-total"><td colspan="3">مجموع اليوم</td>';
+  days.forEach(d=>html+='<td>'+calculatedDayTotal(g,d)+'</td>');
+  html+='</tr><tr class="mgr-day-pct"><td colspan="3">معدل اليوم من 100</td>';
+  days.forEach(d=>{const hasData=ROWS.some((r,ri)=>!r.hidden&&((g.state||{})[sk(ri,d)]||0)!==0);if(hasData){const pct=Math.min(100,Math.round(calcGirlDayBase(g,d)/dayMax*100));html+='<td>'+pct+'%</td>';}else html+='<td>—</td>';});
+  html+='</tr></tbody></table></div>';
+  html+='<div style="font-size:10px;color:var(--mu);padding:7px 2px 0">عداد التسميع: '+(Number(g.counter)||0)+' مرة = '+counterPoints(g)+' نقطة</div>';
+  return html;
+}
+
+function setManagerDayPage(gi,page,event){if(event){event.preventDefault();event.stopPropagation();}managerDayPages[gi]=Math.max(0,Math.min(2,Number(page)||0));const box=document.getElementById('details_'+gi);if(box&&girlsData[gi])box.innerHTML=detailsTable(girlsData[gi],gi)+'<div style="font-size:10px;color:var(--mu);margin-top:8px;text-align:left">آخر إرسال: '+esc(girlsData[gi].lastUpdate||'—')+'</div>';}
+
+function toggleAdminPanel(){document.getElementById('adminPanel').classList.toggle('open');}
+function togglePairsPanel(){
+  const panel=document.getElementById('pairsPanel');
+  panel.classList.toggle('open');
+  if(panel.classList.contains('open'))buildPairGroups();
+}
+function buildPairGroups(){
+  const grid=document.getElementById('pairsGrid');if(!grid)return;
+  const groups=currentPairGroups(),names=girlsData.map(g=>String(g.name||'').trim()).filter(Boolean).sort((a,b)=>a.localeCompare(b,'ar'));
+  grid.innerHTML='';
+  if(!groups.length){grid.innerHTML='<div class="pairs-empty" style="grid-column:1/-1;text-align:center;padding:14px">لا توجد مجموعات لهذه الفترة — اضغطي «إضافة مجموعة» للبدء.</div>';return;}
+  const start=selectedPairPeriod*10+1,end=start+9;
+  const rankedGroups=groups.map((group,originalIndex)=>{
+    const selected=group.filter(Boolean);let points=0,pctSum=0,pctCount=0;
+    selected.forEach(name=>{const girl=girlsData.find(g=>String(g.name||'').trim()===name);if(!girl)return;const st=calcPeriodStats(girl,start,end);points+=st.points;if(st.pct!==null){pctSum+=st.pct;pctCount++;}});
+    return {group,originalIndex,selected,points,avgPct:pctCount?Math.round(pctSum/pctCount):null};
+  }).sort((a,b)=>(b.avgPct??-1)-(a.avgPct??-1)||b.points-a.points||a.originalIndex-b.originalIndex);
+  rankedGroups.forEach((entry,rankIndex)=>{
+    const {group,originalIndex:gi,selected,points,avgPct}=entry;
+    const card=document.createElement('div');card.className='pair-card';
+    const title=document.createElement('div');title.className='pair-title';
+    const medal=rankIndex===0?'🥇':rankIndex===1?'🥈':rankIndex===2?'🥉':'#'+(rankIndex+1);
+    title.textContent=medal+' المجموعة '+(gi+1);card.appendChild(title);
+    for(let si=0;si<3;si++){
+      const sel=document.createElement('select');sel.dataset.group=gi;sel.dataset.slot=si;
+      sel.innerHTML='<option value="">'+(si===2?'البنت الثالثة (اختياري)':'اختاري البنت '+(si+1))+'</option>';
+      names.forEach(name=>{const opt=document.createElement('option');opt.value=name;opt.textContent=name;if(group[si]===name)opt.selected=true;sel.appendChild(opt);});
+      sel.onchange=onPairSelection;card.appendChild(sel);
+    }
+    const summary=document.createElement('div');summary.className='pair-summary';summary.innerHTML=selected.length?selected.map(name=>'<span class="pair-chip">'+esc(name)+'</span>').join(''):'<span class="pairs-empty">لم يتم اختيار البنات بعد</span>';card.appendChild(summary);
+    const total=document.createElement('div');total.className='pair-total';total.innerHTML='<span>متوسط المجموعة للفترة '+start+'–'+end+'</span><b>'+(avgPct===null?'—':avgPct+'%')+'</b><small>مجموع نقاط العضوات: '+points+'</small>';card.appendChild(total);
+    const del=document.createElement('button');del.type='button';del.className='pair-delete';del.textContent='حذف هذه المجموعة';del.onclick=()=>deletePairGroup(gi);card.appendChild(del);grid.appendChild(card);
+  });
+}
+function onPairSelection(e){
+  const groups=currentPairGroups(),gi=Number(e.target.dataset.group),si=Number(e.target.dataset.slot),name=e.target.value;
+  if(name&&groups.some((group,gidx)=>group.some((n,sidx)=>n===name&&(gidx!==gi||sidx!==si)))){e.target.value=groups[gi][si]||'';showToast('هذه البنت موجودة في مجموعة أخرى ضمن نفس الفترة');return;}
+  groups[gi][si]=name;persistPairGroups();buildPairGroups();
+}
+function savePairGroups(){
+  const groups=currentPairGroups(),duplicateNames=groups.flat().filter(Boolean).filter((name,i,a)=>a.indexOf(name)!==i);
+  if(duplicateNames.length){showToast('لا يمكن تكرار البنت في أكثر من مجموعة بنفس الفترة');return;}
+  const incomplete=groups.some(group=>group.filter(Boolean).length===1);if(incomplete){showToast('كل مجموعة مستخدمة يجب أن تضم بنتين على الأقل');return;}
+  persistPairGroups();showToast('تم حفظ جروبات هذه الفترة ✓');
+}
+function populateAdminSelect(){
+  const sel=document.getElementById('adminGirlSelect');if(!sel)return;
+  sel.innerHTML='<option value="">اختاري اسم البنت...</option>';
+  girlsData.map(g=>g.name).filter(Boolean).sort((a,b)=>String(a).localeCompare(String(b),'ar')).forEach(name=>{
+    const opt=document.createElement('option');opt.value=name;opt.textContent=name;sel.appendChild(opt);
+  });
+}
+function deleteSelectedGirl(){
+  const sel=document.getElementById('adminGirlSelect');
+  const name=sel?sel.value.trim():'';
+  if(!name){showToast('اختاري اسم البنت أولاً');return;}
+  if(!confirm('متأكدة من حذف '+name+' نهائياً؟'))return;
+  sb.from('submissions').delete().eq('group_id',currentGroup.id).eq('girl_name',name).then(({error})=>{
+    if(error){console.error(error);showToast('تعذر الحذف');return;}
+    showToast('تم الحذف ✓');loadData();
+  });
+}
+function toggleGirlCard(i){const b=document.getElementById('gbody_'+i);const arr=document.getElementById('garr_'+i);const open=b.style.display==='block';b.style.display=open?'none':'block';if(arr)arr.textContent=open?'▼':'▲';}
+function toggleDetails(i,btn){const d=document.getElementById('details_'+i);d.classList.toggle('open');const s=btn.querySelector('span:last-child');if(s)s.textContent=d.classList.contains('open')?'▲':'▼';}
+function togglePanel(id,btn){const d=document.getElementById(id);if(!d)return;const isOpen=d.style.display==='block';d.style.display=isOpen?'none':'block';const s=btn.querySelector('span:last-child');if(s)s.textContent=isOpen?'▼':'▲';}
+
+function exportExcel(){
+  if(!girlsData.length){showToast('لا يوجد بيانات');return;}
+  const wb=XLSX.utils.book_new();const sorted=[...girlsData].sort((a,b)=>b.grand-a.grand);
+  const sum=[['الترتيب','الاسم','المجموع','المعدل','الأيام','معدل اليوم %',...Array.from({length:DAYS},(_,i)=>'يوم '+(i+1))]];
+  sorted.forEach((g,i)=>{
+    const dp=calcGirlDayPct(g);
+    const bases=Array.from({length:DAYS},(_,d)=>calcGirlDayBase(g,d+1));
+    sum.push([i+1,g.name,g.grand,g.avg,g.filled,dp!==null?dp+'%':'—',...bases]);
+  });
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(sum),'ملخص');
+  girlsData.forEach(g=>{
+    const d=[['الفئة','العبادة','النقاط',...Array.from({length:DAYS},(_,i)=>'يوم '+(i+1)),'المجموع']];
+    ROWS.forEach((r,ri)=>{
+      if(r.hidden)return;
+      let s=0;const row=[r.cat,r.ibada,r.pts];
+      for(let day=1;day<=DAYS;day++){const v=((g.state||{})[sk(ri,day)]||0)===1?getPts(g,ri,day):0;row.push(v);s+=v;}
+      row.push(s);d.push(row);
+    });
+    d.push(['عداد','تسميع قرآن',5,'مرات: '+(Number(g.counter)||0),'نقاط: '+counterPoints(g)]);
+    XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(d),String(g.name).slice(0,28));
+  });
+  XLSX.writeFile(wb,'نتائج_'+(currentGroup?currentGroup.name.replace(/[^\p{L}\p{N}]+/gu,'_'):'البنات')+'.xlsx');showToast('تم التصدير ✓');
+}
+
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);}
+// ===== تسجيل الدخول والمجموعات =====
+let authMode='login';
+function authMsg(t,ok){const m=document.getElementById('authMsg');m.textContent=t||'';m.className='auth-msg'+(ok?' ok':'');}
+function authToggleMode(){authMode=authMode==='login'?'signup':'login';document.getElementById('authMain').textContent=authMode==='login'?'دخول':'إنشاء حساب';document.getElementById('authSwitch').textContent=authMode==='login'?'أول مرة؟ أنشئي حساب':'عندي حساب — دخول';document.getElementById('authPass').autocomplete=authMode==='login'?'current-password':'new-password';authMsg('');}
+async function authSubmit(){
+  const email=document.getElementById('authEmail').value.trim(),pass=document.getElementById('authPass').value;
+  if(!email||!pass){authMsg('اكتبي الإيميل وكلمة السر');return;}
+  if(authMode==='signup'&&pass.length<6){authMsg('كلمة السر لازم تكون 6 أحرف على الأقل');return;}
+  authMsg('...',true);
+  const res=authMode==='login'?await sb.auth.signInWithPassword({email,password:pass}):await sb.auth.signUp({email,password:pass,options:{emailRedirectTo:location.href.split('?')[0]}});
+  if(res.error){authMsg(res.error.message.includes('Invalid login')?'الإيميل أو كلمة السر غلط':res.error.message.includes('not confirmed')?'لازم تأكدي إيميلك أول — شوفي بريدك':res.error.message);return;}
+  if(authMode==='signup'&&!res.data.session){authMsg('تم إنشاء الحساب ✓ — افتحي الإيميل اللي وصلك واضغطي رابط التأكيد، بعدين ارجعي سجّلي دخول',true);authToggleMode();return;}
+  afterLogin();
+}
+async function authForgot(){
+  const email=document.getElementById('authEmail').value.trim();if(!email){authMsg('اكتبي إيميلك أول');return;}
+  const {error}=await sb.auth.resetPasswordForEmail(email,{redirectTo:location.href.split('?')[0]});
+  authMsg(error?error.message:'وصلك إيميل لتغيير كلمة السر ✓',!error);
+}
+async function signOut(){await sb.auth.signOut();location.reload();}
+function girlLink(){return new URL('girl.html?g='+encodeURIComponent(currentGroup.code),location.href).href;}
+function copyGirlLink(){const l=girlLink();if(navigator.clipboard)navigator.clipboard.writeText(l).then(()=>showToast('تم نسخ رابط البنات ✓'),()=>prompt('رابط البنات:',l));else prompt('رابط البنات:',l);}
+async function switchGroup(id){
+  currentGroup=myGroups.find(g=>g.id===id)||myGroups[0];
+  try{localStorage.setItem('manager_last_group',currentGroup.id);}catch(e){}
+  const {data,error}=await sb.from('programs').select('config').eq('group_id',currentGroup.id).single();
+  if(error||!data){showToast('تعذر تحميل برنامج المجموعة');return;}
+  const cfg=data.config||{};
+  ROWS=cfg.ROWS||[];GOAL_ITEMS=cfg.GOAL_ITEMS||[];QIYAM_ROW=cfg.qiyamRow??-1;
+  VARIABLE_BONUS_ROWS=new Set(cfg.VARIABLE_BONUS_ROWS||[]);EDITABLE_BASIC_ROWS=new Set(cfg.EDITABLE_BASIC_ROWS||[]);DHIKR_ROWS=new Set(cfg.DHIKR_ROWS||[]);
+  GOAL_LABELS={};GOAL_UNITS={};GOAL_ITEMS.forEach(g=>{GOAL_LABELS[g.ri]=g.name;GOAL_UNITS[g.ri]=g.unit||(DHIKR_ROWS.has(g.ri)?'مرة يومياً':'');});
+  CAT_ORDER=[...new Set(ROWS.filter(r=>!r.hidden).map(r=>r.cat))];
+  document.getElementById('managerHowBody').innerHTML=cfg.howHtml||'';
+  const h1=document.querySelector('.hdr h1');if(h1)h1.textContent='🌙 النتائج — '+currentGroup.name;
+  PAIRS_KEY='manager_pair_groups_v2_'+currentGroup.id;
+  pairGroupsByPeriod=loadPairGroups();
+  girlsData=[];render();buildPairGroups();
+  loadData();
+}
+async function afterLogin(){
+  const {data:{user}}=await sb.auth.getUser();
+  if(!user){showLogin();return;}
+  const {data:staff}=await sb.from('staff').select('is_admin').eq('user_id',user.id).maybeSingle();
+  if(!staff){document.getElementById('authOv').style.display='flex';document.getElementById('authForm').style.display='none';document.getElementById('authSub').textContent='';authMsg('هذا الإيميل ('+user.email+') غير مسجّل كآنسة. تواصلي مع المسؤولة.');const b=document.createElement('button');b.textContent='خروج';b.onclick=signOut;document.querySelector('.auth-box').appendChild(b);return;}
+  isAdmin=staff.is_admin;
+  const {data:groups}=await sb.from('groups').select('id,name,code').order('created_at');
+  myGroups=groups||[];
+  if(!myGroups.length){authMsg('ما في مجموعات مربوطة بحسابك بعد');return;}
+  document.getElementById('authOv').style.display='none';
+  document.getElementById('groupBar').style.display='flex';
+  document.getElementById('adminLink').style.display=isAdmin?'inline-block':'none';
+  const sel=document.getElementById('groupSelect');
+  sel.innerHTML=myGroups.map(g=>'<option value="'+g.id+'">'+esc(g.name)+'</option>').join('');
+  let last='';try{last=localStorage.getItem('manager_last_group')||'';}catch(e){}
+  const startId=(myGroups.find(g=>g.id===last)||myGroups[0]).id;sel.value=startId;
+  sel.style.display=myGroups.length>1?'block':'none';
+  switchGroup(startId);
+}
+function showLogin(){document.getElementById('authOv').style.display='flex';document.getElementById('authForm').style.display='block';}
+loadAppearance();
+(async()=>{const {data:{session}}=await sb.auth.getSession();if(session)afterLogin();else showLogin();})();
+</script>
+</body>
+</html>

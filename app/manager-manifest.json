@@ -1,0 +1,24 @@
+{
+  "name": "نتائج برنامج عبادة",
+  "short_name": "النتائج",
+  "description": "فاستبقوا الخيرات",
+  "start_url": "./manager.html",
+  "display": "standalone",
+  "background_color": "#f0f7f0",
+  "theme_color": "#1a6b3c",
+  "lang": "ar",
+  "dir": "rtl",
+  "icons": [
+    {
+      "src": "manager-icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "manager-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "scope": "./"
+}
