@@ -400,7 +400,7 @@ var _ls=(function(){var sid=new URLSearchParams(location.search).get('sid')||'';
 // ===== إعدادات الاتصال بالداتابيس =====
 const SB_URL='https://kltwxjplwpuefhjnemnq.supabase.co';
 const SB_KEY='sb_publishable_c2srueTIBH9emOH5nODFAQ_4zCFGSWX';
-const GROUP_CODE=(function(){var g=new URLSearchParams(location.search).get('g')||'';try{if(g)localStorage.setItem('ibada_group_code',g);else g=localStorage.getItem('ibada_group_code')||'';}catch(e){}return g;})();
+const GROUP_CODE=(function(){var g=new URLSearchParams(location.search).get('g')||'';try{if(!g)g=localStorage.getItem('ibada_group_code')||'';}catch(e){}return g;})();
 async function rpc(fn,args){const r=await fetch(SB_URL+'/rest/v1/rpc/'+fn,{method:'POST',headers:{'apikey':SB_KEY,'Content-Type':'application/json'},body:JSON.stringify(args)});if(!r.ok)throw new Error(await r.text());return r.json();}
 
 const DRIVE_BOOK='https://drive.google.com/file/d/1Ao1UT7sIYM6rmvo-AVKBYDAybJsvD7tx/preview';
@@ -937,6 +937,7 @@ async function boot(){
     const res=await rpc('get_program',{p_code:GROUP_CODE});
     if(!res||!res.config){msg.textContent='رابط المجموعة غير صحيح';return;}
     applyConfig(res.config);
+    try{localStorage.setItem('ibada_group_code',GROUP_CODE);}catch(e){}
   }catch(e){console.error(e);msg.textContent='تعذر تحميل البرنامج، تحققي من الإنترنت وأعيدي المحاولة';return;}
   load();loadAppearance();build();buildGoalsSection();
   msg.remove();

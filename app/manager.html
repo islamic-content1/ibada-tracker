@@ -7,7 +7,6 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <style>
 
 /* ===== الألوان الأساسية ===== */
@@ -326,16 +325,8 @@ html[data-mode="dark"] #toast{background:#e8ebe9;color:#17191b}
 </head>
 <body>
 <div id="authOv" class="auth-ov"><div class="auth-box">
-  <h2>🌙 دخول الآنسات</h2>
-  <p id="authSub">سجّلي الدخول بإيميلك</p>
-  <div id="authMsg" class="auth-msg"></div>
-  <div id="authForm" style="display:none">
-    <input id="authEmail" type="email" placeholder="email@example.com" autocomplete="email">
-    <input id="authPass" type="password" placeholder="كلمة السر" autocomplete="current-password">
-    <button id="authMain" type="button" onclick="authSubmit()">دخول</button>
-    <button class="link" type="button" id="authSwitch" onclick="authToggleMode()">أول مرة؟ أنشئي حساب</button>
-    <button class="link" type="button" onclick="authForgot()">نسيت كلمة السر</button>
-  </div>
+  <h2>🌙 النتائج</h2>
+  <div id="authMsg" class="auth-msg ok">جاري التحميل...</div>
 </div></div>
 <div class="hdr"><div class="bsm">بسم الله الرحمن الرحيم</div><h1>🌙 النتائج</h1><p>أداء البنات في برنامج العبادة</p></div>
 <div class="how-box">
@@ -343,10 +334,8 @@ html[data-mode="dark"] #toast{background:#e8ebe9;color:#17191b}
   <div class="how-body" id="managerHowBody"></div>
 </div>
 <div class="group-bar" id="groupBar" style="display:none">
-  <select id="groupSelect" onchange="switchGroup(this.value)"></select>
+  <b id="groupName" style="flex:1;color:var(--gD);font-size:15px"></b>
   <button class="gb-btn" type="button" onclick="copyGirlLink()">🔗 رابط البنات</button>
-  <a class="gb-btn" id="adminLink" href="admin.html" style="display:none">⚙️ الإعدادات</a>
-  <button class="gb-btn" type="button" onclick="signOut()">خروج</button>
 </div>
 <div class="stats">
   <div class="sc"><div class="sv" id="stTotal">0</div><div class="sl">عدد البنات</div></div>
@@ -389,8 +378,10 @@ html[data-mode="dark"] #toast{background:#e8ebe9;color:#17191b}
 // ===== الاتصال بالداتابيس =====
 const SB_URL='https://kltwxjplwpuefhjnemnq.supabase.co';
 const SB_KEY='sb_publishable_c2srueTIBH9emOH5nODFAQ_4zCFGSWX';
-const sb=supabase.createClient(SB_URL,SB_KEY);
-let currentGroup=null,myGroups=[],isAdmin=false;
+// الرمز السري للآنسة: من الرابط، أو آخر رمز انفتح على هالجهاز
+const MGR_KEY=(function(){var k=new URLSearchParams(location.search).get('k')||'';try{if(!k)k=localStorage.getItem('ibada_manager_key')||'';}catch(e){}return k;})();
+async function rpc(fn,args){const r=await fetch(SB_URL+'/rest/v1/rpc/'+fn,{method:'POST',headers:{'apikey':SB_KEY,'Content-Type':'application/json'},body:JSON.stringify(args)});if(!r.ok)throw new Error(await r.text());return r.json();}
+let currentGroup=null,configLoaded=false;
 const DAYS=30;
 
 // ===== ROWS محدّثة تطابق girl.html الجديدة =====
@@ -561,9 +552,10 @@ async function loadData(){
   btn.classList.add('loading');
   btn.disabled=true;
   try{
-    const {data,error}=await sb.from('submissions').select('girl_name,grand,avg,filled,day_totals,payload,updated_at').eq('group_id',currentGroup.id);
-    if(error)throw error;
-    girlsData=(data||[]).map(r=>{
+    const res=await rpc('mgr_get',{p_key:MGR_KEY});
+    if(!res)throw new Error('invalid key');
+    applyConfig(res);
+    girlsData=(res.rows||[]).map(r=>{
       const p=r.payload||{};
       const girl={
         name:r.girl_name,
@@ -942,10 +934,7 @@ function deleteSelectedGirl(){
   const name=sel?sel.value.trim():'';
   if(!name){showToast('اختاري اسم البنت أولاً');return;}
   if(!confirm('متأكدة من حذف '+name+' نهائياً؟'))return;
-  sb.from('submissions').delete().eq('group_id',currentGroup.id).eq('girl_name',name).then(({error})=>{
-    if(error){console.error(error);showToast('تعذر الحذف');return;}
-    showToast('تم الحذف ✓');loadData();
-  });
+  rpc('mgr_delete_girl',{p_key:MGR_KEY,p_name:name}).then(()=>{showToast('تم الحذف ✓');loadData();}).catch(e=>{console.error(e);showToast('تعذر الحذف');});
 }
 function toggleGirlCard(i){const b=document.getElementById('gbody_'+i);const arr=document.getElementById('garr_'+i);const open=b.style.display==='block';b.style.display=open?'none':'block';if(arr)arr.textContent=open?'▼':'▲';}
 function toggleDetails(i,btn){const d=document.getElementById('details_'+i);d.classList.toggle('open');const s=btn.querySelector('span:last-child');if(s)s.textContent=d.classList.contains('open')?'▲':'▼';}
@@ -976,67 +965,28 @@ function exportExcel(){
 }
 
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);}
-// ===== تسجيل الدخول والمجموعات =====
-let authMode='login';
-function authMsg(t,ok){const m=document.getElementById('authMsg');m.textContent=t||'';m.className='auth-msg'+(ok?' ok':'');}
-function authToggleMode(){authMode=authMode==='login'?'signup':'login';document.getElementById('authMain').textContent=authMode==='login'?'دخول':'إنشاء حساب';document.getElementById('authSwitch').textContent=authMode==='login'?'أول مرة؟ أنشئي حساب':'عندي حساب — دخول';document.getElementById('authPass').autocomplete=authMode==='login'?'current-password':'new-password';authMsg('');}
-async function authSubmit(){
-  const email=document.getElementById('authEmail').value.trim(),pass=document.getElementById('authPass').value;
-  if(!email||!pass){authMsg('اكتبي الإيميل وكلمة السر');return;}
-  if(authMode==='signup'&&pass.length<6){authMsg('كلمة السر لازم تكون 6 أحرف على الأقل');return;}
-  authMsg('...',true);
-  const res=authMode==='login'?await sb.auth.signInWithPassword({email,password:pass}):await sb.auth.signUp({email,password:pass,options:{emailRedirectTo:location.href.split('?')[0]}});
-  if(res.error){authMsg(res.error.message.includes('Invalid login')?'الإيميل أو كلمة السر غلط':res.error.message.includes('not confirmed')?'لازم تأكدي إيميلك أول — شوفي بريدك':res.error.message);return;}
-  if(authMode==='signup'&&!res.data.session){authMsg('تم إنشاء الحساب ✓ — افتحي الإيميل اللي وصلك واضغطي رابط التأكيد، بعدين ارجعي سجّلي دخول',true);authToggleMode();return;}
-  afterLogin();
-}
-async function authForgot(){
-  const email=document.getElementById('authEmail').value.trim();if(!email){authMsg('اكتبي إيميلك أول');return;}
-  const {error}=await sb.auth.resetPasswordForEmail(email,{redirectTo:location.href.split('?')[0]});
-  authMsg(error?error.message:'وصلك إيميل لتغيير كلمة السر ✓',!error);
-}
-async function signOut(){await sb.auth.signOut();location.reload();}
+// ===== التشغيل =====
 function girlLink(){return new URL('girl.html?g='+encodeURIComponent(currentGroup.code),location.href).href;}
 function copyGirlLink(){const l=girlLink();if(navigator.clipboard)navigator.clipboard.writeText(l).then(()=>showToast('تم نسخ رابط البنات ✓'),()=>prompt('رابط البنات:',l));else prompt('رابط البنات:',l);}
-async function switchGroup(id){
-  currentGroup=myGroups.find(g=>g.id===id)||myGroups[0];
-  try{localStorage.setItem('manager_last_group',currentGroup.id);}catch(e){}
-  const {data,error}=await sb.from('programs').select('config').eq('group_id',currentGroup.id).single();
-  if(error||!data){showToast('تعذر تحميل برنامج المجموعة');return;}
-  const cfg=data.config||{};
+// البرنامج بيجي مع كل تحديث، فأي تعديل من الإعدادات بيبيّن فوراً
+function applyConfig(res){
+  const cfg=res.config||{};currentGroup=res.group;
   ROWS=cfg.ROWS||[];GOAL_ITEMS=cfg.GOAL_ITEMS||[];QIYAM_ROW=cfg.qiyamRow??-1;
   VARIABLE_BONUS_ROWS=new Set(cfg.VARIABLE_BONUS_ROWS||[]);EDITABLE_BASIC_ROWS=new Set(cfg.EDITABLE_BASIC_ROWS||[]);DHIKR_ROWS=new Set(cfg.DHIKR_ROWS||[]);
   GOAL_LABELS={};GOAL_UNITS={};GOAL_ITEMS.forEach(g=>{GOAL_LABELS[g.ri]=g.name;GOAL_UNITS[g.ri]=g.unit||(DHIKR_ROWS.has(g.ri)?'مرة يومياً':'');});
   CAT_ORDER=[...new Set(ROWS.filter(r=>!r.hidden).map(r=>r.cat))];
   document.getElementById('managerHowBody').innerHTML=cfg.howHtml||'';
-  const h1=document.querySelector('.hdr h1');if(h1)h1.textContent='🌙 النتائج — '+currentGroup.name;
-  PAIRS_KEY='manager_pair_groups_v2_'+currentGroup.id;
-  pairGroupsByPeriod=loadPairGroups();
-  girlsData=[];render();buildPairGroups();
-  loadData();
-}
-async function afterLogin(){
-  const {data:{user}}=await sb.auth.getUser();
-  if(!user){showLogin();return;}
-  const {data:staff}=await sb.from('staff').select('is_admin').eq('user_id',user.id).maybeSingle();
-  if(!staff){document.getElementById('authOv').style.display='flex';document.getElementById('authForm').style.display='none';document.getElementById('authSub').textContent='';authMsg('هذا الإيميل ('+user.email+') غير مسجّل كآنسة. تواصلي مع المسؤولة.');const b=document.createElement('button');b.textContent='خروج';b.onclick=signOut;document.querySelector('.auth-box').appendChild(b);return;}
-  isAdmin=staff.is_admin;
-  const {data:groups}=await sb.from('groups').select('id,name,code').order('created_at');
-  myGroups=groups||[];
-  if(!myGroups.length){authMsg('ما في مجموعات مربوطة بحسابك بعد');return;}
-  document.getElementById('authOv').style.display='none';
+  document.getElementById('groupName').textContent=currentGroup.name;
   document.getElementById('groupBar').style.display='flex';
-  document.getElementById('adminLink').style.display=isAdmin?'inline-block':'none';
-  const sel=document.getElementById('groupSelect');
-  sel.innerHTML=myGroups.map(g=>'<option value="'+g.id+'">'+esc(g.name)+'</option>').join('');
-  let last='';try{last=localStorage.getItem('manager_last_group')||'';}catch(e){}
-  const startId=(myGroups.find(g=>g.id===last)||myGroups[0]).id;sel.value=startId;
-  sel.style.display=myGroups.length>1?'block':'none';
-  switchGroup(startId);
+  if(!configLoaded){configLoaded=true;try{localStorage.setItem('ibada_manager_key',MGR_KEY);}catch(e){}PAIRS_KEY='manager_pair_groups_v2_'+currentGroup.id;pairGroupsByPeriod=loadPairGroups();document.getElementById('authOv').style.display='none';}
 }
-function showLogin(){document.getElementById('authOv').style.display='flex';document.getElementById('authForm').style.display='block';}
 loadAppearance();
-(async()=>{const {data:{session}}=await sb.auth.getSession();if(session)afterLogin();else showLogin();})();
+(async()=>{
+  const msg=document.getElementById('authMsg');
+  if(!MGR_KEY){msg.className='auth-msg';msg.textContent='الرابط ناقص — افتحي رابط الآنسة الخاص بمجموعتك';return;}
+  await loadData();
+  if(!configLoaded){msg.className='auth-msg';msg.textContent='الرابط غير صحيح أو تم تغييره — اطلبي الرابط الجديد';}
+})();
 </script>
 </body>
 </html>

@@ -6,7 +6,6 @@
 <title>إعدادات برنامج عبادة</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <link rel="apple-touch-icon" href="icon.png">
 <style>
 /* ===== الألوان (نفس ألوان البرنامج) ===== */
@@ -75,26 +74,18 @@ textarea{width:100%;min-height:150px;direction:rtl;font-size:13px}
 <!-- شاشة الدخول -->
 <div id="authOv" class="auth-ov"><div class="auth-box">
   <h2>⚙️ الإعدادات</h2>
-  <p class="muted">للأدمن فقط</p>
-  <div id="authMsg" class="auth-msg"></div>
-  <div id="authForm" style="display:none">
-    <input id="authEmail" type="email" placeholder="email@example.com" autocomplete="email">
-    <input id="authPass" type="password" placeholder="كلمة السر" autocomplete="current-password">
-    <button class="btn primary" type="button" onclick="authSubmit()">دخول</button>
-    <a class="btn" href="manager.html">أول مرة؟ أنشئي حسابك من صفحة النتائج</a>
-  </div>
+  <div id="authMsg" class="auth-msg ok">جاري التحميل...</div>
 </div></div>
 
 <div class="hdr">
   <h1>⚙️ إعدادات برنامج عبادة</h1>
-  <p id="whoami"></p>
-  <div class="hdr-links"><a class="btn small" href="manager.html">🌙 صفحة النتائج</a><button class="btn small" onclick="signOut()">خروج</button></div>
+  <p>هاد الرابط إلك إنتِ بس — لا تشاركيه مع حدا</p>
+  
 </div>
 
 <div class="tabs">
   <button class="tab active" onclick="showTab(0)">المجموعات</button>
-  <button class="tab" onclick="showTab(1)">الآنسات</button>
-  <button class="tab" onclick="showTab(2)">بناء البرنامج</button>
+  <button class="tab" onclick="showTab(1)">بناء البرنامج</button>
 </div>
 
 <!-- ===== المجموعات ===== -->
@@ -111,21 +102,8 @@ textarea{width:100%;min-height:150px;direction:rtl;font-size:13px}
   </div>
 </div>
 
-<!-- ===== الآنسات ===== -->
-<div class="panel" id="p1">
-  <div class="warn">الآنسة بتنشئ حسابها بنفسها من صفحة النتائج بنفس الإيميل اللي بتحطيه هون، وبتشوف المجموعات اللي بتحدديها بس.</div>
-  <div id="staffList"></div>
-  <div class="card">
-    <h3>➕ إضافة آنسة</h3>
-    <div class="row"><input type="email" id="newStaffEmail" placeholder="email@example.com" style="flex:1;min-width:200px;direction:ltr;text-align:left"></div>
-    <div class="checks" id="newStaffGroups"></div>
-    <div class="row"><label class="checks"><label><input type="checkbox" id="newStaffAdmin"> أدمن (بتشوف كل إشي وبتعدّل الإعدادات)</label></label></div>
-    <button class="btn primary" onclick="addStaff()">إضافة</button>
-  </div>
-</div>
-
 <!-- ===== بناء البرنامج ===== -->
-<div class="panel" id="p2">
+<div class="panel" id="p1">
   <div class="card">
     <div class="row"><b>المجموعة:</b><select id="progGroup" onchange="loadProgram(this.value)" style="flex:1"></select></div>
     <div id="progLock" class="warn" style="display:none"></div>
@@ -150,115 +128,67 @@ textarea{width:100%;min-height:150px;direction:rtl;font-size:13px}
 // ===== الاتصال =====
 const SB_URL='https://kltwxjplwpuefhjnemnq.supabase.co';
 const SB_KEY='sb_publishable_c2srueTIBH9emOH5nODFAQ_4zCFGSWX';
-const sb=supabase.createClient(SB_URL,SB_KEY);
-let groups=[],counts={},invites=[],prog=null,progLocked=false,progGroupId=null;
+// الرمز السري للأدمن: من الرابط، أو آخر رمز صحيح على هالجهاز
+const ADMIN_KEY=(function(){var k=new URLSearchParams(location.search).get('a')||'';try{if(!k)k=localStorage.getItem('ibada_admin_key')||'';}catch(e){}return k;})();
+async function rpc(fn,args){const r=await fetch(SB_URL+'/rest/v1/rpc/'+fn,{method:'POST',headers:{'apikey':SB_KEY,'Content-Type':'application/json'},body:JSON.stringify(Object.assign({p_key:ADMIN_KEY},args||{}))});if(!r.ok)throw new Error(await r.text());return r.json();}
+let groups=[],counts={},prog=null,progLocked=false,progGroupId=null;
 
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2600);}
 function showTab(i){document.querySelectorAll('.tab').forEach((b,j)=>b.classList.toggle('active',i===j));document.querySelectorAll('.panel').forEach((p,j)=>p.classList.toggle('active',i===j));}
 function girlLink(g){return new URL('girl.html?g='+encodeURIComponent(g.code),location.href).href;}
+function managerLink(g){return new URL('manager.html?k='+encodeURIComponent(g.manager_key),location.href).href;}
 function copyText(t){if(navigator.clipboard)navigator.clipboard.writeText(t).then(()=>toast('تم النسخ ✓'),()=>prompt('انسخي:',t));else prompt('انسخي:',t);}
 
-// ===== الدخول =====
-function authMsg(t,ok){const m=document.getElementById('authMsg');m.textContent=t||'';m.className='auth-msg'+(ok?' ok':'');}
-async function authSubmit(){
-  const email=document.getElementById('authEmail').value.trim(),password=document.getElementById('authPass').value;
-  if(!email||!password){authMsg('اكتبي الإيميل وكلمة السر');return;}
-  const {error}=await sb.auth.signInWithPassword({email,password});
-  if(error){authMsg(error.message.includes('Invalid login')?'الإيميل أو كلمة السر غلط':error.message);return;}
-  start();
-}
-async function signOut(){await sb.auth.signOut();location.reload();}
+// ===== البداية =====
 async function start(){
-  const {data:{user}}=await sb.auth.getUser();
-  if(!user){document.getElementById('authForm').style.display='block';return;}
-  const {data:staff}=await sb.from('staff').select('is_admin').eq('user_id',user.id).maybeSingle();
-  if(!staff||!staff.is_admin){authMsg('هاي الصفحة للأدمن بس');document.getElementById('authForm').style.display='none';const b=document.createElement('a');b.className='btn';b.href='manager.html';b.textContent='روحي لصفحة النتائج';document.querySelector('.auth-box').appendChild(b);return;}
+  const msg=document.getElementById('authMsg');
+  if(!ADMIN_KEY){msg.className='auth-msg';msg.textContent='الرابط ناقص — افتحي رابط الإعدادات الخاص فيكِ';return;}
+  try{await loadAll();}catch(e){console.error(e);msg.className='auth-msg';msg.textContent='الرابط غير صحيح';return;}
+  try{localStorage.setItem('ibada_admin_key',ADMIN_KEY);}catch(e){}
   document.getElementById('authOv').style.display='none';
-  document.getElementById('whoami').textContent=user.email;
-  await loadAll();
 }
 
 // ===== المجموعات =====
 async function loadAll(){
-  const [g,s,i]=await Promise.all([
-    sb.from('groups').select('id,name,code,created_at').order('created_at'),
-    sb.from('submissions').select('group_id'),
-    sb.from('staff_invites').select('email,is_admin,group_ids').order('email')
-  ]);
-  groups=g.data||[];invites=i.data||[];counts={};(s.data||[]).forEach(r=>counts[r.group_id]=(counts[r.group_id]||0)+1);
-  renderGroups();renderStaff();
+  groups=await rpc('admin_list');counts={};groups.forEach(g=>counts[g.id]=g.girls);
+  renderGroups();
   const sel=document.getElementById('progGroup');const keep=sel.value;
   sel.innerHTML=groups.map(x=>'<option value="'+x.id+'">'+esc(x.name)+'</option>').join('');
   document.getElementById('newGroupCopy').innerHTML='<option value="">برنامج فاضي</option>'+groups.map(x=>'<option value="'+x.id+'">نسخ برنامج '+esc(x.name)+'</option>').join('');
   if(groups.length){sel.value=groups.some(x=>x.id===keep)?keep:groups[0].id;loadProgram(sel.value);}
 }
 function renderGroups(){
-  document.getElementById('groupsList').innerHTML=groups.map(g=>{
-    const teachers=invites.filter(v=>v.group_ids.includes(g.id)&&!v.is_admin).map(v=>v.email);
-    return '<div class="card"><div class="row" style="justify-content:space-between"><h3 style="margin:0">'+esc(g.name)+'<span class="pill">'+(counts[g.id]||0)+' بنت</span></h3><span class="code">'+esc(g.code)+'</span></div>'
-    +'<div class="muted">الآنسات: '+(teachers.length?teachers.map(esc).join('، '):'— (الأدمن بس)')+'</div>'
-    +'<div class="row"><span class="code" style="flex:1;word-break:break-all">'+esc(girlLink(g))+'</span></div>'
-    +'<div class="row"><button class="btn small primary" onclick="copyText(\''+girlLink(g)+'\')">🔗 نسخ رابط البنات</button>'
-    +'<button class="btn small" onclick="renameGroup(\''+g.id+'\')">✏️ تغيير الاسم</button>'
-    +'<button class="btn small" onclick="showTab(2);document.getElementById(\'progGroup\').value=\''+g.id+'\';loadProgram(\''+g.id+'\')">🧩 البرنامج</button>'
-    +'<button class="btn small danger" onclick="deleteGroup(\''+g.id+'\')">🗑 حذف</button></div></div>';
-  }).join('')||'<div class="card muted">ما في مجموعات</div>';
+  document.getElementById('groupsList').innerHTML=groups.map(g=>
+    '<div class="card"><div class="row" style="justify-content:space-between"><h3 style="margin:0">'+esc(g.name)+'<span class="pill">'+(counts[g.id]||0)+' بنت</span></h3><span class="code">'+esc(g.code)+'</span></div>'
+    +'<div class="muted" style="margin-top:6px">👧 رابط البنات</div><div class="row"><span class="code" style="flex:1;word-break:break-all">'+esc(girlLink(g))+'</span><button class="btn small primary" onclick="copyText(\''+girlLink(g)+'\')">نسخ</button></div>'
+    +'<div class="muted">🌙 رابط الآنسة (النتائج) — سري</div><div class="row"><span class="code" style="flex:1;word-break:break-all">'+esc(managerLink(g))+'</span><button class="btn small primary" onclick="copyText(\''+managerLink(g)+'\')">نسخ</button><a class="btn small" href="'+managerLink(g)+'" target="_blank">فتح</a></div>'
+    +'<div class="row"><button class="btn small" onclick="renameGroup(\''+g.id+'\')">✏️ تغيير الاسم</button>'
+    +'<button class="btn small" onclick="showTab(1);document.getElementById(\'progGroup\').value=\''+g.id+'\';loadProgram(\''+g.id+'\')">🧩 البرنامج</button>'
+    +'<button class="btn small" onclick="rotateKey(\''+g.id+'\')">🔄 تغيير رابط الآنسة</button>'
+    +'<button class="btn small danger" onclick="deleteGroup(\''+g.id+'\')">🗑 حذف</button></div></div>'
+  ).join('')||'<div class="card muted">ما في مجموعات</div>';
 }
-function newCode(){return 'g'+Math.random().toString(36).slice(2,8);}
 async function createGroup(){
   const name=document.getElementById('newGroupName').value.trim();if(!name){toast('اكتبي اسم المجموعة');return;}
-  const copyId=document.getElementById('newGroupCopy').value;
-  let config={ROWS:[],IBADA_NOTES:{},GOAL_ITEMS:[],VARIABLE_BONUS_ROWS:[],EDITABLE_BASIC_ROWS:[],DHIKR_ROWS:[],howHtml:'',qiyamRow:-1,days:30,pdfs:{},goalNormalizeRows:[]};
-  if(copyId){const {data}=await sb.from('programs').select('config').eq('group_id',copyId).single();if(data)config=JSON.parse(JSON.stringify(data.config));}
-  const {data:g,error}=await sb.from('groups').insert({name,code:newCode()}).select().single();
-  if(error){toast('تعذر الإنشاء: '+error.message);return;}
-  const r=await sb.from('programs').insert({group_id:g.id,config});
-  if(r.error){toast('انعملت المجموعة بس البرنامج ما انحفظ');}
+  const copyId=document.getElementById('newGroupCopy').value||null;
+  try{await rpc('admin_create_group',{p_name:name,p_copy_from:copyId});}catch(e){toast('تعذر الإنشاء');return;}
   document.getElementById('newGroupName').value='';toast('تم إنشاء المجموعة ✓');loadAll();
 }
 async function renameGroup(id){
   const g=groups.find(x=>x.id===id);const name=prompt('الاسم الجديد:',g.name);if(!name||name===g.name)return;
-  const {error}=await sb.from('groups').update({name:name.trim()}).eq('id',id);
-  if(error)toast('تعذر التغيير');else{toast('تم ✓');loadAll();}
+  try{await rpc('admin_rename_group',{p_group:id,p_name:name.trim()});toast('تم ✓');loadAll();}catch(e){toast('تعذر التغيير');}
+}
+async function rotateKey(id){
+  const g=groups.find(x=>x.id===id);
+  if(!confirm('رابط الآنسة القديم لـ"'+g.name+'" رح يوقف يشتغل، ولازم تبعتيلها الرابط الجديد. متأكدة؟'))return;
+  try{await rpc('admin_rotate_manager_key',{p_group:id});toast('تم تغيير الرابط ✓ — انسخي الجديد');loadAll();}catch(e){toast('تعذر التغيير');}
 }
 async function deleteGroup(id){
   const g=groups.find(x=>x.id===id);
   const typed=prompt('حذف المجموعة بيحذف كل نتائج بناتها ('+(counts[id]||0)+' بنت) نهائياً.\nللتأكيد اكتبي اسم المجموعة: '+g.name);
   if(typed===null)return;if(typed.trim()!==g.name){toast('الاسم مش مطابق — ما انحذف إشي');return;}
-  const {error}=await sb.from('groups').delete().eq('id',id);
-  if(error)toast('تعذر الحذف');else{toast('تم الحذف');loadAll();}
-}
-
-// ===== الآنسات =====
-function groupChecks(prefix,selected){return groups.map(g=>'<label><input type="checkbox" data-g="'+g.id+'" class="'+prefix+'"'+(selected.includes(g.id)?' checked':'')+'> '+esc(g.name)+'</label>').join('');}
-function renderStaff(){
-  document.getElementById('newStaffGroups').innerHTML=groupChecks('ng',[]);
-  document.getElementById('staffList').innerHTML=invites.map((v,i)=>'<div class="card"><div class="row" style="justify-content:space-between"><span class="code" style="font-size:14px">'+esc(v.email)+'</span>'+(v.is_admin?'<span class="pill gold">أدمن</span>':'<span class="pill">آنسة</span>')+'</div>'
-    +(v.is_admin?'<div class="muted">الأدمن بتشوف كل المجموعات</div>':'<div class="checks" id="sg_'+i+'">'+groupChecks('sg',v.group_ids)+'</div>')
-    +'<div class="row">'+(v.is_admin?'':'<button class="btn small primary" onclick="saveStaff('+i+')">حفظ المجموعات</button>')+'<button class="btn small danger" onclick="removeStaff('+i+')">إزالة</button></div></div>').join('');
-}
-async function addStaff(){
-  const email=document.getElementById('newStaffEmail').value.trim().toLowerCase();if(!email||!email.includes('@')){toast('اكتبي إيميل صحيح');return;}
-  const isAdmin=document.getElementById('newStaffAdmin').checked;
-  const ids=isAdmin?groups.map(g=>g.id):[...document.querySelectorAll('#newStaffGroups .ng:checked')].map(c=>c.dataset.g);
-  if(!isAdmin&&!ids.length){toast('اختاري مجموعة وحدة على الأقل');return;}
-  const {error}=await sb.from('staff_invites').upsert({email,is_admin:isAdmin,group_ids:ids});
-  if(error){toast('تعذر الإضافة: '+error.message);return;}
-  document.getElementById('newStaffEmail').value='';document.getElementById('newStaffAdmin').checked=false;toast('تمت الإضافة ✓');loadAll();
-}
-async function saveStaff(i){
-  const ids=[...document.querySelectorAll('#sg_'+i+' .sg:checked')].map(c=>c.dataset.g);
-  const {error}=await sb.from('staff_invites').update({group_ids:ids}).eq('email',invites[i].email);
-  if(error)toast('تعذر الحفظ');else{toast('تم الحفظ ✓');loadAll();}
-}
-async function removeStaff(i){
-  const v=invites[i];
-  const {data:{user}}=await sb.auth.getUser();
-  if(user&&user.email.toLowerCase()===v.email.toLowerCase()){toast('ما بتقدري تزيلي حسابك إنتِ');return;}
-  if(!confirm('إزالة '+v.email+'؟ ما رح تقدر تشوف النتائج بعدها.'))return;
-  const {error}=await sb.from('staff_invites').delete().eq('email',v.email);
-  if(error)toast('تعذر الإزالة');else{toast('تمت الإزالة');loadAll();}
+  try{await rpc('admin_delete_group',{p_group:id});toast('تم الحذف');loadAll();}catch(e){toast('تعذر الحذف');}
 }
 
 // ===== بناء البرنامج =====
@@ -267,9 +197,9 @@ async function removeStaff(i){
 const AZKAR_NOTE='أول 3 خانات (الأذكار) بتنعرض كخانة وحدة بالجدول: ص / م / ن';
 async function loadProgram(gid){
   progGroupId=gid;
-  const {data,error}=await sb.from('programs').select('config').eq('group_id',gid).single();
-  if(error||!data){document.getElementById('progEditor').innerHTML='<div class="card">تعذر تحميل البرنامج</div>';return;}
-  prog=JSON.parse(JSON.stringify(data.config||{}));
+  const g=groups.find(x=>x.id===gid);
+  if(!g){document.getElementById('progEditor').innerHTML='<div class="card">تعذر تحميل البرنامج</div>';return;}
+  prog=JSON.parse(JSON.stringify(g.config||{}));
   prog.ROWS=prog.ROWS||[];prog.GOAL_ITEMS=prog.GOAL_ITEMS||[];prog.IBADA_NOTES=prog.IBADA_NOTES||{};
   ['VARIABLE_BONUS_ROWS','EDITABLE_BASIC_ROWS','DHIKR_ROWS','goalNormalizeRows'].forEach(k=>prog[k]=prog[k]||[]);
   if(prog.qiyamRow===undefined)prog.qiyamRow=-1;
@@ -428,12 +358,12 @@ async function saveProgram(){
   const errs=validate();if(errs.length){alert('صلّحي هدول قبل الحفظ:\n\n'+errs.join('\n'));return;}
   prog.howHtml=document.getElementById('howHtml').value;
   const btn=document.getElementById('saveProgBtn');btn.disabled=true;
-  const {error}=await sb.from('programs').update({config:prog,updated_at:new Date().toISOString()}).eq('group_id',progGroupId);
+  try{await rpc('admin_save_program',{p_group:progGroupId,p_config:prog});const g=groups.find(x=>x.id===progGroupId);if(g)g.config=JSON.parse(JSON.stringify(prog));toast('تم حفظ البرنامج ✓ — بيوصل للبنات لما يفتحوا الصفحة');}
+  catch(e){toast('تعذر الحفظ');}
   btn.disabled=false;
-  if(error)toast('تعذر الحفظ: '+error.message);else toast('تم حفظ البرنامج ✓ — بيوصل للبنات لما يفتحوا الصفحة');
 }
 
-(async()=>{const {data:{session}}=await sb.auth.getSession();if(session)start();else document.getElementById('authForm').style.display='block';})();
+start();
 </script>
 </body>
 </html>
