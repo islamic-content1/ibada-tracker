@@ -1,5 +1,5 @@
 // كاش بسيط للصفحات: الشبكة أولاً، والكاش احتياط لما ما في إنترنت
-const CACHE_VERSION = "ibadah-app-2026.10.28.8";
+const CACHE_VERSION = "ibadah-app-2026.10.28.9";
 
 self.addEventListener("install", event => { self.skipWaiting(); });
 

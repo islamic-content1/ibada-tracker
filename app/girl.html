@@ -308,19 +308,15 @@ html[data-mode="dark"][data-theme="blue"]{--done-bg:#36434f;--done-border:#6f98b
 html[data-mode="dark"][data-theme="purple"]{--done-bg:#403a4d;--done-border:#9a82bd;--done-text:#eee6fa;--primary-light:#3c3846}
 html[data-mode="dark"][data-theme="beige"]{--done-bg:#48413a;--done-border:#a89277;--done-text:#f3ebe0;--primary-light:#413c37}
 </style>
-<link rel="manifest" id="appManifest" href="">
+<link rel="manifest" id="appManifest" href="https://kltwxjplwpuefhjnemnq.supabase.co/functions/v1/manifest?t=g">
 <script>
-// ملف التثبيت بيتعمل من الرابط الحالي، فالتطبيق المضاف بيفتح على نفس المجموعة
+// ملف التثبيت حسب الرابط الحالي (كود المجموعة / رمز الآنسة)
 (function(){
   var q=new URLSearchParams(location.search),v=q.get('g');
   try{if(!v)v=localStorage.getItem('ibada_group_code')||'';}catch(e){}
-  var base=location.href.split('?')[0].split('#')[0];
-  var start=base+(v?'?g='+encodeURIComponent(v):'');
-  if(q.get('sid'))start+=(v?'&':'?')+'sid='+encodeURIComponent(q.get('sid'));
-  var dir=base.slice(0,base.lastIndexOf('/')+1);
-  var icons=[{src:"icon.png",sizes:"192x192",type:"image/png"}].map(function(i){return {src:dir+i.src,sizes:i.sizes,type:i.type};});
-  var m={name:"برنامج عبادة",short_name:"عبادة",start_url:start,scope:dir,display:"standalone",background_color:"#fdfaf5",theme_color:"#1a6b3c",lang:"ar",dir:"rtl",icons:icons};
-  document.getElementById('appManifest').href='data:application/manifest+json;charset=utf-8,'+encodeURIComponent(JSON.stringify(m));
+  var u='https://kltwxjplwpuefhjnemnq.supabase.co/functions/v1/manifest?t=g&v='+encodeURIComponent(v||'');
+  if(q.get('sid'))u+='&sid='+encodeURIComponent(q.get('sid'));
+  document.getElementById('appManifest').href=u;
 })();
 </script>
 
