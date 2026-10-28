@@ -8,6 +8,18 @@
 <meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>برنامج عبادة</title>
+<script>
+// ملف التثبيت حسب الرابط الحالي (كود المجموعة / رمز الآنسة)
+(function(){
+  var q=new URLSearchParams(location.search),v=q.get('g');
+  try{if(!v)v=localStorage.getItem('ibada_group_code')||'';}catch(e){}
+  if(!v)return;
+  var u='https://kltwxjplwpuefhjnemnq.supabase.co/functions/v1/manifest?t=g&v='+encodeURIComponent(v);
+  if(q.get('sid'))u+='&sid='+encodeURIComponent(q.get('sid'));
+  var l=document.createElement('link');l.rel='manifest';l.href=u;document.head.appendChild(l);
+})();
+</script>
+
 <style>
 /* ===== الخط: Tufuli للكتابة، والأرقام من Tajawal (أرقام Tufuli بالنسخة التجريبية مش شغالة) ===== */
 @font-face{font-family:'Tufuli';src:url(files/fonts/tufuli-regular.woff2) format('woff2');font-weight:100 500;font-display:swap}
@@ -308,18 +320,6 @@ html[data-mode="dark"][data-theme="blue"]{--done-bg:#36434f;--done-border:#6f98b
 html[data-mode="dark"][data-theme="purple"]{--done-bg:#403a4d;--done-border:#9a82bd;--done-text:#eee6fa;--primary-light:#3c3846}
 html[data-mode="dark"][data-theme="beige"]{--done-bg:#48413a;--done-border:#a89277;--done-text:#f3ebe0;--primary-light:#413c37}
 </style>
-<link rel="manifest" id="appManifest" href="https://kltwxjplwpuefhjnemnq.supabase.co/functions/v1/manifest?t=g">
-<script>
-// ملف التثبيت حسب الرابط الحالي (كود المجموعة / رمز الآنسة)
-(function(){
-  var q=new URLSearchParams(location.search),v=q.get('g');
-  try{if(!v)v=localStorage.getItem('ibada_group_code')||'';}catch(e){}
-  var u='https://kltwxjplwpuefhjnemnq.supabase.co/functions/v1/manifest?t=g&v='+encodeURIComponent(v||'');
-  if(q.get('sid'))u+='&sid='+encodeURIComponent(q.get('sid'));
-  document.getElementById('appManifest').href=u;
-})();
-</script>
-
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -1020,7 +1020,7 @@ async function tryRestore(){
 }
 async function boot(){
   const msg=document.getElementById('bootMsg');
-  if(!GROUP_CODE){msg.textContent='الرابط ناقص — تأكدي من رابط مجموعتك';return;}
+  if(!GROUP_CODE){msg.innerHTML='<div>الرابط ناقص — افتحي رابط مجموعتك</div>'+'<div style="margin-top:14px;text-align:center"><div style="font-size:14px;color:var(--mu);margin-bottom:8px">الصقي الرابط الكامل هون مرة وحدة، وبينحفظ:</div><input id="pasteLink" type="text" inputmode="url" placeholder="https://..." style="width:100%;max-width:320px;padding:10px 12px;border:1px solid var(--bd);border-radius:10px;font-size:16px;direction:ltr;text-align:left;background:var(--sf);color:var(--tx)"><br><button type="button" onclick="usePastedLink(\'g\',\'ibada_group_code\')" style="margin-top:8px;padding:10px 22px;border:none;border-radius:10px;background:#1a6b3c;color:#fff;font-size:15px;font-weight:700;cursor:pointer">فتح</button></div>';return;}
   try{
     const res=await rpc('get_program',{p_code:GROUP_CODE});
     if(!res||!res.config){msg.textContent='رابط المجموعة غير صحيح';return;}
@@ -1087,5 +1087,15 @@ boot();
 })();
 </script>
 
+<script>
+// لصق الرابط: بناخد الكود منه وبنحفظه بتخزين هالتطبيق
+function usePastedLink(param,store){
+  var t=(document.getElementById('pasteLink').value||'').trim(),v='';
+  try{v=new URL(t).searchParams.get(param)||'';}catch(e){v=/^[A-Za-z0-9_-]+$/.test(t)?t:'';}
+  if(!v){alert('الرابط مش صحيح، انسخيه كامل');return;}
+  try{localStorage.setItem(store,v);}catch(e){}
+  location.replace(location.pathname+'?'+param+'='+encodeURIComponent(v));
+}
+</script>
 </body>
 </html>

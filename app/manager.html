@@ -4,6 +4,18 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>نتائج برنامج عبادة</title>
+<script>
+// ملف التثبيت حسب الرابط الحالي (كود المجموعة / رمز الآنسة)
+(function(){
+  var q=new URLSearchParams(location.search),v=q.get('k');
+  try{if(!v)v=localStorage.getItem('ibada_manager_key')||'';}catch(e){}
+  if(!v)return;
+  var u='https://kltwxjplwpuefhjnemnq.supabase.co/functions/v1/manifest?t=m&v='+encodeURIComponent(v);
+  if(q.get('sid'))u+='&sid='+encodeURIComponent(q.get('sid'));
+  var l=document.createElement('link');l.rel='manifest';l.href=u;document.head.appendChild(l);
+})();
+</script>
+
 <style>
 /* ===== الخط: Tufuli للكتابة، والأرقام من Tajawal (أرقام Tufuli بالنسخة التجريبية مش شغالة) ===== */
 @font-face{font-family:'Tufuli';src:url(files/fonts/tufuli-regular.woff2) format('woff2');font-weight:100 500;font-display:swap}
@@ -307,18 +319,6 @@ html[data-mode="dark"] .chip{color:#d8b45c}
 html[data-mode="dark"] .admin-del,html[data-mode="dark"] .pairs-clear{border-color:#5a3532}
 html[data-mode="dark"] #toast{background:#e8ebe9;color:#17191b}
 </style>
-<link rel="manifest" id="appManifest" href="https://kltwxjplwpuefhjnemnq.supabase.co/functions/v1/manifest?t=m">
-<script>
-// ملف التثبيت حسب الرابط الحالي (كود المجموعة / رمز الآنسة)
-(function(){
-  var q=new URLSearchParams(location.search),v=q.get('k');
-  try{if(!v)v=localStorage.getItem('ibada_manager_key')||'';}catch(e){}
-  var u='https://kltwxjplwpuefhjnemnq.supabase.co/functions/v1/manifest?t=m&v='+encodeURIComponent(v||'');
-  if(q.get('sid'))u+='&sid='+encodeURIComponent(q.get('sid'));
-  document.getElementById('appManifest').href=u;
-})();
-</script>
-
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -1116,10 +1116,20 @@ function applyConfig(res){
 loadAppearance();
 (async()=>{
   const msg=document.getElementById('authMsg');
-  if(!MGR_KEY){msg.className='auth-msg';msg.textContent='الرابط ناقص — افتحي رابط الآنسة الخاص بمجموعتك';return;}
+  if(!MGR_KEY){msg.className='auth-msg';msg.innerHTML='<div>الرابط ناقص — افتحي رابط الآنسة الخاص بمجموعتك</div>'+'<div style="margin-top:14px;text-align:center"><div style="font-size:14px;color:var(--mu);margin-bottom:8px">الصقي الرابط الكامل هون مرة وحدة، وبينحفظ:</div><input id="pasteLink" type="text" inputmode="url" placeholder="https://..." style="width:100%;max-width:320px;padding:10px 12px;border:1px solid var(--bd);border-radius:10px;font-size:16px;direction:ltr;text-align:left;background:var(--sf);color:var(--tx)"><br><button type="button" onclick="usePastedLink(\'k\',\'ibada_manager_key\')" style="margin-top:8px;padding:10px 22px;border:none;border-radius:10px;background:#1a6b3c;color:#fff;font-size:15px;font-weight:700;cursor:pointer">فتح</button></div>';return;}
   await loadData();
   if(!configLoaded){msg.className='auth-msg';msg.textContent='الرابط غير صحيح أو تم تغييره — اطلبي الرابط الجديد';}
 })();
+</script>
+<script>
+// لصق الرابط: بناخد الكود منه وبنحفظه بتخزين هالتطبيق
+function usePastedLink(param,store){
+  var t=(document.getElementById('pasteLink').value||'').trim(),v='';
+  try{v=new URL(t).searchParams.get(param)||'';}catch(e){v=/^[A-Za-z0-9_-]+$/.test(t)?t:'';}
+  if(!v){alert('الرابط مش صحيح، انسخيه كامل');return;}
+  try{localStorage.setItem(store,v);}catch(e){}
+  location.replace(location.pathname+'?'+param+'='+encodeURIComponent(v));
+}
 </script>
 <script>if('serviceWorker' in navigator)navigator.serviceWorker.register('./service-worker.js').catch(function(){});</script>
 </body>
