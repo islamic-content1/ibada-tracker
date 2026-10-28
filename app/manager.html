@@ -1121,5 +1121,6 @@ loadAppearance();
   if(!configLoaded){msg.className='auth-msg';msg.textContent='الرابط غير صحيح أو تم تغييره — اطلبي الرابط الجديد';}
 })();
 </script>
+<script>if('serviceWorker' in navigator)navigator.serviceWorker.register('./service-worker.js').catch(function(){});</script>
 </body>
 </html>
