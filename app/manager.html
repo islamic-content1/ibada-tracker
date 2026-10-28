@@ -307,7 +307,22 @@ html[data-mode="dark"] .chip{color:#d8b45c}
 html[data-mode="dark"] .admin-del,html[data-mode="dark"] .pairs-clear{border-color:#5a3532}
 html[data-mode="dark"] #toast{background:#e8ebe9;color:#17191b}
 </style>
-<link rel="manifest" href="manager-manifest.json">
+<link rel="manifest" id="appManifest" href="">
+<script>
+// ملف التثبيت بيتعمل من الرابط الحالي، فالتطبيق المضاف بيفتح على نفس المجموعة
+(function(){
+  var q=new URLSearchParams(location.search),v=q.get('k');
+  try{if(!v)v=localStorage.getItem('ibada_manager_key')||'';}catch(e){}
+  var base=location.href.split('?')[0].split('#')[0];
+  var start=base+(v?'?k='+encodeURIComponent(v):'');
+  if(q.get('sid'))start+=(v?'&':'?')+'sid='+encodeURIComponent(q.get('sid'));
+  var dir=base.slice(0,base.lastIndexOf('/')+1);
+  var icons=[{src:"manager-icon-192.png",sizes:"192x192",type:"image/png"},{src:"manager-icon-512.png",sizes:"512x512",type:"image/png"}].map(function(i){return {src:dir+i.src,sizes:i.sizes,type:i.type};});
+  var m={name:"نتائج برنامج عبادة",short_name:"النتائج",start_url:start,scope:dir,display:"standalone",background_color:"#f0f7f0",theme_color:"#1a6b3c",lang:"ar",dir:"rtl",icons:icons};
+  document.getElementById('appManifest').href='data:application/manifest+json;charset=utf-8,'+encodeURIComponent(JSON.stringify(m));
+})();
+</script>
+
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
