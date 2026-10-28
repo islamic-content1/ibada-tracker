@@ -8,8 +8,16 @@
 <meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>برنامج عبادة</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* ===== الخط: Tufuli للكتابة، والأرقام من Tajawal (أرقام Tufuli بالنسخة التجريبية مش شغالة) ===== */
+@font-face{font-family:'Tufuli';src:url(files/fonts/tufuli-regular.woff2) format('woff2');font-weight:100 500;font-display:swap}
+@font-face{font-family:'Tufuli';src:url(files/fonts/tufuli-bold.woff2) format('woff2');font-weight:600 900;font-display:swap}
+@font-face{font-family:'TajDigits';src:url(files/fonts/tajawal-digits-latin-500.woff2) format('woff2');font-weight:100 500;unicode-range:U+0025,U+002C,U+002E,U+0030-0039}
+@font-face{font-family:'TajDigits';src:url(files/fonts/tajawal-digits-latin-700.woff2) format('woff2');font-weight:600 900;unicode-range:U+0025,U+002C,U+002E,U+0030-0039}
+@font-face{font-family:'TajDigits';src:url(files/fonts/tajawal-digits-arabic-500.woff2) format('woff2');font-weight:100 500;unicode-range:U+0660-0669}
+@font-face{font-family:'TajDigits';src:url(files/fonts/tajawal-digits-arabic-700.woff2) format('woff2');font-weight:600 900;unicode-range:U+0660-0669}
+</style>
+<link rel="preload" href="files/fonts/tufuli-regular.woff2" as="font" type="font/woff2" crossorigin>
 <style>
 /* ===== الألوان الأساسية ===== */
 :root{
@@ -23,9 +31,9 @@
   --sh:0 1px 3px rgba(60,45,20,.06),0 1px 2px rgba(60,45,20,.04);
   --r:14px;
 }
-*{box-sizing:border-box;margin:0;padding:0;font-family:'Amiri',serif!important}
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Tufuli','TajDigits',sans-serif!important}
 html,body{overflow-x:hidden;width:100%;background:var(--bg);min-height:100%}
-button,input,textarea,select,table,thead,tbody,tr,th,td,a,span,div,p,label{font-family:'Amiri',serif!important;}
+button,input,textarea,select,table,thead,tbody,tr,th,td,a,span,div,p,label{font-family:'Tufuli','TajDigits',sans-serif!important;}
 body{background:var(--bg);color:var(--tx);padding:1.2rem .8rem 3rem;max-width:760px;margin:0 auto;line-height:1.55}
 
 /* ===== الهيدر ===== */
@@ -310,10 +318,10 @@ html[data-mode="dark"][data-theme="beige"]{--done-bg:#48413a;--done-border:#a892
 <link rel="apple-touch-icon" href="icon.png">
 
 <style>
-.update-toast{position:fixed;left:12px;right:12px;bottom:16px;z-index:99999;background:#0f4a28;color:#fff;border-radius:14px;padding:12px 14px;box-shadow:0 6px 24px rgba(0,0,0,.25);display:none;align-items:center;gap:10px;justify-content:space-between;font-family:'Amiri',serif!important}
+.update-toast{position:fixed;left:12px;right:12px;bottom:16px;z-index:99999;background:#0f4a28;color:#fff;border-radius:14px;padding:12px 14px;box-shadow:0 6px 24px rgba(0,0,0,.25);display:none;align-items:center;gap:10px;justify-content:space-between;font-family:'Tufuli','TajDigits',sans-serif!important}
 .update-toast.show{display:flex}
 .update-toast span{font-size:13px;font-weight:700;line-height:1.6}
-.update-toast button{background:#fff;color:#0f4a28;border:none;border-radius:9px;padding:7px 14px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Amiri',serif!important;white-space:nowrap}
+.update-toast button{background:#fff;color:#0f4a28;border:none;border-radius:9px;padding:7px 14px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Tufuli','TajDigits',sans-serif!important;white-space:nowrap}
 </style>
 <script>
 window.APP_VERSION = "2026.10.05.1";
