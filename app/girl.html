@@ -278,6 +278,22 @@ html[data-mode="dark"] .day-page-btn.active,html[data-mode="dark"] .counter-val,
 html[data-mode="dark"] .journey-quote span{color:var(--done-text)}
 html[data-mode="dark"] .nr input::placeholder{color:#8f887c}
 html[data-mode="dark"] #toast{background:#f5f1e8;color:#2c3036}
+/* ===== جمل الهيدر ===== */
+.hdr{padding:.9rem .8rem .75rem}
+.hdr .bsm{margin-bottom:0}
+.hdr p{margin-top:6px}
+.q-wrap{position:relative;display:flex;direction:ltr;align-items:center;gap:2px;max-width:420px;margin:4px auto 0}
+.q-car{flex:1;overflow:hidden;touch-action:pan-y;cursor:grab;user-select:none;-webkit-user-select:none}
+.q-track{display:flex;direction:ltr;transition:transform .38s cubic-bezier(.22,.8,.3,1);will-change:transform}
+.q-slide{flex:0 0 100%;height:74px;display:flex;align-items:center;justify-content:center;padding:0 4px}
+.q-slide img{max-width:100%;max-height:100%;object-fit:contain;pointer-events:none;-webkit-user-drag:none}
+html[data-mode="dark"] .q-slide img{filter:invert(1) hue-rotate(180deg) brightness(1.05) saturate(.8)}
+.q-arr{flex:0 0 26px;height:26px;border-radius:50%;border:1px solid var(--bd2);background:var(--soft);color:var(--mu);font-size:17px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0 0 2px;opacity:.75}
+.q-arr:hover{opacity:1}
+.q-dots{display:flex;justify-content:center;gap:6px;margin-top:6px;direction:ltr}
+.q-dot{width:6px;height:6px;border-radius:50%;background:var(--bd);border:none;padding:0;cursor:pointer;transition:all .25s}
+.q-dot.on{width:16px;border-radius:4px;background:var(--gold)}
+@media(min-width:520px){.q-slide{height:88px}}
 </style>
 <link rel="manifest" href="manifest.json?v=2026.10.05.1">
 <meta name="mobile-web-app-capable" content="yes">
@@ -302,7 +318,12 @@ window.APP_VERSION = "2026.10.05.1";
 <div id="bootMsg" style="position:fixed;inset:0;z-index:9999;background:var(--bg);display:flex;align-items:center;justify-content:center;text-align:center;padding:24px;font-size:18px;color:var(--mu)">جاري تحميل البرنامج...</div>
 <div class="hdr">
   <div class="bsm">بسم الله الرحمن الرحيم</div>
-  <img class="hdr-art" src="files/header-calligraphy.webp" alt="الدنيا مزرعة الآخرة" style="width:70%;max-width:320px;display:block;margin:8px auto 0">
+  <div class="q-wrap">
+    <button type="button" class="q-arr q-prev" onclick="quoteStep(-1)" aria-label="الجملة السابقة">‹</button>
+    <div class="q-car" id="qCar"><div class="q-track" id="qTrack"></div></div>
+    <button type="button" class="q-arr q-next" onclick="quoteStep(1)" aria-label="الجملة التالية">›</button>
+  </div>
+  <div class="q-dots" id="qDots"></div>
   <p>كبسة = عملته ✓ &nbsp;|&nbsp; كبستين = ما عملته ✗ &nbsp;|&nbsp; ثلاث = إلغاء</p>
 </div>
 <div class="how-box">
@@ -429,7 +450,7 @@ const sk=(r,d)=>r+'-'+d;
 
 
 function visibleDays(){const start=dayPage*10+1;return Array.from({length:10},(_,i)=>start+i);}
-function setDayPage(page){dayPage=Math.max(0,Math.min(2,Number(page)||0));document.querySelectorAll('#dayPages .day-page-btn').forEach((b,i)=>b.classList.toggle('active',i===dayPage));build();recalc();}
+function setDayPage(page){dayPage=Math.max(0,Math.min(2,Number(page)||0));try{_ls.setItem(DAYPAGE_KEY,String(dayPage));}catch(e){}document.querySelectorAll('#dayPages .day-page-btn').forEach((b,i)=>b.classList.toggle('active',i===dayPage));build();recalc();}
 function updateThemeColor(){
   const mode=document.documentElement.dataset.mode==='dark'?'dark':'light';
   const theme=document.documentElement.dataset.theme||'green';
@@ -909,6 +930,44 @@ function openReport(){
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);}
 document.getElementById('userName').addEventListener('input',save);
 // ===== التشغيل =====
+// ===== جمل الهيدر =====
+const QUOTES=[
+  {src:'files/quotes/q1.webp',alt:'عز المرء تقواه'},
+  {src:'files/quotes/q2.webp',alt:'أطاع هواه حتى أضاع هداه'},
+  {src:'files/quotes/q3.webp',alt:'إلا من أتى الله بقلب سليم'},
+  {src:'files/quotes/q4.webp',alt:'والآخرة خير وأبقى'},
+  {src:'files/quotes/q5.webp',alt:'فاستقم كما أمرت'},
+  {src:'files/quotes/q6.webp',alt:'سر الصلاح صلاح السر'},
+];
+const QUOTE_KEY='ibada_quote_v1',DAYPAGE_KEY='ibada_daypage_v1';
+let quoteIdx=0;
+function initQuotes(){
+  try{const q=parseInt(_ls.getItem(QUOTE_KEY),10);if(q>=0&&q<QUOTES.length)quoteIdx=q;}catch(e){}
+  const track=document.getElementById('qTrack'),dots=document.getElementById('qDots');
+  // الجملة المختارة بتنزل أول، والباقي بعد ما تفتح الصفحة
+  track.innerHTML=QUOTES.map((q,i)=>'<div class="q-slide"><img alt="'+q.alt+'" '+(i===quoteIdx?'src':'data-src')+'="'+q.src+'" draggable="false"></div>').join('');
+  dots.innerHTML=QUOTES.map((q,i)=>'<button type="button" class="q-dot" aria-label="'+q.alt+'" onclick="setQuote('+i+')"></button>').join('');
+  setQuote(quoteIdx);
+  setTimeout(()=>track.querySelectorAll('img[data-src]').forEach(im=>{im.src=im.dataset.src;im.removeAttribute('data-src');}),600);
+  // السحب باللمس أو الماوس
+  const car=document.getElementById('qCar');let x0=null,dx=0;
+  const start=x=>{x0=x;dx=0;track.style.transition='none';};
+  const move=x=>{if(x0===null)return;dx=x-x0;track.style.transform='translateX(calc('+(-quoteIdx*100)+'% + '+dx+'px))';};
+  const end=()=>{if(x0===null)return;track.style.transition='';const w=car.clientWidth||300;if(Math.abs(dx)>w*0.18)quoteStep(dx<0?1:-1);else setQuote(quoteIdx);x0=null;};
+  car.addEventListener('touchstart',e=>start(e.touches[0].clientX),{passive:true});
+  car.addEventListener('touchmove',e=>move(e.touches[0].clientX),{passive:true});
+  car.addEventListener('touchend',end);
+  car.addEventListener('mousedown',e=>{e.preventDefault();start(e.clientX);});
+  window.addEventListener('mousemove',e=>move(e.clientX));
+  window.addEventListener('mouseup',end);
+}
+function setQuote(i){
+  quoteIdx=(i+QUOTES.length)%QUOTES.length;
+  document.getElementById('qTrack').style.transform='translateX('+(-quoteIdx*100)+'%)';
+  document.querySelectorAll('#qDots .q-dot').forEach((d,j)=>d.classList.toggle('on',j===quoteIdx));
+  try{_ls.setItem(QUOTE_KEY,String(quoteIdx));}catch(e){}
+}
+function quoteStep(d){setQuote(quoteIdx+d);}
 function applyConfig(cfg){
   ROWS=cfg.ROWS||[];IBADA_NOTES=cfg.IBADA_NOTES||{};GOAL_ITEMS=cfg.GOAL_ITEMS||[];
   VARIABLE_BONUS_ROWS=new Set(cfg.VARIABLE_BONUS_ROWS||[]);EDITABLE_BASIC_ROWS=new Set(cfg.EDITABLE_BASIC_ROWS||[]);DHIKR_ROWS=new Set(cfg.DHIKR_ROWS||[]);
@@ -938,7 +997,10 @@ async function boot(){
     applyConfig(res.config);
     try{localStorage.setItem('ibada_group_code',GROUP_CODE);}catch(e){}
   }catch(e){console.error(e);msg.textContent='تعذر تحميل البرنامج، تحققي من الإنترنت وأعيدي المحاولة';return;}
-  load();loadAppearance();build();buildGoalsSection();
+  load();loadAppearance();
+  // آخر فترة أيام فتحتها البنت
+  try{const dp=parseInt(_ls.getItem(DAYPAGE_KEY),10);if(dp>=0&&dp<=2){dayPage=dp;document.querySelectorAll('#dayPages .day-page-btn').forEach((b,i)=>b.classList.toggle('active',i===dayPage));}}catch(e){}
+  build();buildGoalsSection();initQuotes();
   msg.remove();
   tryRestore();
   document.getElementById('userName').addEventListener('change',tryRestore);
