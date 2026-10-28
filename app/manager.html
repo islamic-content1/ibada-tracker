@@ -338,29 +338,63 @@ td.cc,.manager-detail-table td.cat{writing-mode:horizontal-tb!important;max-widt
 html,body,*{scrollbar-width:none;-ms-overflow-style:none}
 ::-webkit-scrollbar{display:none!important;width:0!important;height:0!important}
 </style>
+<style>
+/* ===== تحسينات الشكل ===== */
+body{font-size:15px}
+.hdr{padding:.75rem 1rem .7rem!important;margin-bottom:.7rem!important}
+.hdr h1{font-size:21px!important}
+.hdr .bsm{margin-bottom:0!important;font-size:13.5px!important}
+.group-bar{position:relative;gap:6px!important;padding:8px!important;margin-bottom:8px!important}
+.gb-icon{width:36px;height:34px;border-radius:9px;border:1px solid var(--bd);background:var(--soft);color:var(--tx);font-size:17px;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0}
+.gb-icon.spin{animation:mxspin .8s linear infinite}
+@keyframes mxspin{to{transform:rotate(360deg)}}
+.mx-menu{display:none;position:absolute;top:calc(100% + 6px);left:8px;z-index:1000;background:var(--sf);border:1px solid var(--bd);border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.12);padding:6px;min-width:200px}
+.mx-menu.open{display:block}
+.mx-menu button{display:block;width:100%;text-align:right;padding:10px 12px;border:none;background:none;color:var(--tx);font-size:14.5px;border-radius:8px;cursor:pointer}
+.mx-menu button:hover{background:var(--soft)}
+.mx-sub{width:100%;display:flex;gap:8px;align-items:center;justify-content:space-between;font-size:12px;color:var(--mu);padding:2px 2px 0}
+.mx-search{display:flex;align-items:center;gap:6px;background:var(--sf);border:1px solid var(--bd);border-radius:12px;padding:0 12px;margin-bottom:10px}
+.mx-search input{flex:1;border:none;background:none;padding:11px 0;font-size:15px;color:var(--tx);outline:none}
+.mx-search button{border:none;background:none;color:var(--mu);font-size:16px;cursor:pointer;display:none}
+.mx-hide{display:none!important}
+.stats{margin-bottom:10px!important}
+.sl{font-size:12.5px!important}
+.rmeta,.full-rank-meta{font-size:12.5px!important}
+.rname,.full-rank-name{font-size:15.5px!important}
+.gc-name{font-size:16px!important}
+.gc-last{font-size:11.5px;font-weight:400;color:var(--mu);margin-top:2px}
+.gc-last.old{color:#b4483c}
+</style>
 </head>
 <body>
 <div id="authOv" class="auth-ov"><div class="auth-box">
   <h2>🌙 النتائج</h2>
   <div id="authMsg" class="auth-msg ok">جاري التحميل...</div>
 </div></div>
-<div class="hdr"><div class="bsm">بسم الله الرحمن الرحيم</div><h1>🌙 النتائج</h1><p>أداء البنات في برنامج العبادة</p></div>
+<div class="hdr"><div class="bsm">بسم الله الرحمن الرحيم</div><h1>🌙 النتائج</h1></div>
 <div class="how-box">
   <button class="how-hdr" onclick="togglePanel('managerHowBody',this)"><span>كيف تُحسب النقاط؟</span><span>▼</span></button>
   <div class="how-body" id="managerHowBody"></div>
 </div>
 <div class="group-bar" id="groupBar" style="display:none">
-  <b id="groupName" style="flex:1;color:var(--gD);font-size:15px"></b>
+  <b id="groupName" style="flex:1;color:var(--gD);font-size:16px"></b>
   <button class="gb-btn" type="button" onclick="copyGirlLink()">🔗 رابط البنات</button>
+  <button class="gb-icon" id="refreshBtn" type="button" onclick="loadData()" title="تحديث النتائج">↻</button>
+  <button class="gb-icon" type="button" onclick="toggleMenu(event)" title="المزيد">⋯</button>
+  <div class="mx-menu" id="mxMenu">
+    <button type="button" onclick="closeMenu();togglePairsPanel()">👭 مجموع الثنائيات</button>
+    <button type="button" onclick="closeMenu();toggleAdminPanel()">⚙️ إدارة البنات</button>
+    <button type="button" onclick="closeMenu();exportExcel()">⬇ تحميل Excel</button>
+    <button type="button" id="modeBtn" onclick="closeMenu();toggleMode()">🌙 الوضع الليلي</button>
+  </div>
+  <div class="mx-sub"><span id="lastUp"></span></div>
 </div>
+<div class="mx-search"><span>🔍</span><input id="girlSearch" type="search" placeholder="ابحثي عن بنت بالاسم..." oninput="applySearch()"><button type="button" id="searchClear" onclick="clearSearch()">✕</button></div>
 <div class="stats">
-  <div class="sc"><div class="sv" id="stTotal">0</div><div class="sl">عدد البنات</div></div>
-  <div class="sc"><div class="sv" id="stTop">—</div><div class="sl">أعلى مجموع</div></div>
-  <div class="sc"><div class="sv" id="stAvg">—</div><div class="sl">متوسط المجموعة</div></div>
+  <div class="sc"><div class="sv" id="stTotal">0</div><div class="sl" id="slTotal">عدد البنات</div></div>
+  <div class="sc"><div class="sv" id="stTop">—</div><div class="sl" id="slTop">أعلى مجموع</div></div>
+  <div class="sc"><div class="sv" id="stAvg">—</div><div class="sl" id="slAvg">متوسط المجموعة</div></div>
 </div>
-<div class="btns"><button class="btn btn-r" id="refreshBtn" onclick="loadData()">↻ تحديث النتائج</button><button class="btn btn-pairs" onclick="togglePairsPanel()">👭 مجموع الثنائيات</button><button class="btn btn-admin" onclick="toggleAdminPanel()">⚙️ إدارة</button><button class="btn btn-x" onclick="exportExcel()">⬇ Excel</button></div>
-<div class="last-up" id="lastUp"></div>
-<div class="appearance-bar"><button class="appearance-btn" id="modeBtn" type="button" onclick="toggleMode()">🌙 الوضع الليلي</button></div>
 <div class="admin-panel" id="adminPanel">
   <div class="admin-panel-title">⚙️ إدارة البنات</div>
   <select id="adminGirlSelect"><option value="">اختاري اسم البنت...</option></select>
@@ -564,7 +598,7 @@ function migrateManagerState(rawState){
 
 async function loadData(){
   const btn=document.getElementById('refreshBtn');
-  btn.textContent='جاري التحميل...';
+  btn.classList.add('spin');
   btn.classList.add('loading');
   btn.disabled=true;
   try{
@@ -584,6 +618,7 @@ async function loadData(){
         counter:Number(p.counter||0),
         personalGoals:p.personalGoals||{},
         lastUpdate:r.updated_at?new Date(r.updated_at).toLocaleString('ar'):'',
+        updatedAt:r.updated_at||null,
       };
       // نحسب من state لضمان توافق النقاط
       girl.grand=calculatedGrand(girl);
@@ -591,7 +626,7 @@ async function loadData(){
       return girl;
     });
 
-    document.getElementById('lastUp').textContent='آخر تحديث: '+new Date().toLocaleTimeString('ar');
+    document.getElementById('lastUp').textContent='آخر تحديث للصفحة: '+new Date().toLocaleTimeString('ar');
     render();
     populateAdminSelect();
     buildPairGroups();
@@ -600,7 +635,7 @@ async function loadData(){
     console.error(e);
     showToast('خطأ في التحميل');
   }finally{
-    btn.textContent='↻ تحديث النتائج';
+    btn.classList.remove('spin');
     btn.classList.remove('loading');
     btn.disabled=false;
   }
@@ -662,25 +697,26 @@ function renderPeriodPage(period,sorted,maxG){
   const avgPts=active.length?Math.round(active.reduce((s,x)=>s+x.points,0)/active.length):0;
   const avgPct=active.length?Math.round(active.reduce((s,x)=>s+(x.pct||0),0)/active.length):0;
   let html='';
-  html+='<div class="period-stats"><div class="period-stat"><strong>'+active.length+'</strong><span>بنات لديهن بيانات</span></div><div class="period-stat"><strong>'+avgPts+'</strong><span>متوسط النقاط</span></div><div class="period-stat"><strong>'+avgPct+'%</strong><span>متوسط المعدل</span></div></div>';
   html+=renderPeriodChart(start,end);
   html+=renderPeriodRank(start,end);
   html+='<button class="period-groups-btn" onclick="openPeriodGroups('+period+')">إدارة جروبات الأيام '+start+'–'+end+'</button>';
   html+='<div class="period-girl-title">تفاصيل البنات — الأيام '+start+'–'+end+'</div>';
-  girlsData.forEach((g,gi)=>{managerDayPages[gi]=period;html+=girlCard(g,gi,sorted,maxG);});
+  // نفس ترتيب قائمة الفترة: اللي إلها بيانات أول حسب النقاط، وبعدها اللي ما سجلت بهالفترة
+  const order=girlsData.map((g,gi)=>({g,gi,...periodMetrics(g,start,end)})).sort((a,b)=>(b.daysWithData>0)-(a.daysWithData>0)||b.points-a.points||(b.pct||0)-(a.pct||0));
+  let rk=0;
+  order.forEach(x=>{managerDayPages[x.gi]=period;const per=x.daysWithData>0?{rank:++rk,points:x.points,pct:x.pct}:{rank:null,points:0,pct:null};html+=girlCard(x.g,x.gi,sorted,maxG,per);});
   return html;
 }
 
 function render(){
+  setTimeout(applySearch,0);
   const cont=document.getElementById('main');
   document.querySelectorAll('.manager-main-tab').forEach((b,i)=>b.classList.toggle('active',i===managerMainTab));
   if(!girlsData.length){cont.innerHTML='<div class="empty">🌿<br>لا يوجد بيانات بعد</div>';['stTotal','stTop','stAvg'].forEach(id=>document.getElementById(id).textContent='—');return;}
   const sorted=[...girlsData].sort((a,b)=>b.grand-a.grand);
   const maxG=Math.max(...girlsData.map(g=>g.grand),1);
   const avgAll=Math.round(girlsData.reduce((s,g)=>s+Number(g.grand),0)/girlsData.length);
-  document.getElementById('stTotal').textContent=girlsData.length;
-  document.getElementById('stTop').textContent=sorted[0].grand;
-  document.getElementById('stAvg').textContent=avgAll;
+  updateStats(sorted,avgAll);
   if(managerMainTab<3){
     selectedPairPeriod=managerMainTab;
     const start=managerMainTab*10+1;if(selectedSummaryDay<start||selectedSummaryDay>start+9)selectedSummaryDay=start;
@@ -811,10 +847,10 @@ function perIbadaRanking(){
   return html+'</div></div>';
 }
 
-function girlCard(g,gi,sorted,maxG){
+function girlCard(g,gi,sorted,maxG,per){
   const pct=maxG>0?Math.round(g.grand/maxG*100):0;
-  const rank=1+sorted.filter(s=>Number(s.grand)>Number(g.grand)).length;
-  const medal=rankMedal(rank);
+  const rank=per?per.rank:1+sorted.filter(s=>Number(s.grand)>Number(g.grand)).length;
+  const medal=rank?rankMedal(rank):'—';
   const dt=g.dayTotals||Array(DAYS).fill(0);
   const dayPct=calcGirlDayPct(g);
   let totalBase=0,totalBonus=0;
@@ -842,10 +878,14 @@ function girlCard(g,gi,sorted,maxG){
   const pctBadge=dayPct!==null?'<div style="text-align:center;background:#e8f6ee;border:1px solid var(--bd);border-radius:10px;padding:6px 10px;margin-bottom:8px"><div style="font-size:18px;font-weight:700;color:'+pctColor+'">'+dayPct+'%</div><div style="font-size:9px;color:var(--mu)">معدل اليوم من 100 (أساسي فقط)</div></div>':'';
   const pctLabel=dayPct!==null?'<span style="background:#e8f6ee;border:1px solid var(--bd);border-radius:8px;padding:2px 8px;font-size:11px;font-weight:700;color:'+pctColor+'">📊 '+dayPct+'%</span>':'';
   const body=detailsTable(g,gi)+'<div style="font-size:10px;color:var(--mu);margin-top:8px;text-align:left">آخر إرسال: '+esc(g.lastUpdate||'—')+'</div>';
-  return '<div class="girl-card">'
+  // راس الكرت: بالتبويبات بيعرض نقاط ومعدل الفترة نفسها
+  const hp=per?per.pct:dayPct,hpts=per?per.points:g.grand;
+  const hpc=hp!=null?(hp>=80?'#1a6b3c':hp>=50?'#b8860b':'#c0392b'):'#aaa';
+  const hpl=hp!=null?'<span style="background:#e8f6ee;border:1px solid var(--bd);border-radius:8px;padding:2px 8px;font-size:12px;font-weight:700;color:'+hpc+'">📊 '+hp+'%</span>':'';
+  return '<div class="girl-card" data-name="'+esc(g.name)+'">'
     +'<div class="gc-hdr" onclick="toggleGirlCard('+gi+')">'
-    +'<div class="gc-name">'+medal+' '+esc(g.name)+'</div>'
-    +'<div style="display:flex;align-items:center;gap:6px">'+pctLabel+'<div class="gc-pts">'+g.grand+' نقطة</div><span id="garr_'+gi+'" style="color:#a8e6c0;font-size:12px">▼</span></div>'
+    +'<div class="gc-name">'+medal+' '+esc(g.name)+lastSeen(g)+'</div>'
+    +'<div style="display:flex;align-items:center;gap:6px">'+hpl+'<div class="gc-pts">'+hpts+' نقطة</div><span id="garr_'+gi+'" style="color:#a8e6c0;font-size:12px">▼</span></div>'
     +'</div>'
     +'<div class="gc-body" id="gbody_'+gi+'" style="display:none">'
     +pctBadge+'<div class="period-overview">'+periodOverviewHtml(g)+'</div>'+goalsHtml+bonusHtml
@@ -980,6 +1020,49 @@ function exportExcel(){
   XLSX.writeFile(wb,'نتائج_'+(currentGroup?currentGroup.name.replace(/[^\p{L}\p{N}]+/gu,'_'):'البنات')+'.xlsx');showToast('تم التصدير ✓');
 }
 
+// ===== إحصائيات صف واحد =====
+function updateStats(sorted,avgAll){
+  const set=(id,v,l)=>{document.getElementById('st'+id).textContent=v;document.getElementById('sl'+id).textContent=l;};
+  if(managerMainTab<3){
+    const start=managerMainTab*10+1,end=start+9;
+    const active=girlsData.map(g=>periodMetrics(g,start,end)).filter(x=>x.daysWithData>0);
+    const avgPts=active.length?Math.round(active.reduce((s,x)=>s+x.points,0)/active.length):0;
+    const avgPct=active.length?Math.round(active.reduce((s,x)=>s+(x.pct||0),0)/active.length):0;
+    set('Total',active.length+'/'+girlsData.length,'سجّلن بهالفترة');
+    set('Top',avgPts,'متوسط النقاط');
+    set('Avg',avgPct+'%','متوسط المعدل');
+  }else{
+    set('Total',girlsData.length,'عدد البنات');
+    set('Top',sorted[0].grand,'أعلى مجموع');
+    set('Avg',avgAll,'متوسط المجموعة');
+  }
+}
+// ===== آخر إرسال جنب الاسم =====
+function lastSeen(g){
+  if(!g.updatedAt)return '';
+  const mins=Math.max(0,Math.round((Date.now()-new Date(g.updatedAt).getTime())/60000));
+  let t;
+  if(mins<60)t='قبل '+(mins<=1?'دقيقة':mins+' دقيقة');
+  else if(mins<60*24){const h=Math.round(mins/60);t='قبل '+(h===1?'ساعة':h===2?'ساعتين':h+' ساعات');}
+  else{const d=Math.round(mins/1440);t=d===1?'أمس':'قبل '+(d===2?'يومين':d+' أيام');}
+  return '<div class="gc-last'+(mins>=2880?' old':'')+'">آخر إرسال: '+t+'</div>';
+}
+// ===== القائمة ⋯ =====
+function toggleMenu(e){e.stopPropagation();document.getElementById('mxMenu').classList.toggle('open');}
+function closeMenu(){document.getElementById('mxMenu').classList.remove('open');}
+document.addEventListener('click',e=>{if(!e.target.closest('#mxMenu'))closeMenu();});
+// ===== البحث بالاسم =====
+function normName(t){return String(t||'').replace(/[\u064B-\u0652\u0640]/g,'').replace(/[أإآ]/g,'ا').replace(/ة/g,'ه').replace(/ى/g,'ي').toLowerCase().trim();}
+function applySearch(){
+  const inp=document.getElementById('girlSearch');if(!inp)return;
+  const q=normName(inp.value);
+  document.getElementById('searchClear').style.display=q?'block':'none';
+  document.querySelectorAll('#main .girl-card,#main .rank-item,#main .full-rank-row').forEach(el=>{
+    const n=el.dataset.name||(el.querySelector('.rname,.full-rank-name')||{}).textContent||'';
+    el.classList.toggle('mx-hide',!!q&&!normName(n).includes(q));
+  });
+}
+function clearSearch(){document.getElementById('girlSearch').value='';applySearch();}
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);}
 // ===== التشغيل =====
 function girlLink(){return new URL('girl.html?g='+encodeURIComponent(currentGroup.code),location.href).href;}
