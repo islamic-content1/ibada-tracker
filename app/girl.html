@@ -294,6 +294,11 @@ html[data-mode="dark"] .q-slide img{filter:invert(1) hue-rotate(180deg) brightne
 .q-dot{width:6px;height:6px;border-radius:50%;background:var(--bd);border:none;padding:0;cursor:pointer;transition:all .25s}
 .q-dot.on{width:16px;border-radius:4px;background:var(--gold)}
 @media(min-width:520px){.q-slide{height:88px}}
+/* الوضع الليلي لكل ثيم: لون "تم" والأزرار حسب الثيم المختار مش أخضر دايماً */
+html[data-mode="dark"][data-theme="rose"]{--done-bg:#4a3840;--done-border:#b0798a;--done-text:#fbe3ea;--primary-light:#43383d}
+html[data-mode="dark"][data-theme="blue"]{--done-bg:#36434f;--done-border:#6f98b8;--done-text:#e3f0fa;--primary-light:#363f48}
+html[data-mode="dark"][data-theme="purple"]{--done-bg:#403a4d;--done-border:#9a82bd;--done-text:#eee6fa;--primary-light:#3c3846}
+html[data-mode="dark"][data-theme="beige"]{--done-bg:#48413a;--done-border:#a89277;--done-text:#f3ebe0;--primary-light:#413c37}
 </style>
 <link rel="manifest" href="manifest.json?v=2026.10.05.1">
 <meta name="mobile-web-app-capable" content="yes">
@@ -324,7 +329,6 @@ window.APP_VERSION = "2026.10.05.1";
     <button type="button" class="q-arr q-next" onclick="quoteStep(1)" aria-label="الجملة التالية">›</button>
   </div>
   <div class="q-dots" id="qDots"></div>
-  <p>كبسة = عملته ✓ &nbsp;|&nbsp; كبستين = ما عملته ✗ &nbsp;|&nbsp; ثلاث = إلغاء</p>
 </div>
 <div class="how-box">
   <div class="how-hdr" onclick="toggleHow()"><span>كيف تُحسب النقاط؟</span><span id="howArr">▼</span></div>
