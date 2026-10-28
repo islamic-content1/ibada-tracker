@@ -326,6 +326,14 @@ html[data-mode="dark"][data-theme="beige"]{--done-bg:#48413a;--done-border:#a892
 <script>
 window.APP_VERSION = "2026.10.05.1";
 </script>
+<style>
+/* اسم الفئة: النص بالطول جوّا عنصر لحاله، فالسطر بيطول حسب الكلمة وما بتنقص (خصوصاً على الآيفون) */
+td.cc,.manager-detail-table td.cat{writing-mode:horizontal-tb!important;max-width:none!important;overflow:visible!important;width:22px;padding:6px 1px!important}
+.cat-v{display:inline-block;writing-mode:vertical-lr;text-orientation:mixed;white-space:nowrap;line-height:1.15}
+/* إخفاء شريط السكرول (الصفحة بتضل تتحرك عادي) */
+html,body,*{scrollbar-width:none;-ms-overflow-style:none}
+::-webkit-scrollbar{display:none!important;width:0!important;height:0!important}
+</style>
 </head>
 <body>
 <div id="bootMsg" style="position:fixed;inset:0;z-index:9999;background:var(--bg);display:flex;align-items:center;justify-content:center;text-align:center;padding:24px;font-size:18px;color:var(--mu)">جاري تحميل البرنامج...</div>
@@ -727,7 +735,7 @@ function build(){
     const r=ROWS[ri];const tr=document.createElement('tr');
     if(r.cat!==lastCat){
       const td=document.createElement('td');td.className='cc';td.rowSpan=mainRows.filter(x=>ROWS[x].cat===r.cat).length;
-      td.textContent=abbr[r.cat]||r.cat;tr.appendChild(td);lastCat=r.cat;
+      td.innerHTML='<span class="cat-v">'+(abbr[r.cat]||r.cat)+'</span>';tr.appendChild(td);lastCat=r.cat;
     }
     if(ri===0){
       const ti=document.createElement('td');ti.className='ic';

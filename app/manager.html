@@ -330,6 +330,14 @@ html[data-mode="dark"] #toast{background:#e8ebe9;color:#17191b}
 .group-bar .gb-btn{padding:7px 11px;border-radius:9px;border:1px solid var(--bd);background:var(--soft);color:var(--tx);font-size:12.5px;cursor:pointer;text-decoration:none}
 .group-bar .gb-link{font-size:12px;color:var(--mu);direction:ltr;word-break:break-all;width:100%;text-align:center;padding-top:4px}
 </style>
+<style>
+/* اسم الفئة: النص بالطول جوّا عنصر لحاله، فالسطر بيطول حسب الكلمة وما بتنقص (خصوصاً على الآيفون) */
+td.cc,.manager-detail-table td.cat{writing-mode:horizontal-tb!important;max-width:none!important;overflow:visible!important;width:22px;padding:6px 1px!important}
+.cat-v{display:inline-block;writing-mode:vertical-lr;text-orientation:mixed;white-space:nowrap;line-height:1.15}
+/* إخفاء شريط السكرول (الصفحة بتضل تتحرك عادي) */
+html,body,*{scrollbar-width:none;-ms-overflow-style:none}
+::-webkit-scrollbar{display:none!important;width:0!important;height:0!important}
+</style>
 </head>
 <body>
 <div id="authOv" class="auth-ov"><div class="auth-box">
@@ -861,7 +869,7 @@ function detailsTable(g,gi){
   ROWS.forEach((r,ri)=>{
     if(r.hidden)return;
     html+='<tr>';
-    if(r.cat!==lastCat){html+='<td class="cat" rowspan="'+catRows[r.cat]+'">'+esc(r.cat)+'</td>';lastCat=r.cat;}
+    if(r.cat!==lastCat){html+='<td class="cat" rowspan="'+catRows[r.cat]+'"><span class="cat-v">'+esc(r.cat)+'</span></td>';lastCat=r.cat;}
     const meta=[r.note,r.bonus?'بونص':''].filter(Boolean).join(' | ');
     html+='<td class="ibada" style="'+(r.negative?'color:#ef4444;':'')+(r.bonus?'color:#b8860b;':'')+'">'+esc(r.ibada)+(meta?'<div style="font-size:8px;color:#b8860b;font-weight:400">'+esc(meta)+'</div>':'')+'</td>';
     html+='<td class="pts" style="'+(r.negative?'color:#ef4444;':'')+(r.bonus?'color:#b8860b;':'')+'">'+r.pts+'</td>';
