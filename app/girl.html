@@ -321,8 +321,9 @@ html[data-mode="dark"][data-theme="purple"]{--done-bg:#403a4d;--done-border:#9a8
 html[data-mode="dark"][data-theme="beige"]{--done-bg:#48413a;--done-border:#a89277;--done-text:#f3ebe0;--primary-light:#413c37}
 /* ===== اسم العبادة + زر التفاصيل ===== */
 td.ic{vertical-align:middle}
-.ic-name{display:flex;align-items:center;justify-content:space-between;gap:4px;line-height:1.35}
-.ic-more{flex:0 0 auto;width:24px;height:24px;border-radius:50%;border:1px solid var(--gold-bd);background:var(--gold-l);font-size:12px;line-height:1;padding:0;cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
+.ic-name{display:flex;align-items:center;justify-content:flex-start;gap:5px;line-height:1.35}
+.ic-more{flex:0 0 auto;border:none;background:none;color:var(--gold);padding:3px;margin:-3px 0;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;opacity:.9}
+.ic-more svg{display:block}
 .ex-ov{position:fixed;inset:0;z-index:9000;background:rgba(30,25,15,.35);display:none;align-items:flex-end;justify-content:center}
 .ex-ov.show{display:flex}
 .ex-box{background:var(--sf);width:100%;max-width:520px;border-radius:18px 18px 0 0;padding:14px 16px 22px;box-shadow:0 -6px 24px rgba(0,0,0,.15);animation:exup .22s ease-out}
@@ -739,7 +740,7 @@ function build(){
     const nameHtml=r.negative?'<span style="color:var(--miss-text)">'+r.ibada+'</span>':'<span>'+r.ibada+'</span>';
     if(!extra){ti.innerHTML='<div class="ic-name">'+nameHtml+'</div>';return ti;}
     // الرمز حسب نوع الإضافة: 🔄 بديل، 📄 ملف، 💬 ملاحظة
-    const icon=(r.badil||r.badilBook)?'🔄':(r.pdfLink?'📄':'💬');
+    const icon=(r.badil||r.badilBook)?ICON_BADIL:(r.pdfLink?ICON_FILE:ICON_NOTE);
     const k=ROWS.indexOf(r);IBADA_EXTRA[k]={title:r.ibada,html:extra};
     ti.innerHTML='<div class="ic-name">'+nameHtml+'<button type="button" class="ic-more" aria-label="تفاصيل" onclick="event.stopPropagation();openExtra('+k+')">'+icon+'</button></div>';
     return ti;
@@ -860,6 +861,10 @@ function recalc(){
 }
 
 const IBADA_EXTRA={};
+// رموز رفيعة بلون ذهبي: بديل، ملف، ملاحظة
+const ICON_BADIL='<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 0 0-14.3-4.9L4 8"/><path d="M4 4v4h4"/><path d="M4 13a8 8 0 0 0 14.3 4.9L20 16"/><path d="M20 20v-4h-4"/></svg>';
+const ICON_FILE='<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h4"/></svg>';
+const ICON_NOTE='<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1.1-4.6A8 8 0 1 1 21 12z"/><path d="M8.5 12h.01M12 12h.01M15.5 12h.01"/></svg>';
 function openExtra(k){const x=IBADA_EXTRA[k];if(!x)return;document.getElementById('exTitle').textContent=x.title;document.getElementById('exBody').innerHTML=x.html;document.getElementById('extraSheet').classList.add('show');}
 function closeExtra(){document.getElementById('extraSheet').classList.remove('show');}
 function toggleHow(){const body=document.getElementById('howBody');const arr=document.getElementById('howArr');const open=body.style.display==='block';body.style.display=open?'none':'block';arr.textContent=open?'▼':'▲';}
