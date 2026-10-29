@@ -319,6 +319,19 @@ html[data-mode="dark"][data-theme="rose"]{--done-bg:#4a3840;--done-border:#b0798
 html[data-mode="dark"][data-theme="blue"]{--done-bg:#36434f;--done-border:#6f98b8;--done-text:#e3f0fa;--primary-light:#363f48}
 html[data-mode="dark"][data-theme="purple"]{--done-bg:#403a4d;--done-border:#9a82bd;--done-text:#eee6fa;--primary-light:#3c3846}
 html[data-mode="dark"][data-theme="beige"]{--done-bg:#48413a;--done-border:#a89277;--done-text:#f3ebe0;--primary-light:#413c37}
+/* ===== اسم العبادة + زر التفاصيل ===== */
+td.ic{vertical-align:middle}
+.ic-name{display:flex;align-items:center;justify-content:space-between;gap:4px;line-height:1.35}
+.ic-more{flex:0 0 auto;width:24px;height:24px;border-radius:50%;border:1px solid var(--gold-bd);background:var(--gold-l);font-size:12px;line-height:1;padding:0;cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
+.ex-ov{position:fixed;inset:0;z-index:9000;background:rgba(30,25,15,.35);display:none;align-items:flex-end;justify-content:center}
+.ex-ov.show{display:flex}
+.ex-box{background:var(--sf);width:100%;max-width:520px;border-radius:18px 18px 0 0;padding:14px 16px 22px;box-shadow:0 -6px 24px rgba(0,0,0,.15);animation:exup .22s ease-out}
+@keyframes exup{from{transform:translateY(40px);opacity:.4}to{transform:none;opacity:1}}
+.ex-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-size:17px;color:var(--tx)}
+.ex-head button{border:none;background:var(--soft);color:var(--mu);width:30px;height:30px;border-radius:50%;font-size:15px;cursor:pointer}
+.ex-body{font-size:15px!important;line-height:1.8}
+.ex-body div{font-size:15px!important;margin-top:6px!important}
+.ex-body .pdf-btn{margin-top:10px!important;font-size:14px!important;padding:8px 14px!important}
 </style>
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -444,6 +457,7 @@ td.cc,.manager-detail-table td.cat{writing-mode:horizontal-tb!important;max-widt
   <button class="btn btn-reset" onclick="document.getElementById('resetModal').classList.add('show')">🗑️ إعادة تفريغ الجدول</button>
 </div>
 <p class="note">البيانات تُحفظ تلقائياً على جهازك ✓<br>اضغطي "إرسال" بعد كل يوم لتحديث نتائجك</p>
+<div id="extraSheet" class="ex-ov" onclick="if(event.target===this)closeExtra()"><div class="ex-box"><div class="ex-head"><b id="exTitle"></b><button type="button" onclick="closeExtra()">✕</button></div><div class="ex-body" id="exBody"></div></div></div>
 <div id="toast"></div>
 <script>
 var _ls=(function(){var sid=new URLSearchParams(location.search).get('sid')||'';if(!sid)return localStorage;var prefix='sid_'+sid+'_';return{getItem:function(k){return localStorage.getItem(prefix+k);},setItem:function(k,v){localStorage.setItem(prefix+k,v);},removeItem:function(k){localStorage.removeItem(prefix+k);}};})();
@@ -721,8 +735,13 @@ function build(){
       badilHtml='<div style="color:var(--gold);font-size:10px;line-height:1.4;margin-top:2px">🔄 '+r.badil+'</div>';
     }
     const pdfHtml=r.pdfLink?'<button class="pdf-btn" onclick="openPdf(\''+r.pdfLink+'\',\''+r.pdfTitle+'\')">📄 افتحي الملف</button>':'';
-    if(r.negative){ti.innerHTML='<div style="color:var(--miss-text)">'+r.ibada+'</div>'+noteHtml+badilHtml;}
-    else{ti.innerHTML='<div>'+r.ibada+'</div>'+noteHtml+badilHtml+pdfHtml;}
+    const extra=noteHtml+badilHtml+(r.negative?'':pdfHtml);
+    const nameHtml=r.negative?'<span style="color:var(--miss-text)">'+r.ibada+'</span>':'<span>'+r.ibada+'</span>';
+    if(!extra){ti.innerHTML='<div class="ic-name">'+nameHtml+'</div>';return ti;}
+    // الرمز حسب نوع الإضافة: 🔄 بديل، 📄 ملف، 💬 ملاحظة
+    const icon=(r.badil||r.badilBook)?'🔄':(r.pdfLink?'📄':'💬');
+    const k=ROWS.indexOf(r);IBADA_EXTRA[k]={title:r.ibada,html:extra};
+    ti.innerHTML='<div class="ic-name">'+nameHtml+'<button type="button" class="ic-more" aria-label="تفاصيل" onclick="event.stopPropagation();openExtra('+k+')">'+icon+'</button></div>';
     return ti;
   }
   function ptsCell(r,txt){
@@ -840,6 +859,9 @@ function recalc(){
   document.getElementById('pctDayVal').textContent=ps.pct===null?'—':ps.pct+'%';
 }
 
+const IBADA_EXTRA={};
+function openExtra(k){const x=IBADA_EXTRA[k];if(!x)return;document.getElementById('exTitle').textContent=x.title;document.getElementById('exBody').innerHTML=x.html;document.getElementById('extraSheet').classList.add('show');}
+function closeExtra(){document.getElementById('extraSheet').classList.remove('show');}
 function toggleHow(){const body=document.getElementById('howBody');const arr=document.getElementById('howArr');const open=body.style.display==='block';body.style.display=open?'none':'block';arr.textContent=open?'▼':'▲';}
 
 async function sendToManager(){
