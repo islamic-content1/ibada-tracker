@@ -405,6 +405,7 @@ body{font-size:15px}
     <button type="button" onclick="closeMenu();toggleAdminPanel()">⚙️ إدارة البنات</button>
     <button type="button" onclick="closeMenu();exportExcel()">⬇ تحميل Excel</button>
     <button type="button" id="modeBtn" onclick="closeMenu();toggleMode()">🌙 الوضع الليلي</button>
+    <button type="button" onclick="closeMenu();resetAllGirls()" style="color:#b4483c">🗑 حذف كل البنات (بداية جديدة)</button>
   </div>
   <div class="mx-sub"><span id="lastUp"></span></div>
 </div>
@@ -1038,6 +1039,17 @@ function exportExcel(){
   XLSX.writeFile(wb,'نتائج_'+(currentGroup?currentGroup.name.replace(/[^\p{L}\p{N}]+/gu,'_'):'البنات')+'.xlsx');showToast('تم التصدير ✓');
 }
 
+// ===== حذف كل البنات: النتائج بتنحفظ بأرشيف احتياط، والصفحة بتفضى =====
+async function resetAllGirls(){
+  const n=girlsData.length;
+  if(!n){showToast('ما في بنات للحذف');return;}
+  if(!confirm('رح ينحذف كل البنات ('+n+' بنت) ونتائجهم من صفحة '+(currentGroup?currentGroup.name:'المجموعة')+'.\nمتأكدة؟'))return;
+  const t=prompt('للتأكيد اكتبي كلمة: حذف');
+  if(t===null)return;
+  if(t.trim()!=='حذف'){showToast('ما انحذف إشي');return;}
+  try{const c=await rpc('mgr_reset_group',{p_key:MGR_KEY});showToast('تم حذف '+c+' بنت ✓');loadData();}
+  catch(e){console.error(e);showToast('تعذر الحذف');}
+}
 // ===== إحصائيات صف واحد =====
 function updateStats(sorted,avgAll){
   const set=(id,v,l)=>{document.getElementById('st'+id).textContent=v;document.getElementById('sl'+id).textContent=l;};
