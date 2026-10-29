@@ -321,9 +321,10 @@ html[data-mode="dark"][data-theme="purple"]{--done-bg:#403a4d;--done-border:#9a8
 html[data-mode="dark"][data-theme="beige"]{--done-bg:#48413a;--done-border:#a89277;--done-text:#f3ebe0;--primary-light:#413c37}
 /* ===== اسم العبادة + زر التفاصيل ===== */
 td.ic{vertical-align:middle}
-.ic-name{display:flex;align-items:center;justify-content:flex-start;gap:5px;line-height:1.35}
-.ic-more{flex:0 0 auto;border:none;background:none;color:var(--gold);padding:3px;margin:-3px 0;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;opacity:.9}
-.ic-more svg{display:block}
+.ic-name{display:flex;align-items:center;justify-content:space-between;gap:4px;line-height:1.35}
+.ic-more{flex:0 0 auto;min-width:50px;justify-content:center;display:inline-flex;align-items:center;gap:2px;border:1px solid var(--gold-bd);background:var(--gold-l);color:var(--gold);border-radius:999px;padding:0 5px 0 4px;font-size:9.5px;font-weight:700;line-height:1.6;cursor:pointer;white-space:nowrap}
+.ic-img{width:11px;height:11px;display:block;object-fit:contain}
+html[data-mode="dark"] .ic-more{background:rgba(216,180,92,.12);border-color:rgba(216,180,92,.35)}
 .ex-ov{position:fixed;inset:0;z-index:9000;background:rgba(30,25,15,.35);display:none;align-items:flex-end;justify-content:center}
 .ex-ov.show{display:flex}
 .ex-box{background:var(--sf);width:100%;max-width:520px;border-radius:18px 18px 0 0;padding:14px 16px 22px;box-shadow:0 -6px 24px rgba(0,0,0,.15);animation:exup .22s ease-out}
@@ -740,7 +741,9 @@ function build(){
     const nameHtml=r.negative?'<span style="color:var(--miss-text)">'+r.ibada+'</span>':'<span>'+r.ibada+'</span>';
     if(!extra){ti.innerHTML='<div class="ic-name">'+nameHtml+'</div>';return ti;}
     // الرمز حسب نوع الإضافة: 🔄 بديل، 📄 ملف، 💬 ملاحظة
-    const icon=(r.badil||r.badilBook)?ICON_BADIL:(r.pdfLink?ICON_FILE:ICON_NOTE);
+    // شارة صغيرة: أيقونة + كلمة
+    const kind=(r.badil||r.badilBook)?'badil':(r.pdfLink?'file':'note');
+    const icon='<img class="ic-img" src="files/icons/'+kind+'.png" alt="" draggable="false"><span>'+({badil:'بديل',file:'ملف',note:'ملاحظة'})[kind]+'</span>';
     const k=ROWS.indexOf(r);IBADA_EXTRA[k]={title:r.ibada,html:extra};
     ti.innerHTML='<div class="ic-name">'+nameHtml+'<button type="button" class="ic-more" aria-label="تفاصيل" onclick="event.stopPropagation();openExtra('+k+')">'+icon+'</button></div>';
     return ti;
