@@ -614,6 +614,7 @@ function updateCounter(){
 function confirmReset(){
   document.getElementById('resetModal').classList.remove('show');
   [SK,NK,EDITK,COUNTERK,GOALK].forEach(k=>{try{_ls.removeItem(k);}catch(e){}});
+  try{_ls.setItem('ibada_fresh_start','1');}catch(e){}
   state={__schemaVersion:SCHEMA_VERSION};editedPts={};counterVal=0;personalGoals={};
   document.getElementById('userName').value='';
   updateCounter();build();buildGoalsSection();showToast('✓ تم تفريغ الجدول');
@@ -879,6 +880,7 @@ async function sendToManager(){
   try{
     // نرسل للداتابيس
     await rpc('submit_entry',{p_code:GROUP_CODE,p_name:name,p_grand:grand,p_avg:String(avg),p_filled:filled,p_day_totals:dayTotals,p_payload:payload});
+    try{_ls.removeItem('ibada_fresh_start');}catch(e){}
 
     const bar=document.getElementById('statusBar');
     bar.style.display='block';
@@ -1009,6 +1011,7 @@ function hasLocalData(){return Object.keys(state).some(k=>k!=='__schemaVersion')
 async function tryRestore(){
   const name=document.getElementById('userName').value.trim();
   if(!name||hasLocalData())return;
+  try{if(_ls.getItem('ibada_fresh_start')==='1')return;}catch(e){}
   try{
     const p=await rpc('get_my_entry',{p_code:GROUP_CODE,p_name:name});
     if(p&&p.state&&Object.keys(p.state).length>1){
