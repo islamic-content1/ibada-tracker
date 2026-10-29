@@ -334,6 +334,13 @@ html[data-mode="dark"] .ic-more{background:rgba(216,180,92,.12);border-color:rgb
 .ex-body{font-size:15px!important;line-height:1.8}
 .ex-body div{font-size:15px!important;margin-top:6px!important}
 .ex-body .pdf-btn{margin-top:10px!important;font-size:14px!important;padding:8px 14px!important}
+/* ===== عرض الملف ===== */
+.pdf-overlay{background:var(--bg)!important}
+.pdf-header{gap:10px;justify-content:flex-start!important;padding-top:max(10px,env(safe-area-inset-top))!important}
+.pdf-header span{font-size:16px;font-weight:700}
+.pdf-back{border:1px solid var(--bd)!important;background:var(--primary-light)!important;color:var(--primary)!important;border-radius:10px;padding:7px 14px;font-size:15px;font-weight:700;cursor:pointer}
+.pdf-pages{overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px;display:flex;flex-direction:column;align-items:center;gap:12px;background:var(--bg)!important}
+.pdf-pages img{width:100%;max-width:640px;height:auto;border-radius:10px;box-shadow:0 2px 10px rgba(0,0,0,.12);background:#fff}
 </style>
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -450,8 +457,8 @@ td.cc,.manager-detail-table td.cat{writing-mode:horizontal-tb!important;max-widt
   </div>
 </div></div>
 <div id="pdfOverlay" class="pdf-overlay">
-  <div class="pdf-header"><span id="pdfTitle">عرض الملف</span><button onclick="closePdf()">✕ إغلاق</button></div>
-  <iframe id="pdfFrame" class="pdf-frame" src=""></iframe>
+  <div class="pdf-header"><button class="pdf-back" onclick="closePdf()">→ رجوع</button><span id="pdfTitle">عرض الملف</span></div>
+  <div id="pdfFrame" class="pdf-frame pdf-pages"></div>
 </div>
 <div class="btns">
   <button class="btn btn-send" id="sendBtn" onclick="sendToManager()">☁️ إرسال نتائجي</button>
@@ -470,15 +477,26 @@ const GROUP_CODE=(function(){var g=new URLSearchParams(location.search).get('g')
 async function rpc(fn,args){const r=await fetch(SB_URL+'/rest/v1/rpc/'+fn,{method:'POST',headers:{'apikey':SB_KEY,'Content-Type':'application/json'},body:JSON.stringify(args)});if(!r.ok)throw new Error(await r.text());return r.json();}
 
 const DRIVE_BOOK='https://drive.google.com/file/d/1Ao1UT7sIYM6rmvo-AVKBYDAybJsvD7tx/preview';
+const PDF_PAGE_COUNT={c1:2,c2:2};
 function openPdf(key,title){
   if(key==='book'){window.open(DRIVE_BOOK,'_blank');return;}
-  // الملفات صارت روابط منفصلة
-  const url=PDF_FILES[key];if(url)window.open(url,'_blank');
+  const n=PDF_PAGE_COUNT[key];
+  if(!n){const url=PDF_FILES[key];if(url)window.open(url,'_blank');return;}
+  closeExtra&&closeExtra();
+  document.getElementById('pdfTitle').textContent=title||'الملف';
+  document.getElementById('pdfFrame').innerHTML=Array.from({length:n},(_,i)=>'<img src="files/pages/'+key+'-'+(i+1)+'.webp" alt="صفحة '+(i+1)+'">').join('');
+  document.getElementById('pdfOverlay').classList.add('show');
+  document.body.style.overflow='hidden';
+  // زر الرجوع بالجوال بيسكّر الملف بدل ما يطلع من الصفحة
+  try{history.pushState({pdf:1},'');}catch(e){}
 }
-function closePdf(){
-  document.getElementById('pdfOverlay').classList.remove('show');
-  document.getElementById('pdfFrame').src='';
+function closePdf(fromPop){
+  const ov=document.getElementById('pdfOverlay');if(!ov.classList.contains('show'))return;
+  ov.classList.remove('show');document.body.style.overflow='';
+  document.getElementById('pdfFrame').innerHTML='';
+  if(!fromPop){try{if(history.state&&history.state.pdf)history.back();}catch(e){}}
 }
+window.addEventListener('popstate',()=>closePdf(true));
 
 let ROWS=[];
 
