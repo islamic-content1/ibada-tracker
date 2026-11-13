@@ -1124,7 +1124,7 @@ function applyConfig(res){
   GOAL_LABELS={};GOAL_UNITS={};GOAL_ITEMS.forEach(g=>{GOAL_LABELS[g.ri]=g.name;GOAL_UNITS[g.ri]=g.unit||(DHIKR_ROWS.has(g.ri)?'مرة يومياً':'');});
   CAT_ORDER=[...new Set(ROWS.filter(r=>!r.hidden).map(r=>r.cat))];
   document.getElementById('managerHowBody').innerHTML=cfg.howHtml||'';
-  document.getElementById('groupName').textContent=currentGroup.name;
+  document.getElementById('groupName').textContent=cfg.hideGroupName?'':currentGroup.name;
   document.getElementById('groupBar').style.display='flex';
   if(!configLoaded){configLoaded=true;try{localStorage.setItem('ibada_manager_key',MGR_KEY);}catch(e){}PAIRS_KEY='manager_pair_groups_v2_'+currentGroup.id;pairGroupsByPeriod=loadPairGroups();document.getElementById('authOv').style.display='none';}
 }

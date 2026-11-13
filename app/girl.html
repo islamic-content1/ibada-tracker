@@ -704,6 +704,7 @@ function openInlineEdit(ri,d,numSpan,curPts){
 
 // خانة الأذكار: ثلاث كبسات (صباح/مساء/نوم) تحفظ بنفس الصفوف 0،1،2
 const AZKAR_ROWS=[0,1,2],AZKAR_LABELS=['ص','م','ن'];
+let AZKAR_TRIO=true;
 function renderAzkarCell(td,d){
   td.innerHTML='';
   const stack=document.createElement('div');stack.className='azkar-stack';
@@ -741,7 +742,7 @@ function build(){
   const head=document.getElementById('tableHead');if(head)head.innerHTML='<th class="tc">الفئة</th><th class="ti">العبادة</th><th class="tp">نقاط</th>'+dayHeads;
   const bHead=document.getElementById('bonusHead');if(bHead)bHead.innerHTML='<th class="ti" colspan="2">العبادة</th><th class="tp">نقاط</th>'+dayHeads;
   // الصفوف المعروضة بالجدول الأساسي: بدون البونص، والأذكار الثلاثة بصف واحد
-  const mainRows=ROWS.map((r,ri)=>ri).filter(ri=>!ROWS[ri].hidden&&!ROWS[ri].bonus&&ri!==1&&ri!==2);
+  const mainRows=ROWS.map((r,ri)=>ri).filter(ri=>!ROWS[ri].hidden&&!ROWS[ri].bonus&&!(AZKAR_TRIO&&(ri===1||ri===2)));
   const bonusRows=ROWS.map((r,ri)=>ri).filter(ri=>!ROWS[ri].hidden&&ROWS[ri].bonus);
   const abbr={'الأذكار':'أذكار','القرآن':'قرآن','القيام':'قيام','الصلاة':'صلاة','الذكر':'ذكر','صدقة':'صدقة'};
 
@@ -791,7 +792,7 @@ function build(){
       const td=document.createElement('td');td.className='cc';td.rowSpan=mainRows.filter(x=>ROWS[x].cat===r.cat).length;
       td.innerHTML='<span class="cat-v">'+(abbr[r.cat]||r.cat)+'</span>';tr.appendChild(td);lastCat=r.cat;
     }
-    if(ri===0){
+    if(AZKAR_TRIO&&ri===0){
       const ti=document.createElement('td');ti.className='ic';
       ti.innerHTML='<div>أذكار الصباح والمساء والنوم</div><div class="azkar-key">ص = صباح · م = مساء · ن = نوم</div>';
       tr.appendChild(ti);
@@ -1053,7 +1054,13 @@ function quoteStep(d){setQuote(quoteIdx+d);}
 function applyConfig(cfg){
   ROWS=cfg.ROWS||[];IBADA_NOTES=cfg.IBADA_NOTES||{};GOAL_ITEMS=cfg.GOAL_ITEMS||[];
   VARIABLE_BONUS_ROWS=new Set(cfg.VARIABLE_BONUS_ROWS||[]);EDITABLE_BASIC_ROWS=new Set(cfg.EDITABLE_BASIC_ROWS||[]);DHIKR_ROWS=new Set(cfg.DHIKR_ROWS||[]);
-  QIYAM_ROW=cfg.qiyamRow??-1;PDF_FILES=cfg.pdfs||{};GOAL_NORMALIZE_ROWS=cfg.goalNormalizeRows||[];
+  QIYAM_ROW=cfg.qiyamRow??-1;AZKAR_TRIO=cfg.azkarTrio!==false;
+  // عداد التسميع بينخفى إذا البرنامج ما فيه عداد
+  {const cb=document.querySelector('.counter-box');if(cb)cb.style.display=cfg.counter===false?'none':'';}
+  // قسم الأهداف وملحق البونص بينخفوا إذا البرنامج ما فيه
+  {const gb=document.getElementById('goalsBox');if(gb)gb.style.display=GOAL_ITEMS.length?'':'none';
+   const bt=document.querySelector('.bonus-tw');if(bt)bt.style.display=ROWS.some(r=>r.bonus&&!r.hidden)?'':'none';}
+  PDF_FILES=cfg.pdfs||{};GOAL_NORMALIZE_ROWS=cfg.goalNormalizeRows||[];
   document.getElementById('howBody').innerHTML=cfg.howHtml||'';
 }
 function hasLocalData(){return Object.keys(state).some(k=>k!=='__schemaVersion');}
