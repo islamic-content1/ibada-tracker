@@ -290,7 +290,7 @@ html[data-theme="beige"]{--gL:#eee3d3;--gM:#b79b78;--gD:#80654a;--gDD:#5c4734;--
 }
 
 /* ===== الوضع الليلي ===== */
-html[data-mode="dark"]{--bg:#2c3036;--sf:#343941;--bd:#4a525d;--bd2:#3f454e;--soft:#3a4047;--tx:#f5f1e8;--mu:#c9c2b4;--sh:0 1px 3px rgba(0,0,0,.2);--primary-light:#3d444d;--primary-dark:#e8efe9;--done-bg:#3b4a40;--done-border:#6e9579;--done-text:#e2f4e6;--miss-bg:#4d3939;--miss-border:#a16c6c;--miss-text:#ffc9c2;--gold:#d8b45c;--gold-l:#3d3828;--gold-bd:#5a4c2a}
+html[data-mode="dark"]{--bg:#2c3036;--sf:#343941;--bd:#4a525d;--bd2:#3f454e;--soft:#3a4047;--tx:#f5f1e8;--mu:#c9c2b4;--sh:0 1px 3px rgba(0,0,0,.2);--primary-light:#3d444d;--primary-dark:#e8efe9;--done-bg:#3b4a40;--done-border:#6e9579;--done-text:#e2f4e6;--miss-bg:#3e3a3d;--miss-border:#6f5b5e;--miss-text:#d9a29b;--gold:#d8b45c;--gold-l:#3d3828;--gold-bd:#5a4c2a}
 html[data-mode="dark"],html[data-mode="dark"] body{background:var(--bg);color:var(--tx)}
 html[data-mode="dark"] .btn-send{color:#fff;background:var(--gD);border-color:var(--gD)}
 html[data-mode="dark"] .btn-report{color:var(--tx)}
@@ -690,7 +690,7 @@ function applyCell(td,v,ri,d){
     ptsRow.appendChild(numSpan);inner.appendChild(ptsRow);td.innerHTML='';td.appendChild(inner);
   }else if(v===2){
     td.classList.add('miss');
-    td.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="12" height="12" style="display:block;margin:auto"><path d="M5 5L19 19M19 5L5 19" fill="none" stroke="#c0392b" stroke-width="2.8" stroke-linecap="round"/></svg>';
+    td.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="12" height="12" style="display:block;margin:auto"><path d="M5 5L19 19M19 5L5 19" fill="none" stroke="var(--miss-text)" stroke-width="2.8" stroke-linecap="round"/></svg>';
   }else{td.innerHTML='';}
 }
 
