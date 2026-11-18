@@ -470,7 +470,7 @@ html[data-mode="dark"] .rj-ist{background:var(--soft)}
 .rj-hero .ip b{color:var(--primary)}
 .rj-hero .ip .pl{background:var(--primary);color:#fff;border-radius:999px;padding:.5cqw 2.2cqw;font-size:3cqw;margin-right:.8cqw}
 /* آخر الصفحة: التراب والإيد ع عرض الشاشة */
-.rj-foot{position:relative;width:100vw;margin:-6px calc(50% - 50vw) -3rem 0;aspect-ratio:2129/738;background:url(files/rajab/foot-rajab.webp) center bottom/cover no-repeat;container-type:inline-size}
+.rj-foot{position:relative;width:100vw;margin:-22px calc(50% - 50vw) -3rem 0;aspect-ratio:2129/738;background:url(files/rajab/foot-rajab.webp) center bottom/cover no-repeat;container-type:inline-size}
 .rj-foot .bg{position:absolute;right:6%;bottom:9%;background:rgba(253,250,245,.94);color:#7a4a1c;border-radius:999px;padding:.8cqw 3.4cqw;font-weight:700;font-size:4.2cqw;box-shadow:0 1px 4px rgba(0,0,0,.15)}
 body{overflow-x:hidden}
 
@@ -576,7 +576,7 @@ body{overflow-x:hidden}
   <button class="btn btn-reset" onclick="document.getElementById('resetModal').classList.add('show')">🗑️ إعادة تفريغ الجدول</button>
 </div>
 <p class="note">البيانات تُحفظ تلقائياً على جهازك ✓<br>اضغطي "إرسال" بعد كل يوم لتحديث نتائجك</p>
-<div class="rj-foot"><div class="bg" id="banG"></div></div>
+<div class="rj-foot"></div>
 <div id="jrSheet" class="ex-ov" onclick="if(event.target===this)rjJourneyClose()"><div class="ex-box jr-box">
   <div class="ex-head"><b>رحلتنا لرمضان</b><button type="button" onclick="rjJourneyClose()">✕</button></div>
   <div class="jr-art">
@@ -1267,7 +1267,6 @@ function rjInit(){
   const GR=['شهر الزرع','شهر السقي','شهر الحصاد'];
   document.getElementById('rjBan').style.backgroundImage='url('+BAN[rjNow]+')';
   document.getElementById('banT').textContent=RJ_MONTHS[rjNow].t;
-  document.getElementById('banG').textContent=GR[rjNow];
   const left=Math.max(0,Math.round((RJ.ramadan-t)/day));
   const cd=left>0?'🌙 باقي '+left+' يوم':'🌙 رمضان مبارك';
   document.getElementById('jrCd').textContent=left>0?'باقي '+left+' يوم على رمضان':cd;
