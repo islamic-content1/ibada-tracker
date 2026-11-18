@@ -461,17 +461,17 @@ html[data-mode="dark"] .rj-ist{background:var(--soft)}
 .rj-hero{position:relative;width:100%;aspect-ratio:1862/844;background:url(files/rajab/hdr-rajab.webp) center/cover no-repeat;container-type:inline-size;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .rj-hero .sg{position:absolute;left:59.1%;top:34.7%;width:35%;height:47.9%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:1cqw}
 .rj-hero .sg b{color:#f3c57c;font-weight:700;font-size:6.6cqw;line-height:1.1}
-.rj-hero .sg span{color:#f6ead6;font-size:3.5cqw;font-weight:700;opacity:.95}
+.rj-hero .sg span{color:#f6ead6;font-size:3.3cqw;font-weight:700;opacity:.95;line-height:1.35;padding:0 4%}
 .rj-hero .tx{position:absolute;left:3%;width:52%;top:50%;transform:translateY(-46%);display:flex;flex-direction:column;align-items:center;gap:.8cqw}
 .rj-hero .tx .bsm{font-size:3.4cqw;color:#5d4a2c;margin:0}
 .rj-hero .tx img{display:block;width:100%;height:auto}
 .rj-hero .tx img.ay{width:86%}
 .rj-hero .ip{margin-top:1.2cqw;display:flex;align-items:center;gap:1.2cqw;background:rgba(255,255,255,.92);color:var(--mu);border-radius:999px;padding:.6cqw .8cqw .6cqw 2.4cqw;font-size:3.2cqw;font-weight:700;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.12)}
 .rj-hero .ip b{color:var(--primary)}
-.rj-hero .ip .pl{width:5cqw;height:5cqw;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-size:3.6cqw;margin-right:.8cqw}
+.rj-hero .ip .pl{background:var(--primary);color:#fff;border-radius:999px;padding:.5cqw 2.2cqw;font-size:3cqw;margin-right:.8cqw}
 /* آخر الصفحة: التراب والإيد ع عرض الشاشة */
-.rj-foot{position:relative;width:100vw;margin:18px calc(50% - 50vw) -3rem 0;aspect-ratio:2129/738;background:url(files/rajab/foot-rajab.webp) center bottom/cover no-repeat;container-type:inline-size}
-.rj-foot .bg{position:absolute;right:8%;bottom:6%;color:#fff;font-weight:700;font-size:5.4cqw;text-shadow:0 1px 2px rgba(0,0,0,.4)}
+.rj-foot{position:relative;width:100vw;margin:-6px calc(50% - 50vw) -3rem 0;aspect-ratio:2129/738;background:url(files/rajab/foot-rajab.webp) center bottom/cover no-repeat;container-type:inline-size}
+.rj-foot .bg{position:absolute;right:6%;bottom:9%;background:rgba(253,250,245,.94);color:#7a4a1c;border-radius:999px;padding:.8cqw 3.4cqw;font-weight:700;font-size:4.2cqw;box-shadow:0 1px 4px rgba(0,0,0,.15)}
 body{overflow-x:hidden}
 
 </style>
@@ -483,7 +483,7 @@ body{overflow-x:hidden}
   <div class="rj-hero" id="rjBan" onclick="rjJourney()" role="button">
     <div class="sg"><b id="banT"></b><span id="jrCd"></span></div>
     <div class="tx"><div class="bsm">بسم الله الرحمن الرحيم</div><img class="ay" src="files/rajab/r2.webp" alt="فلا تظلموا فيهن أنفسكم"><img class="qt" src="files/rajab/r1.webp" alt="عش رجباً ترى عجبا">
-      <div class="ip" onclick="event.stopPropagation();istOpen()" role="button">الاستغفار <b id="istPill">0</b> / <span id="istGoal2"></span><span class="pl">＋</span></div></div>
+      <div class="ip" onclick="event.stopPropagation();istOpen()" role="button">الاستغفار <b id="istPill">0</b> / <span id="istGoal2"></span><span class="pl">أضيفي</span></div></div>
   </div>
 
 </div>
@@ -1270,7 +1270,7 @@ function rjInit(){
   document.getElementById('banG').textContent=GR[rjNow];
   const left=Math.max(0,Math.round((RJ.ramadan-t)/day));
   const cd=left>0?'🌙 باقي '+left+' يوم':'🌙 رمضان مبارك';
-  document.getElementById('jrCd').textContent=cd;
+  document.getElementById('jrCd').textContent=left>0?'باقي '+left+' يوم على رمضان':cd;
   document.getElementById('jrCd2').textContent=left>0?cd+' على رمضان':cd;
   const prog=Math.min(1,Math.max(0,(t-RJ.rajab)/(RJ.ramadan-RJ.rajab)));
   document.getElementById('jrBar').style.width=Math.max(3,prog*100)+'%';
