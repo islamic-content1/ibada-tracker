@@ -377,8 +377,8 @@ input,select,textarea{font-size:16px!important}
 .rj-q img+img{max-width:215px}
 html[data-mode="dark"] .rj-q img{filter:invert(1) hue-rotate(180deg) brightness(1.15)}
 .rj-card{background:var(--sf);border:1px solid var(--bd);border-radius:18px;overflow:hidden;margin-bottom:1rem;box-shadow:var(--sh)}
-.hdr .jr-art{border-radius:14px;overflow:hidden}
-.hdr .jr-cd{padding:8px 2px 0}
+.jr-box .jr-art{border-radius:14px;overflow:hidden}
+.jr-box{max-height:92vh;overflow:auto}
 .jr-art{position:relative;width:100%;aspect-ratio:1100/917;background:url(files/rajab/journey-bg.webp) center/cover;container-type:inline-size}
 .jr-art .c{position:absolute;top:10.5%;width:29%;text-align:center;font-weight:700;font-size:7.2cqw;color:#2b3a67}
 .jr-art .s{position:absolute;top:36%;height:22.6%;width:28.8%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 2%;border-radius:2.5cqw;cursor:pointer;transition:box-shadow .2s;-webkit-tap-highlight-color:transparent}
@@ -428,13 +428,28 @@ html[data-mode="dark"] .rj-q img{filter:invert(1) hue-rotate(180deg) brightness(
 .rj-notif .nt b{display:block;font-size:14px}
 .rj-notif .nt small{color:#777;font-size:11px}
 
-/* زر الاستغفار الثابت */
-.ist-pill{position:fixed;left:12px;bottom:calc(14px + env(safe-area-inset-bottom));z-index:8000;border:none;border-radius:999px;padding:10px 16px;background:var(--primary);color:#fff;font-size:14px;font-weight:700;box-shadow:0 6px 18px rgba(0,0,0,.22);cursor:pointer;-webkit-tap-highlight-color:transparent}
-.ist-pill b{font-weight:700}
+/* شريط الرحلة بالهيدر */
+.rj-strip{display:flex;align-items:center;justify-content:space-between;gap:8px;background:var(--gold-l);border:1px solid var(--gold-bd);border-radius:12px;padding:7px 10px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.rj-steps{display:flex;align-items:center;gap:5px;font-size:13.5px;font-weight:700;color:var(--mu)}
+.rj-steps i{font-style:normal;opacity:.6}
+.rj-steps span{padding:2px 9px;border-radius:999px;opacity:.65}
+.rj-steps span.on{background:var(--gold);color:#fff;opacity:1}
+.rj-cd{font-size:12.5px;font-weight:700;color:var(--primary);white-space:nowrap}
+/* سطر الاستغفار */
+.rj-ist{display:flex;align-items:center;gap:8px;margin-top:7px;background:var(--primary-light);border:1px solid var(--bd);border-radius:12px;padding:7px 10px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.rj-ist .lb{font-size:13px;font-weight:700;color:var(--primary);white-space:nowrap}
+.rj-ist .rj-bar{height:6px;min-width:30px}
+.rj-ist .rj-bar i{background:linear-gradient(270deg,#5cb87a,#1a6b3c)}
+.rj-ist .nm{font-size:12px;color:var(--mu);white-space:nowrap}
+.rj-ist .nm b{color:var(--primary)}
+.rj-ist .pl{width:24px;height:24px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;flex:none}
 .ex-box.ist{text-align:center}
 .ex-box.ist .ex-head b{color:var(--gold)}
+.jr-box .ex-head b{color:var(--gold)}
 .appearance-bar{grid-template-columns:1fr 1fr 42px!important}
 .rj-bell{padding:0!important;font-size:18px!important}
+html[data-mode="dark"] .rj-strip{background:var(--soft);border-color:var(--bd)}
+html[data-mode="dark"] .rj-ist{background:var(--soft)}
 
 </style>
 </head>
@@ -443,14 +458,16 @@ html[data-mode="dark"] .rj-q img{filter:invert(1) hue-rotate(180deg) brightness(
 <div class="rj-demo">🧪 تجريبي — ما بينحفظ ولا بيوصل للآنسة</div>
 <div class="hdr">
   <div class="bsm">بسم الله الرحمن الرحيم</div>
-  <div class="rj-q"><img src="files/rajab/r1.webp" alt="عش رجباً ترى عجبا"><img src="files/rajab/r2.webp" alt="فلا تظلموا فيهن أنفسكم"></div><div class="jr-art">
-    <div class="c c1" id="jc1">رجب</div><div class="c c2" id="jc2">شعبان</div><div class="c c3" id="jc3">رمضان</div>
-    <div class="s s1" id="js1" onclick="rjShow(0)"><b>شهر التخلِّي</b></div>
-    <div class="s s2" id="js2" onclick="rjShow(1)"><b>شهر التحلِّي</b></div>
-    <div class="s s3" id="js3" onclick="rjShow(2)"><b>شهر التجلِّي</b></div>
-    <div class="g" id="jg1" style="right:2.5%">شهر الزرع</div><div class="g" id="jg2" style="right:35.5%">شهر السقي</div><div class="g" id="jg3" style="right:68.5%">شهر الحصاد</div>
+  <div class="rj-q"><img src="files/rajab/r1.webp" alt="عش رجباً ترى عجبا"><img src="files/rajab/r2.webp" alt="فلا تظلموا فيهن أنفسكم"></div><div class="rj-strip" onclick="rjJourney()" role="button">
+    <div class="rj-steps"><span id="st0">رجب</span><i>‹</i><span id="st1">شعبان</span><i>‹</i><span id="st2">رمضان</span></div>
+    <div class="rj-cd" id="jrCd"></div>
   </div>
-  <div class="jr-cd"><span id="jrCd"></span><div class="rj-bar"><i id="jrBar"></i></div></div>
+  <div class="rj-ist" onclick="istOpen()" role="button">
+    <span class="lb">🤍 استغفار المجموعة</span>
+    <div class="rj-bar"><i id="istBar2"></i></div>
+    <span class="nm"><b id="istPill">0</b> / <span id="istGoal2"></span></span>
+    <span class="pl">＋</span>
+  </div>
 
 </div>
 <div class="how-box">
@@ -542,7 +559,18 @@ html[data-mode="dark"] .rj-q img{filter:invert(1) hue-rotate(180deg) brightness(
   <button class="btn btn-reset" onclick="document.getElementById('resetModal').classList.add('show')">🗑️ إعادة تفريغ الجدول</button>
 </div>
 <p class="note">البيانات تُحفظ تلقائياً على جهازك ✓<br>اضغطي "إرسال" بعد كل يوم لتحديث نتائجك</p>
-<button type="button" class="ist-pill" onclick="istOpen()">🤍 الاستغفار · <b id="istPill">0</b></button>
+<div id="jrSheet" class="ex-ov" onclick="if(event.target===this)rjJourneyClose()"><div class="ex-box jr-box">
+  <div class="ex-head"><b>رحلتنا لرمضان</b><button type="button" onclick="rjJourneyClose()">✕</button></div>
+  <div class="jr-art">
+    <div class="c c1" id="jc1">رجب</div><div class="c c2" id="jc2">شعبان</div><div class="c c3" id="jc3">رمضان</div>
+    <div class="s s1" id="js1" onclick="rjShow(0)"><b>شهر التخلِّي</b></div>
+    <div class="s s2" id="js2" onclick="rjShow(1)"><b>شهر التحلِّي</b></div>
+    <div class="s s3" id="js3" onclick="rjShow(2)"><b>شهر التجلِّي</b></div>
+    <div class="g" id="jg1" style="right:2.5%">شهر الزرع</div><div class="g" id="jg2" style="right:35.5%">شهر السقي</div><div class="g" id="jg3" style="right:68.5%">شهر الحصاد</div>
+  </div>
+  <div class="jr-txt"><h4 id="jrH"></h4><p id="jrP"></p></div>
+  <div class="jr-cd"><span id="jrCd2"></span><div class="rj-bar"><i id="jrBar"></i></div></div>
+</div></div>
 <div id="istSheet" class="ex-ov" onclick="if(event.target===this)istClose()"><div class="ex-box ist">
   <div class="ex-head"><b>رجب شهر الاستغفار</b><button type="button" onclick="istClose()">✕</button></div>
   <div class="sub">عدّاد المجموعة كلها — كل وحدة بتضيف اللي استغفرته</div>
@@ -1198,13 +1226,15 @@ const RJ_MONTHS=[
 let rjNow=0;
 function rjFmt(n){return Number(n).toLocaleString('en-US');}
 function rjToday(){const d=new Date();d.setHours(0,0,0,0);return d;}
-// نص الشهر بيطلع بنافذة من تحت لما تضغط ع اللوحة
+// الرحلة: شريط بالهيدر، والصورة كاملة بنافذة
 function rjShow(i){
   const x=RJ_MONTHS[i];
-  document.getElementById('exTitle').textContent=x.m+' · '+x.t;
-  document.getElementById('exBody').textContent=x.p;
-  document.getElementById('extraSheet').classList.add('show');
+  document.getElementById('jrH').textContent=x.m+' · '+x.t;
+  document.getElementById('jrP').textContent=x.p;
+  [1,2,3].forEach(k=>document.getElementById('js'+k).classList.toggle('sel',k-1===i&&i!==rjNow));
 }
+function rjJourney(){rjShow(rjNow);document.getElementById('jrSheet').classList.add('show');}
+function rjJourneyClose(){document.getElementById('jrSheet').classList.remove('show');}
 function rjInit(){
   const t=rjToday(),day=864e5;
   rjNow=t<RJ.shaban?0:(t<RJ.ramadan?1:2);
@@ -1213,12 +1243,16 @@ function rjInit(){
     document.getElementById('js'+k).classList.toggle('now',on);
     document.getElementById('jc'+k).classList.toggle('dim',!on);
     document.getElementById('jg'+k).classList.toggle('dim',!on);
+    document.getElementById('st'+(k-1)).classList.toggle('on',on);
   });
   const left=Math.max(0,Math.round((RJ.ramadan-t)/day));
-  document.getElementById('jrCd').textContent=left>0?'🌙 باقي '+left+' يوم على رمضان':'🌙 رمضان مبارك';
+  const cd=left>0?'🌙 باقي '+left+' يوم':'🌙 رمضان مبارك';
+  document.getElementById('jrCd').textContent=cd;
+  document.getElementById('jrCd2').textContent=left>0?cd+' على رمضان':cd;
   const prog=Math.min(1,Math.max(0,(t-RJ.rajab)/(RJ.ramadan-RJ.rajab)));
-  setTimeout(()=>{document.getElementById('jrBar').style.width=Math.max(3,prog*100)+'%';},200);
+  document.getElementById('jrBar').style.width=Math.max(3,prog*100)+'%';
   document.getElementById('istGoal').textContent=rjFmt(RJ.goal);
+  document.getElementById('istGoal2').textContent=rjFmt(RJ.goal);
   istRender();
 }
 // عداد الاستغفار — بالتجربة بينحفظ عندك بس
@@ -1228,7 +1262,7 @@ function istRender(){
   const mine=istMine(),tot=RJ.demoBase+mine;
   document.getElementById('istTot').textContent=rjFmt(tot);document.getElementById('istPill').textContent=rjFmt(tot);
   const p=Math.min(100,tot/RJ.goal*100);
-  document.getElementById('istBar').style.width=p+'%';
+  document.getElementById('istBar').style.width=p+'%';document.getElementById('istBar2').style.width=p+'%';
   document.getElementById('istPct').textContent=p.toFixed(1)+'%';
   const last=istLast();
   document.getElementById('istMine').innerHTML='أنتِ أضفتِ: <b>'+rjFmt(mine)+'</b>'+(last?'<a onclick="istUndo()">تراجعي عن آخر إضافة</a>':'');
