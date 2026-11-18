@@ -456,20 +456,23 @@ html[data-mode="dark"] .rj-ist{background:var(--soft)}
 .rj-ban .bc{position:absolute;left:31%;top:56%;transform:translateX(-50%);background:rgba(255,255,255,.88);color:var(--primary);border-radius:999px;padding:.6cqw 2.6cqw;font-size:3.6cqw;font-weight:700;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.08)}
 .rj-ban .bc{left:auto;right:44%;top:52%;transform:none}
 .rj-bell .bell-img{width:26px;height:26px;display:block;margin:auto}
-/* الهيدر كله صورة وحدة */
+/* الهيدر: السما واللوحة */
 .hdr{padding:0!important;overflow:hidden;border-color:#a9d3ea!important;background:#bde9fb!important}
-.rj-hero{position:relative;width:100%;aspect-ratio:1122/950;background:url(files/rajab/hdr-rajab.webp) center/cover no-repeat;container-type:inline-size;cursor:pointer;-webkit-tap-highlight-color:transparent}
-.rj-hero .sg{position:absolute;left:59.3%;top:16.3%;width:32.5%;height:20.5%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:.8cqw}
-.rj-hero .sg b{color:#f3c57c;font-weight:700;font-size:6cqw;line-height:1.1}
-.rj-hero .sg span{color:#f6ead6;font-size:3.3cqw;font-weight:700;opacity:.95}
-.rj-hero .tx{position:absolute;right:3%;width:66%;top:39%;display:flex;flex-direction:column;align-items:center;gap:1cqw}
-.rj-hero .tx .bsm{font-size:3.8cqw;color:#5d4a2c;margin:0}
+.rj-hero{position:relative;width:100%;aspect-ratio:1862/844;background:url(files/rajab/hdr-rajab.webp) center/cover no-repeat;container-type:inline-size;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.rj-hero .sg{position:absolute;left:59.1%;top:34.7%;width:35%;height:47.9%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:1cqw}
+.rj-hero .sg b{color:#f3c57c;font-weight:700;font-size:6.6cqw;line-height:1.1}
+.rj-hero .sg span{color:#f6ead6;font-size:3.5cqw;font-weight:700;opacity:.95}
+.rj-hero .tx{position:absolute;left:3%;width:52%;top:50%;transform:translateY(-46%);display:flex;flex-direction:column;align-items:center;gap:.8cqw}
+.rj-hero .tx .bsm{font-size:3.4cqw;color:#5d4a2c;margin:0}
 .rj-hero .tx img{display:block;width:100%;height:auto}
-.rj-hero .tx img.ay{width:84%}
-.rj-hero .bg{position:absolute;left:3%;bottom:1.8%;width:32%;text-align:center;color:#fff;font-weight:700;font-size:4.6cqw;text-shadow:0 1px 2px rgba(0,0,0,.4)}
-.rj-hero .ip{position:absolute;right:3%;bottom:1.8%;display:flex;align-items:center;gap:1.2cqw;background:rgba(255,255,255,.92);color:var(--mu);border-radius:999px;padding:.7cqw .9cqw .7cqw 2.6cqw;font-size:3.5cqw;font-weight:700;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.12)}
+.rj-hero .tx img.ay{width:86%}
+.rj-hero .ip{margin-top:1.2cqw;display:flex;align-items:center;gap:1.2cqw;background:rgba(255,255,255,.92);color:var(--mu);border-radius:999px;padding:.6cqw .8cqw .6cqw 2.4cqw;font-size:3.2cqw;font-weight:700;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.12)}
 .rj-hero .ip b{color:var(--primary)}
-.rj-hero .ip .pl{width:5.6cqw;height:5.6cqw;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-size:4cqw;margin-right:1cqw}
+.rj-hero .ip .pl{width:5cqw;height:5cqw;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-size:3.6cqw;margin-right:.8cqw}
+/* آخر الصفحة: التراب والإيد ع عرض الشاشة */
+.rj-foot{position:relative;width:100vw;margin:18px calc(50% - 50vw) -3rem 0;aspect-ratio:2129/738;background:url(files/rajab/foot-rajab.webp) center bottom/cover no-repeat;container-type:inline-size}
+.rj-foot .bg{position:absolute;right:8%;bottom:6%;color:#fff;font-weight:700;font-size:5.4cqw;text-shadow:0 1px 2px rgba(0,0,0,.4)}
+body{overflow-x:hidden}
 
 </style>
 </head>
@@ -479,9 +482,8 @@ html[data-mode="dark"] .rj-ist{background:var(--soft)}
 <div class="hdr">
   <div class="rj-hero" id="rjBan" onclick="rjJourney()" role="button">
     <div class="sg"><b id="banT"></b><span id="jrCd"></span></div>
-    <div class="tx"><div class="bsm">بسم الله الرحمن الرحيم</div><img class="ay" src="files/rajab/r2.webp" alt="فلا تظلموا فيهن أنفسكم"><img class="qt" src="files/rajab/r1.webp" alt="عش رجباً ترى عجبا"></div>
-    <div class="bg" id="banG"></div>
-    <div class="ip" onclick="event.stopPropagation();istOpen()" role="button">الاستغفار <b id="istPill">0</b> / <span id="istGoal2"></span><span class="pl">＋</span></div>
+    <div class="tx"><div class="bsm">بسم الله الرحمن الرحيم</div><img class="ay" src="files/rajab/r2.webp" alt="فلا تظلموا فيهن أنفسكم"><img class="qt" src="files/rajab/r1.webp" alt="عش رجباً ترى عجبا">
+      <div class="ip" onclick="event.stopPropagation();istOpen()" role="button">الاستغفار <b id="istPill">0</b> / <span id="istGoal2"></span><span class="pl">＋</span></div></div>
   </div>
 
 </div>
@@ -574,6 +576,7 @@ html[data-mode="dark"] .rj-ist{background:var(--soft)}
   <button class="btn btn-reset" onclick="document.getElementById('resetModal').classList.add('show')">🗑️ إعادة تفريغ الجدول</button>
 </div>
 <p class="note">البيانات تُحفظ تلقائياً على جهازك ✓<br>اضغطي "إرسال" بعد كل يوم لتحديث نتائجك</p>
+<div class="rj-foot"><div class="bg" id="banG"></div></div>
 <div id="jrSheet" class="ex-ov" onclick="if(event.target===this)rjJourneyClose()"><div class="ex-box jr-box">
   <div class="ex-head"><b>رحلتنا لرمضان</b><button type="button" onclick="rjJourneyClose()">✕</button></div>
   <div class="jr-art">
