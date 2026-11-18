@@ -375,7 +375,6 @@ input,select,textarea{font-size:16px!important}
 .rj-q{display:flex;flex-direction:column;align-items:center;gap:4px;margin:2px 0 10px}
 .rj-q img{display:block;width:100%;max-width:250px;height:auto}
 .rj-q img+img{max-width:215px}
-html[data-mode="dark"] .rj-q img{filter:invert(1) hue-rotate(180deg) brightness(1.15)}
 .rj-card{background:var(--sf);border:1px solid var(--bd);border-radius:18px;overflow:hidden;margin-bottom:1rem;box-shadow:var(--sh)}
 .jr-box .jr-art{border-radius:14px;overflow:hidden}
 .jr-box{max-height:92vh;overflow:auto}
@@ -436,7 +435,7 @@ html[data-mode="dark"] .rj-q img{filter:invert(1) hue-rotate(180deg) brightness(
 .rj-steps span.on{background:var(--gold);color:#fff;opacity:1}
 .rj-cd{font-size:12.5px;font-weight:700;color:var(--primary);white-space:nowrap}
 /* سطر الاستغفار */
-.rj-ist{display:flex;align-items:center;gap:8px;margin-top:7px;background:var(--primary-light);border:1px solid var(--bd);border-radius:12px;padding:7px 10px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.rj-ist{display:flex;align-items:center;gap:8px;margin:0 0 1rem;box-shadow:var(--sh);background:var(--primary-light);border:1px solid var(--bd);border-radius:12px;padding:7px 10px;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .rj-ist .lb{font-size:13px;font-weight:700;color:var(--primary);white-space:nowrap}
 .rj-ist .rj-bar{height:6px;min-width:30px}
 .rj-ist .rj-bar i{background:linear-gradient(270deg,#5cb87a,#1a6b3c)}
@@ -457,6 +456,11 @@ html[data-mode="dark"] .rj-ist{background:var(--soft)}
 .rj-ban .bc{position:absolute;left:31%;top:56%;transform:translateX(-50%);background:rgba(255,255,255,.88);color:var(--primary);border-radius:999px;padding:.6cqw 2.6cqw;font-size:3.6cqw;font-weight:700;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.08)}
 .rj-ban .bc{left:auto;right:44%;top:52%;transform:none}
 .rj-bell .bell-img{width:26px;height:26px;display:block;margin:auto}
+/* الهيدر كله سما، والبانر ع عرض المربع تحت */
+.hdr{background:linear-gradient(180deg,#a9dcf6 0%,#bde9fb 100%)!important;padding:.9rem .8rem 0!important;overflow:hidden;border-color:#a9d3ea!important}
+.hdr .bsm{color:#5d4a2c!important}
+.hdr .rj-ban{width:calc(100% + 1.6rem);margin:4px -.8rem 0;border-radius:0}
+.hdr .rj-ban{-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 7%);mask-image:linear-gradient(to bottom,transparent 0,#000 7%);margin-top:-6px}
 
 </style>
 </head>
@@ -470,14 +474,15 @@ html[data-mode="dark"] .rj-ist{background:var(--soft)}
     <div class="bg" id="banG"></div>
     <div class="bc" id="jrCd"></div>
   </div>
-  <div class="rj-ist" onclick="istOpen()" role="button">
+  
+</div>
+<div class="rj-ist" onclick="istOpen()" role="button">
     <span class="lb">🤍 استغفار المجموعة</span>
     <div class="rj-bar"><i id="istBar2"></i></div>
     <span class="nm"><b id="istPill">0</b> / <span id="istGoal2"></span></span>
     <span class="pl">＋</span>
   </div>
 
-</div>
 <div class="how-box">
   <div class="how-hdr" onclick="toggleHow()"><span>كيف تُحسب النقاط؟</span><span id="howArr">▼</span></div>
   <div class="how-body" id="howBody"></div>
