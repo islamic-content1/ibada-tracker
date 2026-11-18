@@ -456,6 +456,7 @@ html[data-mode="dark"] .rj-ist{background:var(--soft)}
 .rj-ban .bg{position:absolute;left:5%;bottom:1.5%;width:30%;text-align:center;color:#fff;font-weight:700;font-size:4.6cqw;text-shadow:0 1px 2px rgba(0,0,0,.4)}
 .rj-ban .bc{position:absolute;left:31%;top:56%;transform:translateX(-50%);background:rgba(255,255,255,.88);color:var(--primary);border-radius:999px;padding:.6cqw 2.6cqw;font-size:3.6cqw;font-weight:700;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.08)}
 .rj-ban .bc{left:auto;right:44%;top:52%;transform:none}
+.rj-bell .bell-img{width:26px;height:26px;display:block;margin:auto}
 
 </style>
 </head>
@@ -493,7 +494,7 @@ html[data-mode="dark"] .rj-ist{background:var(--soft)}
   <select class="theme-select" id="themeSelect" onchange="setTheme(this.value)" aria-label="اختيار الثيم">
     <option value="green">أخضر</option><option value="rose">وردي</option><option value="blue">أزرق</option><option value="purple">بنفسجي</option><option value="beige">بيج</option>
   </select>
-  <button class="appearance-btn rj-bell" id="rjBtn" type="button" onclick="rjNotifDemo()" aria-label="تذكير يومي">🔔</button>
+  <button class="appearance-btn rj-bell" id="rjBtn" type="button" onclick="rjNotifDemo()" aria-label="تذكير يومي"><img src="files/icons/bell.png" alt="" class="bell-img"></button>
 </div>
 <div class="how-box" id="goalsBox">
   <div class="how-hdr" onclick="toggleGoals()"><span>🎯 حددي كميتك من هذه العبادات</span><span id="goalsArr">▼</span></div>
@@ -1300,7 +1301,7 @@ async function rjNotifDemo(){
     else showToast('هاد المتصفح ما بيدعم الإشعارات — هاد شكله');
     rjMock();return;
   }
-  const btn=document.getElementById('rjBtn');btn.disabled=true;btn.textContent='⏳';
+  const btn=document.getElementById('rjBtn');btn.disabled=true;btn.style.opacity='.5';
   try{
     const perm=await Notification.requestPermission();
     if(perm!=='granted'){showToast('لازم توافقي ع الإشعارات');return;}
@@ -1313,7 +1314,7 @@ async function rjNotifDemo(){
     if(!j.ok)throw new Error(j.error||'failed');
     showToast('سكّري البرنامج هلّا 🔔 بعد ١٠ ثواني بيوصلك الإشعار');
   }catch(e){console.error(e);showToast('ما زبط الإشعار — هاد شكله');rjMock();}
-  finally{btn.disabled=false;btn.textContent='🔔';}
+  finally{btn.disabled=false;btn.style.opacity='';}
 }
 // الأرقام العربية بأي خانة بتتحول لإنجليزي
 document.addEventListener('input',function(e){
