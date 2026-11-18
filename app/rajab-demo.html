@@ -458,14 +458,18 @@ html[data-mode="dark"] .rj-ist{background:var(--soft)}
 .rj-bell .bell-img{width:26px;height:26px;display:block;margin:auto}
 /* الهيدر كله صورة وحدة */
 .hdr{padding:0!important;overflow:hidden;border-color:#a9d3ea!important;background:#bde9fb!important}
-.rj-hero{position:relative;width:100%;aspect-ratio:1122/1042;background:url(files/rajab/hdr-rajab.webp) center/cover no-repeat;container-type:inline-size;cursor:pointer;-webkit-tap-highlight-color:transparent}
-.rj-hero .sg{position:absolute;left:59.5%;top:18.5%;width:32.5%;height:19%;display:flex;align-items:center;justify-content:center;text-align:center;color:#f3c57c;font-weight:700;font-size:6.2cqw;line-height:1.15}
-.rj-hero .tx{position:absolute;right:3%;width:66%;top:42%;display:flex;flex-direction:column;align-items:center;gap:1cqw}
+.rj-hero{position:relative;width:100%;aspect-ratio:1122/950;background:url(files/rajab/hdr-rajab.webp) center/cover no-repeat;container-type:inline-size;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.rj-hero .sg{position:absolute;left:59.3%;top:16.3%;width:32.5%;height:20.5%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:.8cqw}
+.rj-hero .sg b{color:#f3c57c;font-weight:700;font-size:6cqw;line-height:1.1}
+.rj-hero .sg span{color:#f6ead6;font-size:3.3cqw;font-weight:700;opacity:.95}
+.rj-hero .tx{position:absolute;right:3%;width:66%;top:39%;display:flex;flex-direction:column;align-items:center;gap:1cqw}
 .rj-hero .tx .bsm{font-size:3.8cqw;color:#5d4a2c;margin:0}
 .rj-hero .tx img{display:block;width:100%;height:auto}
 .rj-hero .tx img.ay{width:84%}
-.rj-hero .bg{position:absolute;left:4%;bottom:2.5%;width:32%;text-align:center;color:#fff;font-weight:700;font-size:4.8cqw;text-shadow:0 1px 2px rgba(0,0,0,.4)}
-.rj-hero .bc{position:absolute;right:4%;bottom:3%;background:rgba(255,255,255,.9);color:var(--primary);border-radius:999px;padding:.6cqw 2.8cqw;font-size:3.8cqw;font-weight:700;white-space:nowrap}
+.rj-hero .bg{position:absolute;left:3%;bottom:1.8%;width:32%;text-align:center;color:#fff;font-weight:700;font-size:4.6cqw;text-shadow:0 1px 2px rgba(0,0,0,.4)}
+.rj-hero .ip{position:absolute;right:3%;bottom:1.8%;display:flex;align-items:center;gap:1.2cqw;background:rgba(255,255,255,.92);color:var(--mu);border-radius:999px;padding:.7cqw .9cqw .7cqw 2.6cqw;font-size:3.5cqw;font-weight:700;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.12)}
+.rj-hero .ip b{color:var(--primary)}
+.rj-hero .ip .pl{width:5.6cqw;height:5.6cqw;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-size:4cqw;margin-right:1cqw}
 
 </style>
 </head>
@@ -474,20 +478,13 @@ html[data-mode="dark"] .rj-ist{background:var(--soft)}
 <div class="rj-demo">🧪 تجريبي — ما بينحفظ ولا بيوصل للآنسة</div>
 <div class="hdr">
   <div class="rj-hero" id="rjBan" onclick="rjJourney()" role="button">
-    <div class="sg" id="banT"></div>
+    <div class="sg"><b id="banT"></b><span id="jrCd"></span></div>
     <div class="tx"><div class="bsm">بسم الله الرحمن الرحيم</div><img class="ay" src="files/rajab/r2.webp" alt="فلا تظلموا فيهن أنفسكم"><img class="qt" src="files/rajab/r1.webp" alt="عش رجباً ترى عجبا"></div>
     <div class="bg" id="banG"></div>
-    <div class="bc" id="jrCd"></div>
+    <div class="ip" onclick="event.stopPropagation();istOpen()" role="button">الاستغفار <b id="istPill">0</b> / <span id="istGoal2"></span><span class="pl">＋</span></div>
   </div>
 
 </div>
-<div class="rj-ist" onclick="istOpen()" role="button">
-    <span class="lb">استغفار المجموعة</span>
-    <div class="rj-bar"><i id="istBar2"></i></div>
-    <span class="nm"><b id="istPill">0</b> / <span id="istGoal2"></span></span>
-    <span class="pl">＋</span>
-  </div>
-
 <div class="how-box">
   <div class="how-hdr" onclick="toggleHow()"><span>كيف تُحسب النقاط؟</span><span id="howArr">▼</span></div>
   <div class="how-body" id="howBody"></div>
@@ -1285,7 +1282,7 @@ function istRender(){
   const mine=istMine(),tot=RJ.demoBase+mine;
   document.getElementById('istTot').textContent=rjFmt(tot);document.getElementById('istPill').textContent=rjFmt(tot);
   const p=Math.min(100,tot/RJ.goal*100);
-  document.getElementById('istBar').style.width=p+'%';document.getElementById('istBar2').style.width=p+'%';
+  document.getElementById('istBar').style.width=p+'%';
   document.getElementById('istPct').textContent=p.toFixed(1)+'%';
   const last=istLast();
   document.getElementById('istMine').innerHTML='أنتِ أضفتِ: <b>'+rjFmt(mine)+'</b>'+(last?'<a onclick="istUndo()">تراجعي عن آخر إضافة</a>':'');
