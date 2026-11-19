@@ -483,29 +483,28 @@ body{overflow-x:hidden}
 .ip-sign{position:absolute;left:55.7%;top:10.3%;width:36.9%;height:10.3%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
 .ip-sign small{color:#f6ead6;font-size:4cqw;font-weight:700}
 .ip-sign b{color:#f3c57c;font-size:5.6cqw;line-height:1.15}
-.ip-sub{position:absolute;top:24.5%;left:6%;right:6%;text-align:center;color:#5d4a2c;font-size:3.8cqw;font-weight:700}
-.tsb{position:absolute;left:15%;width:70%;top:27.5%;border:none;background:none;padding:0;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation;user-select:none}
+.ip-grp{position:absolute;top:23.2%;left:10%;right:10%;color:#5d4a2c}
+.ip-grp .gp{display:flex;justify-content:space-between;align-items:baseline;font-size:3.8cqw;font-weight:700}
+.ip-grp .gp b{font-size:5.4cqw;color:var(--primary)}
+.ip-grp .rj-bar{flex:none;width:100%;height:2.2cqw;background:rgba(255,255,255,.75);margin-top:1.2cqw;box-shadow:inset 0 0 0 1px rgba(93,74,44,.08)}
+.ip-grp .rj-bar i{background:linear-gradient(270deg,#5cb87a,#1a6b3c)}
+.ip-grp .gn{font-size:3.2cqw;margin-top:1.4cqw;text-align:center;color:#6b5a3e}
+.ip-grp .gn a{color:var(--rD);text-decoration:underline;cursor:pointer}
+.tsb{position:absolute;left:28%;width:44%;top:33%;border:none;background:none;padding:0;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation;user-select:none}
 .tsb img{display:block;width:100%;height:auto;pointer-events:none}
 .tsb .in{position:absolute;left:0;right:0;top:35.5%;transform:translateY(-50%);display:flex;flex-direction:column;align-items:center}
-.tsb .n{font-size:15cqw;font-weight:700;color:var(--primary);line-height:1}
-.tsb .l{font-size:4.6cqw;color:#8b5a1e;font-weight:700;margin-top:1.4cqw}
-.tsb .h{font-size:3cqw;color:#7a6a52;margin-top:1cqw}
+.tsb .n{font-size:11cqw;font-weight:700;color:var(--primary);line-height:1}
+.tsb .l{font-size:3.6cqw;color:#8b5a1e;font-weight:700;margin-top:1cqw}
 .tsb.pop img{animation:tsbPop .18s ease}
 @keyframes tsbPop{50%{transform:scale(.97)}}
-.tsb-row{position:absolute;top:71.6%;left:0;right:0;display:flex;align-items:center;justify-content:center;gap:3cqw}
-.tsb-add{border:none;border-radius:999px;background:var(--primary);color:#fff;font-size:4.2cqw;font-weight:700;padding:2.4cqw 6cqw;cursor:pointer;box-shadow:0 3px 10px rgba(26,107,60,.3)}
+.tsb-row{position:absolute;top:62.4%;left:0;right:0;display:flex;align-items:center;justify-content:center;gap:3cqw}
+.tsb-add{border:none;border-radius:999px;background:var(--primary);color:#fff;font-size:4cqw;font-weight:700;padding:2.2cqw 6cqw;cursor:pointer;box-shadow:0 3px 10px rgba(26,107,60,.3)}
 .tsb-add:disabled{opacity:.5;cursor:default;box-shadow:none}
 .tsb-reset{font-size:3.4cqw;color:#5d4a2c;text-decoration:underline;cursor:pointer}
-.ip-soil{position:absolute;top:83.5%;left:5%;right:5%;bottom:1.5%;display:flex;flex-direction:column;align-items:center;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.35)}
-.ip-soil .q{font-size:3.6cqw;font-weight:700}
-.ip-soil .qc{display:flex;gap:2cqw;margin-top:1.6cqw;width:100%}
-.ip-soil .qc button{flex:1;border:none;border-radius:999px;background:rgba(255,255,255,.92);color:var(--primary);font-weight:700;font-size:3.8cqw;padding:1.6cqw 0;cursor:pointer;text-shadow:none}
-.ip-soil .gp{display:flex;justify-content:space-between;align-items:baseline;width:100%;margin-top:3cqw;font-size:3.6cqw;font-weight:700}
-.ip-soil .gp b{font-size:5cqw}
-.ip-soil .rj-bar{flex:none;width:100%;height:2cqw;background:rgba(255,255,255,.3);margin-top:1cqw}
-.ip-soil .rj-bar i{background:linear-gradient(270deg,#b9f0c9,#5cd08a)}
-.ip-soil .gn{font-size:3.2cqw;margin-top:1.4cqw;opacity:.95}
-.ip-soil .gn a{color:#ffe1a8;text-decoration:underline;cursor:pointer}
+.ip-out{position:absolute;top:67.6%;left:7%;right:7%;display:flex;flex-direction:column;align-items:center}
+.ip-out .q{font-size:3.5cqw;font-weight:700;color:#5d4a2c}
+.ip-out .qc{display:flex;gap:2cqw;margin-top:1.4cqw;width:100%}
+.ip-out .qc button{flex:1;border:1px solid rgba(26,107,60,.18);border-radius:999px;background:rgba(255,255,255,.88);color:var(--primary);font-weight:700;font-size:3.7cqw;padding:1.5cqw 0;cursor:pointer}
 /* سؤال «كم مرة» بالنص */
 .ia-ov{position:fixed;inset:0;z-index:9500;background:rgba(0,0,0,.35);display:none;align-items:center;justify-content:center;padding:20px}
 .ia-ov.show{display:flex}
@@ -637,20 +636,21 @@ body{overflow-x:hidden}
   <div class="jr-cd"><span id="jrCd2"></span><div class="rj-bar"><i id="jrBar"></i></div></div>
 </div></div>
 <div id="istPage" class="ist-page" aria-hidden="true"><div class="ip-scene">
-  <button type="button" class="ip-back" onclick="istClose()">→ رجوع</button>
+  <button type="button" class="ip-back" onclick="istClose()">رجوع ←</button>
   <div class="ip-sign"><small>رجب</small><b>شهر الاستغفار</b></div>
-  <div class="ip-sub">كل استغفار منك بيقرّب المجموعة من هدفها</div>
-  <button type="button" class="tsb" id="tsb" onclick="tsbTap()" aria-label="اضغطي مع كل استغفار">
-    <img src="files/rajab/beads.webp" alt="">
-    <span class="in"><span class="n" id="tsbN">0</span><span class="l">أستغفر الله</span><span class="h">اضغطي مع كل استغفار</span></span>
-  </button>
-  <div class="tsb-row"><button type="button" class="tsb-add" id="tsbAdd" onclick="tsbCommit()">أضيفي للمجموعة</button><a class="tsb-reset" onclick="tsbReset()">تصفير</a></div>
-  <div class="ip-soil">
-    <div class="q">استغفرتِ برّا البرنامج؟</div>
-    <div class="qc"><button type="button" onclick="istAdd(100)">100</button><button type="button" onclick="istAdd(300)">300</button><button type="button" onclick="istAdd(1000)">1000</button><button type="button" onclick="istAskFree()">عدد تاني</button></div>
+  <div class="ip-grp">
     <div class="gp"><span>استغفار المجموعة</span><b id="istPct">0%</b></div>
     <div class="rj-bar"><i id="istBar"></i></div>
     <div class="gn"><span id="istTot">0</span> من <span id="istGoal"></span> · <span id="istMine"></span></div>
+  </div>
+  <button type="button" class="tsb" id="tsb" onclick="tsbTap()" aria-label="اضغطي مع كل استغفار">
+    <img src="files/rajab/beads.webp" alt="">
+    <span class="in"><span class="n" id="tsbN">0</span><span class="l">أستغفر الله</span></span>
+  </button>
+  <div class="tsb-row"><button type="button" class="tsb-add" id="tsbAdd" onclick="tsbCommit()">أضيفي للمجموعة</button><a class="tsb-reset" onclick="tsbReset()">تصفير</a></div>
+  <div class="ip-out">
+    <div class="q">استغفرتِ برّا البرنامج؟</div>
+    <div class="qc"><button type="button" onclick="istAdd(100)">100</button><button type="button" onclick="istAdd(300)">300</button><button type="button" onclick="istAdd(1000)">1000</button><button type="button" onclick="istAskFree()">عدد تاني</button></div>
   </div>
 </div></div>
 <div id="istAsk" class="ia-ov" onclick="if(event.target===this)istAskClose()"><div class="ia-box">
