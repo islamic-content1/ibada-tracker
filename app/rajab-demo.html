@@ -519,6 +519,16 @@ body{overflow-x:hidden}
 .ist-cele.show div{transform:scale(1)}
 .ist-cele span{font-size:36px;display:block}
 .ist-cele b{font-size:17px;color:var(--primary);line-height:1.6}
+/* خانة «عدد تاني» بالنافذة */
+.ia-box .cust{display:flex;flex-direction:column;gap:10px;margin-top:12px}
+.ia-box .cust input{width:100%;padding:12px;border:1.5px solid var(--bd);border-radius:14px;background:var(--soft);color:var(--tx);text-align:center;font-size:22px;font-weight:700;font-family:inherit;outline:none}
+.ia-box .cust input:focus{border-color:var(--primary);background:var(--sf)}
+.ia-box .cust button{width:100%;padding:12px;border:none;border-radius:14px;background:var(--primary);color:#fff;font-size:16px;font-weight:700;font-family:inherit;cursor:pointer}
+.ia-box .chips{margin-top:2px}
+.ia-box .chips{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.ia-box .chips button{flex:1;min-width:64px;border:1px solid var(--bd);background:var(--primary-light);color:var(--primary);border-radius:12px;padding:9px 4px;font-size:16px;font-weight:700;font-family:inherit;cursor:pointer;display:flex;flex-direction:column;align-items:center;line-height:1.2}
+.ia-box .chips button.on{background:var(--primary);color:#fff;border-color:var(--primary)}
+.ia-box .chips button small{font-size:10.5px;font-weight:700;opacity:.9}
 
 </style>
 </head>
@@ -657,8 +667,8 @@ body{overflow-x:hidden}
   <b id="iaT">تقبّل الله ✓</b>
   <p id="iaP">كم مرة استغفرتِ اليوم؟ بينضاف لعدّاد المجموعة</p>
   <div class="chips" id="iaChips"></div>
-  <div class="cust"><input id="iaInp" type="text" inputmode="numeric" placeholder="عدد تاني..."><button type="button" onclick="istAskCustom()">أضيفي</button></div>
-  <a class="ia-skip" onclick="istAskClose()">مش هلّا</a>
+  <div class="cust"><input id="iaInp" type="text" inputmode="numeric" placeholder="مثلاً 250" onkeydown="if(event.key==='Enter')istAskCustom()"><button type="button" onclick="istAskCustom()">أضيفي</button></div>
+  <a class="ia-skip" id="iaSkip" onclick="istAskClose()">مش هلّا</a>
 </div></div>
 <div id="istCele" class="ist-cele"><div><span>🎉</span><b id="celeT"></b></div></div>
 <div class="rj-notif" id="rjNotif"><img src="icon.png" alt=""><div class="nt"><b>برنامج عبادة 🌙</b>لسا ما سجّلتي عبادة اليوم.. رجب شهر الزرع، لا يفوتك<br><small>الآن</small></div></div>
@@ -1382,13 +1392,13 @@ function tsbReset(){rjSet('rj_tsb',0);tsbRender();}
 // ربط سطر «استغفار» بالجدول: لما تحط ✓ بنسألها كم مرة
 let iaDay=0;
 function istAsk(ri,d){
-  iaDay=d;document.getElementById('iaT').textContent='تقبّل الله ✓';document.getElementById('iaP').textContent='كم مرة استغفرتِ اليوم؟ بينضاف لعدّاد المجموعة';document.getElementById('iaChips').style.display='';const g=(typeof getGoalVal==='function'&&getGoalVal(ri))||200;
+  iaDay=d;document.getElementById('iaT').textContent='تقبّل الله ✓';document.getElementById('iaP').textContent='كم مرة استغفرتِ اليوم؟ بينضاف لعدّاد المجموعة';document.getElementById('iaChips').style.display='';document.getElementById('iaSkip').textContent='مش هلّا';const g=(typeof getGoalVal==='function'&&getGoalVal(ri))||200;
   const opts=[g].concat([100,300,600].filter(x=>x!==g));
-  document.getElementById('iaChips').innerHTML=opts.map((v,i)=>'<button type="button" class="'+(i?'':'on')+'" onclick="istAskPick('+v+')">'+arN(v)+(i?'':' <small>كميتك</small>')+'</button>').join('');
+  document.getElementById('iaChips').innerHTML=opts.map((v,i)=>'<button type="button" class="'+(i?'':'on')+'" onclick="istAskPick('+v+')">'+arN(v)+(i?'':'<small>كميتك</small>')+'</button>').join('');
   document.getElementById('iaInp').value='';
   document.getElementById('istAsk').classList.add('show');
 }
-function istAskFree(){iaDay=0;document.getElementById('iaT').textContent='كم استغفرتِ؟';document.getElementById('iaP').textContent='اكتبي العدد وبينضاف لعدّاد المجموعة';document.getElementById('iaChips').style.display='none';document.getElementById('iaInp').value='';document.getElementById('istAsk').classList.add('show');setTimeout(()=>document.getElementById('iaInp').focus(),50);}
+function istAskFree(){iaDay=0;document.getElementById('iaT').textContent='كم استغفرتِ؟';document.getElementById('iaP').textContent='اكتبي العدد وبينضاف لعدّاد المجموعة';document.getElementById('iaChips').style.display='none';document.getElementById('iaSkip').textContent='إلغاء';document.getElementById('iaInp').value='';document.getElementById('istAsk').classList.add('show');setTimeout(()=>document.getElementById('iaInp').focus(),50);}
 function istAskClose(){document.getElementById('istAsk').classList.remove('show');}
 function istAskPick(v){if(!iaDay){istAskClose();istAdd(v);return;}const days=rjGet('rj_ist_days',{});const old=days[iaDay]||0;
   if(old){rjSet('rj_ist_mine',Math.max(0,istMine()-old));}
