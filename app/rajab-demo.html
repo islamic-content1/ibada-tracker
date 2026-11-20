@@ -476,7 +476,7 @@ body{overflow-x:hidden}
 .rj-hero .ip .mb i{display:block;height:100%;background:linear-gradient(270deg,#5cb87a,#1a6b3c);border-radius:9px}
 .rj-hero .ip b{color:var(--primary)}
 /* صفحة الاستغفار: مشهد واحد */
-.ist-page{position:fixed;inset:0;z-index:9000;background:linear-gradient(180deg,#a9daf6 0%,#cfeefb 60%,#8a4317 60.01%,#6e3412 100%);overflow-y:auto;transform:translateX(-100%);transition:transform .28s ease;-webkit-overflow-scrolling:touch}
+.ist-page{position:fixed;inset:0;z-index:9000;--hs:calc(min(100vw,480px)*2.1674);background:linear-gradient(180deg,#9cdafb 0,#e6f4fa calc(var(--hs)*.78),#eef7f9 calc(var(--hs)*.818),#a54b19 calc(var(--hs)*.826),#7a2f12 var(--hs),#7a2f12 100%);overflow-y:auto;transform:translateX(-100%);transition:transform .28s ease;-webkit-overflow-scrolling:touch}
 .ist-page.show{transform:none}
 .ip-scene{position:relative;width:min(100vw,480px);margin:0 auto;aspect-ratio:1290/2796;background:url(files/rajab/ist-bg.webp) center top/100% 100% no-repeat;container-type:inline-size}
 .ip-back{position:absolute;left:4%;top:calc(2% + env(safe-area-inset-top));border:none;background:rgba(255,255,255,.9);color:var(--primary);font-weight:700;font-size:3.8cqw;padding:1.6cqw 3.8cqw;border-radius:999px;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.1)}
@@ -490,7 +490,7 @@ body{overflow-x:hidden}
 .ip-grp .rj-bar i{background:linear-gradient(270deg,#5cb87a,#1a6b3c)}
 .ip-grp .gn{font-size:3.2cqw;margin-top:1.4cqw;text-align:center;color:#6b5a3e}
 .ip-grp .gn a{color:var(--rD);text-decoration:underline;cursor:pointer}
-.tsb{position:absolute;left:28%;width:44%;top:33%;border:none;background:none;padding:0;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation;user-select:none}
+.tsb{position:absolute;left:29.5%;width:41%;top:35.2%;border:none;background:none;padding:0;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation;user-select:none}
 .tsb img{display:block;width:100%;height:auto;pointer-events:none}
 .tsb .in{position:absolute;left:0;right:0;top:35.5%;transform:translateY(-50%);display:flex;flex-direction:column;align-items:center}
 .tsb .n{font-size:11cqw;font-weight:700;color:var(--primary);line-height:1}
@@ -529,6 +529,25 @@ body{overflow-x:hidden}
 .ia-box .chips button{flex:1;min-width:64px;border:1px solid var(--bd);background:var(--primary-light);color:var(--primary);border-radius:12px;padding:9px 4px;font-size:16px;font-weight:700;font-family:inherit;cursor:pointer;display:flex;flex-direction:column;align-items:center;line-height:1.2}
 .ia-box .chips button.on{background:var(--primary);color:#fff;border-color:var(--primary)}
 .ia-box .chips button small{font-size:10.5px;font-weight:700;opacity:.9}
+.ip-grp .gt{font-size:3.2cqw;margin-top:1cqw;text-align:center;color:#6b5a3e}
+.ip-grp .gt b{color:var(--primary)}
+.ip-grp .gq{font-size:3cqw;margin-top:1cqw;text-align:center;color:#8b5a1e;font-weight:700}
+.tsb.mile img{animation:tsbMile .5s ease}
+.tsb.mile .n{animation:tsbGold .6s ease}
+@keyframes tsbMile{30%{transform:scale(1.04)}}
+@keyframes tsbGold{30%{color:#c99a4e;transform:scale(1.12)}}
+.cf-btns{display:flex;flex-direction:column;gap:8px;margin-top:6px}
+.cf-btns button{width:100%;padding:12px;border:none;border-radius:14px;background:var(--primary);color:#fff;font-size:16px;font-weight:700;font-family:inherit;cursor:pointer}
+.cf-btns button.no{background:var(--soft);color:var(--tx);border:1px solid var(--bd)}
+#rjCf{z-index:9900}
+.rj-hero .sg span.sp{color:#ffe1a8;font-size:3.6cqw}
+.ip-grp .gt a{color:var(--rD);text-decoration:underline;cursor:pointer;margin-right:4px}
+.ip-grp .gt .wq{color:#8b5a1e;font-weight:700}
+/* الوضع الليلي للنوافذ */
+html[data-mode="dark"] .ia-box b,html[data-mode="dark"] .ist-cele b{color:var(--gold)}
+html[data-mode="dark"] .ia-box .chips button:not(.on){background:var(--soft);color:var(--tx);border-color:var(--bd)}
+html[data-mode="dark"] .ist-cele div{background:var(--sf)}
+@media(min-width:500px){.ip-scene{-webkit-mask-image:linear-gradient(to right,transparent 0,#000 6%,#000 94%,transparent 100%);mask-image:linear-gradient(to right,transparent 0,#000 6%,#000 94%,transparent 100%)}}
 
 </style>
 </head>
@@ -652,6 +671,7 @@ body{overflow-x:hidden}
     <div class="gp"><span>استغفار المجموعة</span><b id="istPct">0%</b></div>
     <div class="rj-bar"><i id="istBar"></i></div>
     <div class="gn"><span id="istTot">0</span> من <span id="istGoal"></span> · <span id="istMine"></span></div>
+    <div class="gt" id="istToday"></div>
   </div>
   <button type="button" class="tsb" id="tsb" onclick="tsbTap()" aria-label="اضغطي مع كل استغفار">
     <img src="files/rajab/beads.webp" alt="">
@@ -1302,7 +1322,7 @@ async function boot(){
 }
 // ===== رجب (تجريبي) =====
 // التواريخ تقريبية حسب رؤية الهلال
-const RJ={rajab:new Date(2026,11,11),shaban:new Date(2027,0,10),ramadan:new Date(2027,1,8),goal:200000,demoBase:48300};
+const RJ={rajab:new Date(2026,11,11),shaban:new Date(2027,0,10),ramadan:new Date(2027,1,8),goal:200000,demoBase:48300,demoGirls:12};
 const RJ_MONTHS=[
   {m:'رجب',t:'شهر التخلِّي',p:'بتطهير القلب بالتوبة وكثرة الاستغفار.'},
   {m:'شعبان',t:'شهر التحلِّي',p:'بتزيين القلب بكثرة الأعمال الصالحة سيّما الصلاة على النبي ﷺ'},
@@ -1310,7 +1330,10 @@ const RJ_MONTHS=[
 ];
 let rjNow=0;
 function rjFmt(n){return Number(n).toLocaleString('en-US');}
-function rjToday(){const d=new Date();d.setHours(0,0,0,0);return d;}
+function rjToday(){let d=new Date();const q=new URLSearchParams(location.search).get('rjdate');if(q&&/^\d{4}-\d{2}-\d{2}$/.test(q)){const a=q.split('-');d=new Date(+a[0],+a[1]-1,+a[2]);}d.setHours(0,0,0,0);return d;}
+function rjKeyDay(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+// أيام مميزة: بيتغيّر السطر ع اللوحة (النص قابل للتعديل)
+const RJ_SPECIAL={'2027-01-05':'الليلة ليلة الإسراء والمعراج','2027-01-06':'٢٧ رجب · ذكرى الإسراء والمعراج'};
 // الرحلة: شريط بالهيدر، والصورة كاملة بنافذة
 function rjShow(i){
   const x=RJ_MONTHS[i];
@@ -1336,12 +1359,14 @@ function rjInit(){
   document.getElementById('banT').textContent=RJ_MONTHS[rjNow].t;
   const left=Math.max(0,Math.round((RJ.ramadan-t)/day));
   const cd=left>0?'🌙 باقي '+left+' يوم':'🌙 رمضان مبارك';
-  document.getElementById('jrCd').textContent=left>0?'باقي '+left+' يوم على رمضان':cd;
+  const sp=RJ_SPECIAL[rjKeyDay(t)];
+  document.getElementById('jrCd').textContent=sp||(left>0?'باقي '+left+' يوم على رمضان':cd);
+  document.getElementById('jrCd').classList.toggle('sp',!!sp);
   document.getElementById('jrCd2').textContent=left>0?cd+' على رمضان':cd;
   const prog=Math.min(1,Math.max(0,(t-RJ.rajab)/(RJ.ramadan-RJ.rajab)));
   document.getElementById('jrBar').style.width=Math.max(3,prog*100)+'%';
   document.getElementById('istGoal').textContent=rjFmt(RJ.goal);
-  istRender();
+  istRender();istFlush();
   istSnap=istTake();
 }
 // عداد الاستغفار — بالتجربة بينحفظ عندك بس
@@ -1358,37 +1383,71 @@ function istRender(){
   document.getElementById('istBar').style.width=p+'%';
   document.getElementById('istBar2').style.width=p+'%';
   const last=rjGet('rj_ist_last',0);
-  document.getElementById('istMine').innerHTML='أنتِ: <b>'+rjFmt(mine)+'</b>'+(last?' <a onclick="istUndo()">تراجعي</a>':'');
+  // سطرين بس: المجموع وعدد البنات، وبعدين اللي أضافته اليوم (أو الطابور إذا في)
+  const td=istTodayN(),girls=RJ.demoGirls+(td>0?1:0);
+  document.getElementById('istMine').textContent=girls+' بنت استغفرن اليوم';
+  const q=rjGet('rj_ist_q',[]);
+  document.getElementById('istToday').innerHTML=q.length?'<span class="wq">⏳ '+q.length+(q.length===1?' إضافة بتستنى النت':' إضافات بتستنى النت')+'</span>':'أضفتِ اليوم: <b>'+rjFmt(td)+'</b>'+(last?' <a onclick="istUndo()">تراجعي</a>':'');
+}
+// كم أضافت اليوم
+function istTodayN(){const o=rjGet('rj_ist_today',{});return o.d===rjKeyDay(rjToday())?(o.n||0):0;}
+function istTodayAdd(n){const k=rjKeyDay(rjToday());const o=rjGet('rj_ist_today',{});const cur=o.d===k?(o.n||0):0;rjSet('rj_ist_today',{d:k,n:Math.max(0,cur+n)});}
+// طابور الإرسال: إذا ما في نت بينحفظ وبينبعت لما يرجع
+function istQueue(n){const q=rjGet('rj_ist_q',[]);q.push({n:n,t:Date.now()});rjSet('rj_ist_q',q);}
+let istFlushing=false;
+async function istFlush(){
+  if(istFlushing||!navigator.onLine)return;const q=rjGet('rj_ist_q',[]);if(!q.length)return;istFlushing=true;
+  try{await new Promise(r=>setTimeout(r,300)); /* بالتجربة: ما في سيرفر، بنعتبره انبعت */ rjSet('rj_ist_q',[]);}catch(e){}
+  istFlushing=false;istRender();
+}
+window.addEventListener('online',()=>{istFlush().then(()=>showToast('رجع النت وانبعت الاستغفار ✓'));});
+// نافذة تأكيد عامة (بدل confirm تبع المتصفح)
+function rjConfirm(title,text,ok,cancel,onOk,onCancel){
+  let el=document.getElementById('rjCf');
+  if(!el){el=document.createElement('div');el.id='rjCf';el.className='ia-ov';el.innerHTML='<div class="ia-box"><b id="cfT"></b><p id="cfP"></p><div class="cf-btns"><button type="button" id="cfOk"></button><button type="button" id="cfNo" class="no"></button></div></div>';document.body.appendChild(el);}
+  document.getElementById('cfT').textContent=title;document.getElementById('cfP').textContent=text;
+  const b1=document.getElementById('cfOk'),b2=document.getElementById('cfNo');b1.textContent=ok;b2.textContent=cancel;
+  b1.onclick=()=>{el.classList.remove('show');onOk&&onOk();};b2.onclick=()=>{el.classList.remove('show');onCancel&&onCancel();};
+  el.onclick=e=>{if(e.target===el){el.classList.remove('show');onCancel&&onCancel();}};
+  el.classList.add('show');
 }
 // إضافة رقم للمجموعة + احتفال إذا قطعنا ٢٥/٥٠/٧٥/١٠٠٪
-function istAdd(n,silent){
-  n=parseInt(n,10);if(!(n>0)||n>100000){showToast('أدخلي عدد صحيح');return false;}
+const IST_MAX=10000,IST_ASK=3000;
+function istAdd(n,silent,ok){
+  n=parseInt(n,10);if(!(n>0)){showToast('أدخلي عدد صحيح');return false;}
+  if(n>IST_MAX){showToast('أعلى رقم بالمرة الوحدة '+rjFmt(IST_MAX));return false;}
+  if(n>=IST_ASK&&!ok){rjConfirm('متأكدة؟','بدك تضيفي '+rjFmt(n)+' استغفار للمجموعة؟','أضيفي '+rjFmt(n),'لا، رجعيني',()=>istAdd(n,silent,true));return 'wait';}
   const before=istPct(RJ.demoBase+istMine());
-  rjSet('rj_ist_mine',istMine()+n);rjSet('rj_ist_last',n);
+  rjSet('rj_ist_mine',istMine()+n);rjSet('rj_ist_last',n);istTodayAdd(n);
+  istQueue(n);const off=!navigator.onLine;istFlush();
   istRender();
   const after=istPct(RJ.demoBase+istMine());
   const ms=[25,50,75,100].find(m=>before<m&&after>=m);
   if(ms)istCele(ms===100?'وصلنا هدف المجموعة! تقبّل الله منا ومنكن':'وصلنا '+ms+'% من هدف المجموعة');
+  else if(off)showToast('انحفظ عندك، وبينبعت لحاله لما يرجع النت');
   else if(!silent)showToast('تقبّل الله، صرنا '+Math.floor(after)+'% من الهدف');
   return true;
 }
-function istAddCustom(){const i=document.getElementById('istInp');if(istAdd(i.value))i.value='';}
-function istUndo(){const l=rjGet('rj_ist_last',0);if(!l)return;rjSet('rj_ist_mine',Math.max(0,istMine()-l));rjSet('rj_ist_last',0);istRender();}
+
+function istUndo(){const l=rjGet('rj_ist_last',0);if(!l)return;rjSet('rj_ist_mine',Math.max(0,istMine()-l));rjSet('rj_ist_last',0);istTodayAdd(-l);istRender();}
 function istCele(t){const c=document.getElementById('istCele');document.getElementById('celeT').textContent=t;c.classList.add('show');setTimeout(()=>c.classList.remove('show'),2800);}
 // الصفحة الكاملة (بترجع بزر الرجوع تبع الموبايل كمان)
 function istOpen(){const pg=document.getElementById('istPage');pg.classList.add('show');pg.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';try{history.pushState({ist:1},'');}catch(e){}tsbRender();}
 function istHide(){const pg=document.getElementById('istPage');pg.classList.remove('show');pg.setAttribute('aria-hidden','true');document.body.style.overflow='';}
-function istClose(){if(history.state&&history.state.ist)history.back();else istHide();}
-window.addEventListener('popstate',()=>{if(document.getElementById('istPage').classList.contains('show'))istHide();});
+function istLeft(){const n=rjGet('rj_tsb',0);if(n>0)rjConfirm('عندك '+rjFmt(n)+' استغفار','ما أضفتيهم للمجموعة لسا. بدك تضيفيهم؟','أضيفيهم','بعدين (بيضلوا محفوظين)',()=>tsbCommit());}
+function istClose(){if(history.state&&history.state.ist)history.back();else{istHide();istLeft();}}
+window.addEventListener('popstate',()=>{if(document.getElementById('istPage').classList.contains('show')){istHide();istLeft();}});
 // المسبحة
 function tsbRender(){
   const n=rjGet('rj_tsb',0);document.getElementById('tsbN').textContent=rjFmt(n);
   const b=document.getElementById('tsbAdd');b.disabled=!n;b.textContent=n?'أضيفي '+rjFmt(n)+' للمجموعة':'أضيفي للمجموعة';
 }
-function tsbTap(){const n=rjGet('rj_tsb',0)+1;rjSet('rj_tsb',n);try{navigator.vibrate&&navigator.vibrate(n%100===0?[30,40,30]:8);}catch(e){}tsbRender();
-  const el=document.getElementById('tsb');el.classList.remove('pop');void el.offsetWidth;el.classList.add('pop');}
-function tsbCommit(){const n=rjGet('rj_tsb',0);if(!n)return;if(istAdd(n)){rjSet('rj_tsb',0);tsbRender();}}
-function tsbReset(){rjSet('rj_tsb',0);tsbRender();}
+function tsbTap(){const n=rjGet('rj_tsb',0)+1;rjSet('rj_tsb',n);
+  const big=n%100===0,mid=!big&&n%33===0;
+  try{navigator.vibrate&&navigator.vibrate(big?[60,60,60,60,60]:mid?[35,50,35]:8);}catch(e){}tsbRender();
+  const el=document.getElementById('tsb');el.classList.remove('pop','mile');void el.offsetWidth;el.classList.add(big||mid?'mile':'pop');}
+function tsbCommit(){const n=rjGet('rj_tsb',0);if(!n)return;if(n>=IST_ASK){rjConfirm('متأكدة؟','بدك تضيفي '+rjFmt(n)+' استغفار للمجموعة؟','أضيفي '+rjFmt(n),'لا',()=>{if(istAdd(n,false,true)===true){rjSet('rj_tsb',0);tsbRender();}});return;}if(istAdd(n)===true){rjSet('rj_tsb',0);tsbRender();}}
+function tsbReset(){const n=rjGet('rj_tsb',0);if(!n)return;rjConfirm('تصفير المسبحة؟','رح ينمسح العدد ('+rjFmt(n)+') وما بينضاف للمجموعة.','صفّري','لا',()=>{rjSet('rj_tsb',0);tsbRender();});}
 // ربط سطر «استغفار» بالجدول: لما تحط ✓ بنسألها كم مرة
 let iaDay=0;
 function istAsk(ri,d){
@@ -1400,11 +1459,12 @@ function istAsk(ri,d){
 }
 function istAskFree(){iaDay=0;document.getElementById('iaT').textContent='كم استغفرتِ؟';document.getElementById('iaP').textContent='اكتبي العدد وبينضاف لعدّاد المجموعة';document.getElementById('iaChips').style.display='none';document.getElementById('iaSkip').textContent='إلغاء';document.getElementById('iaInp').value='';document.getElementById('istAsk').classList.add('show');setTimeout(()=>document.getElementById('iaInp').focus(),50);}
 function istAskClose(){document.getElementById('istAsk').classList.remove('show');}
-function istAskPick(v){if(!iaDay){istAskClose();istAdd(v);return;}const days=rjGet('rj_ist_days',{});const old=days[iaDay]||0;
+function istAskPick(v){if(!iaDay){istAskClose();istAdd(v);return;}if(v>=IST_ASK&&!istAskPick.ok){istAskClose();rjConfirm('متأكدة؟','بدك تضيفي '+rjFmt(v)+' استغفار للمجموعة؟','أضيفي '+rjFmt(v),'لا',()=>{istAskPick.ok=1;istAskPick(v);istAskPick.ok=0;});return;}const days=rjGet('rj_ist_days',{});const old=days[iaDay]||0;
   if(old){rjSet('rj_ist_mine',Math.max(0,istMine()-old));}
-  days[iaDay]=v;rjSet('rj_ist_days',days);istAskClose();istAdd(v);}
-function istAskCustom(){const v=parseInt(document.getElementById('iaInp').value,10);if(!(v>0)){showToast('أدخلي عدد صحيح');return;}istAskPick(v);}
-function istDayRemoved(d){const days=rjGet('rj_ist_days',{});const old=days[d]||0;if(!old)return;delete days[d];rjSet('rj_ist_days',days);rjSet('rj_ist_mine',Math.max(0,istMine()-old));rjSet('rj_ist_last',0);istRender();showToast('شلنا استغفار هداك اليوم من العدّاد');}
+  if(old)istTodayAdd(-old);
+  days[iaDay]=v;rjSet('rj_ist_days',days);istAskClose();istAdd(v,false,true);}
+function istAskCustom(){const v=parseInt(document.getElementById('iaInp').value,10);if(!(v>0)){showToast('أدخلي عدد صحيح');return;}if(v>IST_MAX){showToast('أعلى رقم بالمرة الوحدة '+rjFmt(IST_MAX));return;}istAskPick(v);}
+function istDayRemoved(d){const days=rjGet('rj_ist_days',{});const old=days[d]||0;if(!old)return;delete days[d];rjSet('rj_ist_days',days);rjSet('rj_ist_mine',Math.max(0,istMine()-old));istTodayAdd(-old);rjSet('rj_ist_last',0);istRender();showToast('شلنا استغفار هداك اليوم من العدّاد');}
 // بنراقب سطر الاستغفار مع كل حفظ (أي طريقة تغيّر فيها الخانة)
 let istSnap=null;
 function istRi(){return ROWS.findIndex(r=>r.ibada==='استغفار');}
